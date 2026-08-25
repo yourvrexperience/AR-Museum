@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="utf-8">
+		<title>Firebase Web Quickstart</title>
+	</head>
+
+	<body>
+	
+	<h1 id="tagInformation"></h1>
+	
+	<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "adfgadadfgsdfgsdfhgsdfhgsdfsdgsdfgsdgasdfgasdfg",
+		authDomain: "yourowndomain8765432.firebaseapp.com",
+		databaseURL: "https://yourowndomain8765432.firebaseio.com",
+		projectId: "yourowndomain8765432",
+		storageBucket: "yourowndomain8765432.appspot.com",
+		messagingSenderId: "876543456"
+	  };
+	  firebase.initializeApp(config);
+	
+		
+		var tagInfo = document.getElementById('tagInformation');
+		var dbRef = firebase.database().ref().child('text');
+		dbRef.on('value', snap => tagInfo.innerText = snap.val());
+	
+	</script>
+	
+	</body>
+	
+</html>
+	

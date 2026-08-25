@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | MuseumTechDemo</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+
+    <!-- ============================================================
+         Layout + Admin panel styles.
+         Placed AFTER the template stylesheet so these win on equal
+         specificity. The Unity canvas now lives in a flexible left
+         area; the admin panel occupies a fixed column on the right.
+         ============================================================ -->
+    <link rel="stylesheet" href="css/panel.css">
+  </head>
+  <body>
+    <div id="app-layout">
+
+      <!-- ============ Unity area ============ -->
+      <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" width=1488 height=2266 tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+          <div id="unity-logo"></div>
+          <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+          </div>
+        </div>
+        <div id="unity-warning"></div>
+      </div>
+
+      <!-- ============ Toggle ============ -->
+      <button id="panel-toggle" type="button" aria-label="Toggle admin panel" aria-expanded="true">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M8 2 L4 6 L8 10" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- ============ Admin panel ============ -->
+      <aside id="admin-panel" aria-label="Museum admin console">
+
+        <div class="ap-header">
+          <h1 class="ap-title">Guide Admin</h1>
+          <!-- TODO: replace with the active exhibition / museum name -->
+          <p class="ap-subtitle">Triàsic · Explosió de vida — Museu d'Alcover</p>
+
+		<hr>
+		<!-- Area selector (options populated dynamically from the data) -->
+		<div class="ap-area-select">
+		  <label for="ap-area">Area</label>
+		  <select class="ap-select" id="ap-area">
+			<option value="0" disabled selected>No data</option>
+		  </select>
+		</div>
+		  
+          <div class="ap-header-row">
+            <span class="ap-status" id="ap-status">
+              <span class="dot"></span>
+              <span class="txt">Not connected</span>
+            </span>
+            <button class="ap-refresh" id="ap-refresh" type="button">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2v3h-3"
+                      stroke="currentColor" stroke-width="1.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <nav class="ap-tabs" role="tablist">
+          <button class="ap-tab is-active" data-view="overview" role="tab">Overview</button>
+          <button class="ap-tab" data-view="users" role="tab">Users<span class="ap-tab-count" style="display:none"></span></button>
+          <button class="ap-tab" data-view="events" role="tab">Events<span class="ap-tab-count" style="display:none"></span></button>
+        </nav>
+
+        <div class="ap-body">
+
+          <!-- ============ OVERVIEW ============ -->
+          <section class="ap-view is-active" id="view-overview" role="tabpanel">
+
+            <div class="ap-eyebrow">At a glance</div>
+            <div class="ap-stats">
+              <div class="ap-stat">
+                <div class="k">Registered users</div>
+                <div class="v" data-stat="users">—</div>
+                <div class="sub">total accounts</div>
+              </div>
+              <div class="ap-stat">
+                <div class="k">Active (24h)</div>
+                <div class="v" data-stat="active">—</div>
+                <div class="sub">by last login</div>
+              </div>
+              <div class="ap-stat">
+                <div class="k">Narrations played</div>
+                <div class="v" data-stat="narrations">—</div>
+              </div>
+              <div class="ap-stat">
+                <div class="k">Tours completed</div>
+                <div class="v" data-stat="completed">—</div>
+                <div class="sub" data-area-label>in this area</div>
+              </div>
+              <div class="ap-stat">
+                <div class="k">Secrets initited</div>
+                <div class="v" data-stat="secrets">—</div>
+              </div>
+              <div class="ap-stat">
+                <div class="k">Secrets discovered</div>
+                <div class="v" data-stat="discovered">—</div>
+                <div class="sub" data-area-label>in this area</div>
+              </div>
+            </div>
+
+            <!-- Q3: finish rate per age = finishers / starters, for the selected area -->
+            <div class="ap-eyebrow">Completion POIs by profile <span class="ap-eyebrow-note" data-area-label></span></div>
+            <div id="ap-completion">
+              <div class="ap-bar-row">
+                <span class="lbl">Children</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-comp="0"></span></span>
+                <span class="val" data-comp-val="0">—</span>
+              </div>
+              <div class="ap-bar-row">
+                <span class="lbl">Adults</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-comp="1"></span></span>
+                <span class="val" data-comp-val="1">—</span>
+              </div>
+              <div class="ap-bar-row">
+                <span class="lbl">Experts</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-comp="2"></span></span>
+                <span class="val" data-comp-val="2">—</span>
+              </div>
+            </div>
+
+            <!-- Q4: discovered secrets finish rate per age = finishers / starters, for the selected area -->
+            <div class="ap-eyebrow">Completion Secrets by profile <span class="ap-eyebrow-note" data-area-label></span></div>
+            <div id="ap-secrets">
+              <div class="ap-bar-row">
+                <span class="lbl">Children</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-sec="0"></span></span>
+                <span class="val" data-sec-val="0">—</span>
+              </div>
+              <div class="ap-bar-row">
+                <span class="lbl">Adults</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-sec="1"></span></span>
+                <span class="val" data-sec-val="1">—</span>
+              </div>
+              <div class="ap-bar-row">
+                <span class="lbl">Experts</span>
+                <span class="ap-bar-track"><span class="ap-bar-fill" data-sec="2"></span></span>
+                <span class="val" data-sec-val="2">—</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============ USERS ============ -->
+          <section class="ap-view" id="view-users" role="tabpanel">
+            <div class="ap-filters">
+              <input class="ap-input" id="ap-user-search" type="search" placeholder="Search email or name">
+              <select class="ap-select" id="ap-user-profile">
+                <option value="">All profiles</option>
+                <option value="children">Children</option>
+                <option value="adults">Adults</option>
+                <option value="experts">Experts</option>
+              </select>
+            </div>
+            <table class="ap-table ap-users-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Last active</th>
+                  <th>POIs</th>
+                  <th>Secrets</th>
+                </tr>
+              </thead>
+              <tbody id="ap-users-body">
+                <!-- Rows injected from parsed data (email, last active, overall POI/secret %). -->
+              </tbody>
+            </table>
+            <div class="ap-empty" id="ap-users-empty">
+              <strong>No users loaded</strong>
+              Registered visitors appear here once you connect the backend.
+            </div>
+          </section>
+
+          <!-- ============ EVENTS ============ -->
+          <section class="ap-view" id="view-events" role="tabpanel">
+			<div id="ap-events-filter"></div>  
+            <div class="ap-eyebrow">POI engagement</div>
+			<div id="ap-poi-engagement"></div>
+
+			<div class="ap-eyebrow">Drop-off funnel</div>
+			<div id="ap-funnel"></div>
+
+			<div class="ap-eyebrow">AI questions</div>
+			<div id="ap-ai-questions"></div>   
+
+            <div class="ap-eyebrow">Recent event log</div>
+            <div class="ap-filters">
+              <select class="ap-select" id="ap-event-type" style="flex:1 1 auto;">
+                <option value="">All event types</option>
+                <option value="narration_start">Narration started</option>
+                <option value="narration_complete">Narration completed</option>
+                <option value="poi_enter">POI entered</option>
+                <option value="language_change">Language changed</option>
+                <option value="session_start">Session started</option>
+              </select>
+            </div>
+            <table class="ap-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Event</th>
+                  <th>POI</th>
+                </tr>
+              </thead>
+              <tbody id="ap-events-body">
+                <!-- Rows injected via MuseumAdmin.setEvents([...]) -->
+              </tbody>
+            </table>
+            <div class="ap-empty" id="ap-events-empty">
+              <strong>No events yet</strong>
+              Events captured during narration will stream in here.
+            </div>
+          </section>
+
+        </div>
+      </aside>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

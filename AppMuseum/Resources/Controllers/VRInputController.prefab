@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2536266713973108330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2536266713973108332}
+  - component: {fileID: 5935740230654916756}
+  m_Layer: 0
+  m_Name: VRInputController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2536266713973108332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536266713973108330}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.61, y: 0.2935808, z: 1.57}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5935740230654916756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536266713973108330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b2427fcea650f641b34dfb5834cbfbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScaleMovementXZ: 1
+  ScaleMovementY: 0
+  VerticalCameraShift: 0
+  FixLinkedAvatarYAxis: 1
+  TriggerDistance: 0.05
+  EnableJoystickMovement: 1
+  speedJoystickMovement: 1
+  EnableJoystickRotation: 0
+  DegreesJoystickRotation: 30
+  EnableJoystickTeleport: 3
+  EnableReorientTeleport: 0
+  ignoreZDepthBuffer: {fileID: 2100000, guid: dd7c2626a12651c42b11f0523b66e222, type: 2}

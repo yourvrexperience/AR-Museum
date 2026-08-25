@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4102771406699587042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8849944577990030418}
+  - component: {fileID: 3845261447712975296}
+  m_Layer: 0
+  m_Name: NarrationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8849944577990030418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4102771406699587042}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.216609, y: -0.41750002, z: 4.686515}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3845261447712975296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4102771406699587042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1226071d8f186746a65ab0bbf58980c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NarrationTexts: {fileID: 4900000, guid: c9cd57e45e6566b45a59cd397d095a1d, type: 3}
+  WordsForUnit: 15
+  TimeDisplayUnit: 5.5
+  AudioSegments:
+  - {fileID: 8300000, guid: f0ff295b1f871e9459399424eff2284d, type: 3}
+  - {fileID: 8300000, guid: 7bb30dd2c89018a4199b28a4821446f2, type: 3}
+  - {fileID: 8300000, guid: 31cfc2beeda9e044db0ed5f3782e0874, type: 3}
+  - {fileID: 8300000, guid: a9dcda2a95105ee4681402146befff66, type: 3}
+  - {fileID: 8300000, guid: 918cdd20b9149f54ca6102fbfcc3c394, type: 3}
+  - {fileID: 8300000, guid: 09c23ef0dd1d29543aefb26d66eee9db, type: 3}
+  - {fileID: 8300000, guid: c7625706f3476f648adc9c2a4f82129c, type: 3}
+  - {fileID: 8300000, guid: 135450ff0e5b27146b1bbb7b89a86d83, type: 3}
+  - {fileID: 8300000, guid: e029f7cbcd95b4447b968263b85c868e, type: 3}
+  - {fileID: 8300000, guid: 142ae6c3fb9d2a4439c56e346c6dfe11, type: 3}
+  - {fileID: 8300000, guid: 330bda280d622f347ab8e11b32a040c0, type: 3}
+  - {fileID: 8300000, guid: 6937aad9f183f4012ac4e959d54e2b54, type: 3}
+  - {fileID: 8300000, guid: 1fbf9059b8b724224ac98e1a47f81723, type: 3}
+  - {fileID: 8300000, guid: 0325af842fe72408f8fb8adc4de31e94, type: 3}
+  - {fileID: 8300000, guid: cf1a28b3a74ee428ca0c6c74ccb76c35, type: 3}
+  - {fileID: 8300000, guid: 1542274c0321a4aa8a0819b77f4e8028, type: 3}
+  - {fileID: 8300000, guid: 1e6a3259103204707a3dfc97f3b912cc, type: 3}
+  - {fileID: 8300000, guid: f4a4184877a154684a17c1a709b1a99a, type: 3}
+  - {fileID: 8300000, guid: 62b65255d63dd46888acb00e61eeb3e1, type: 3}
+  - {fileID: 8300000, guid: b73db8ad0a4df4eaca4f052657f2fd7b, type: 3}
+  - {fileID: 8300000, guid: 9e065da65703c4106a06b5b8393177c8, type: 3}
+  - {fileID: 8300000, guid: fc04f28c5538b4a69ab9da81d7c75ef9, type: 3}
+  - {fileID: 8300000, guid: a6f7f45b5163748a09a0b82c75b72f6f, type: 3}
+  - {fileID: 8300000, guid: 5aba0273ff69e4f7bb1829c630e73e6c, type: 3}
+  - {fileID: 8300000, guid: 70c0ad428498c49ee984799c04b952a0, type: 3}
+  - {fileID: 8300000, guid: 984bc455a2fb94ec9bb35be198c7a89a, type: 3}
+  - {fileID: 8300000, guid: b50b8eb6cbada424aa9d757f4f8ba7eb, type: 3}
+  - {fileID: 8300000, guid: 5331d7323b53a4bacabc262a6cec7b9b, type: 3}
+  - {fileID: 8300000, guid: a754fd6e3d614484eb69e5ed86e095e3, type: 3}
+  - {fileID: 8300000, guid: 01e8998556c1541a99745488091d7312, type: 3}
+  - {fileID: 8300000, guid: b548f7b9781b94fdea0710766dd94b26, type: 3}
+  - {fileID: 8300000, guid: d4389c1e22eb743d2ba852cf57237edc, type: 3}
+  - {fileID: 8300000, guid: f925dd0733708483d81ba0efe0dc1af6, type: 3}
+  - {fileID: 8300000, guid: 9729d7fc61e884d1c9da5fdcca06e07a, type: 3}
+  - {fileID: 8300000, guid: de6eb9ad789b641ceb67cae93b4e1ffa, type: 3}
+  - {fileID: 8300000, guid: 92d43f1d8861043ab84dd7bd3571ac68, type: 3}

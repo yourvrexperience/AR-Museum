@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<texts>
+
+  <!-- APP NAME -->
+  <text id="message.user.registration.title">
+    <en>User Registration Module</en>
+    <es>Modulo de registro de usuarios</es>
+  </text>
+
+  <!-- CONNECTION SCREEN -->
+  <text id="screen.connecting.please.wait">
+    <en>Connecting with server.++Please wait...</en>
+    <es>Conectando con servidor.++Por favor, espere...</es>
+  </text>
+
+  <text id="screen.connecting.failed">
+    <en>There has been a failure in the connection.++Please, try again later.</en>
+    <es>Ha habido un fallo en la conexión++Por favor, intentelo de nuevo mas tarde.</es>
+  </text>
+
+  <text id="screen.connecting.server.not.enabled">
+    <en>The server is not enabled right now++Please, try again later.</en>
+    <es>El servidor no esta habilitado actualmente++Por favor, intentelo de nuevo mas tarde.</es>
+  </text>
+
+  <!-- MAIN SCREEN USER -->
+  <text id="screen.main.user.register">
+    <en>Register New User</en>
+    <es>Registrar Nuevo Usuario</es>
+  </text>
+
+  <text id="screen.main.user.consult">
+    <en>Load User</en>
+    <es>Cargar Usuario</es>
+  </text>
+
+  <text id="screen.main.no.current.user">
+    <en>No User Loaded</en>
+    <es>No hay usuario cargado</es>
+  </text>
+
+  <text id="screen.main.current.user">
+    <en>Current User</en>
+    <es>Usuario Actual</es>
+  </text>
+
+  <text id="screen.main.user.management">
+    <en>Manage Users</en>
+    <es>Gestionar Usuarios</es>
+  </text>
+
+  <text id="screen.main.user.no.access">
+    <en>You don't have access privileges to admin the users</en>
+    <es>No tiene privilegios de acceso para administrar los usuarios</es>
+  </text>
+
+  <text id="screen.main.user.must.login">
+    <en>You must log in in order to access this option.</en>
+    <es>Debe estar logeado para acceder a esta opción.</es>
+  </text>
+
+  <!-- COMMON TEXTS -->
+  <text id="message.cancel">
+    <en>Cancel</en>
+    <es>Cancelar</es>
+  </text>
+  
+  <text id="message.error">
+    <en>Error</en>
+    <es>Error</es>
+  </text>
+
+  <text id="message.success">
+    <en>Success</en>
+    <es>Exito</es>
+  </text>
+
+  <text id="message.warning">
+    <en>Warning</en>
+    <es>Alerta</es>
+  </text>
+
+  <text id="message.info">
+    <en>Information</en>
+    <es>Informacion</es>
+  </text>
+
+  <text id="message.loading">
+    <en>Loading...</en>
+    <es>Cargando...</es>
+  </text>
+
+  <text id="message.please.wait">
+    <en>Working. Please, wait...</en>
+    <es>Trabajando. Por favor, espere...</es>
+  </text>
+
+  <text id="message.no.records">
+    <en>No records</en>
+    <es>Sin registros</es>
+  </text>
+  
+  <text id="message.operation.canceled">
+    <en>Operation canceled</en>
+    <es>Operacion cancelada</es>
+  </text>
+
+  <text id="message.do.you.want.exit">
+    <en>Do you want to exit the app?</en>
+    <es>Desea salir de la aplicacion?</es>
+  </text>
+
+
+  <!-- SCREEN LOGIN -->
+  <text id="screen.login.title">
+    <en>Login</en>
+    <es>Entrar</es>
+  </text>
+
+  <text id="screen.login.email">
+    <en>Write your email</en>
+    <es>Escribe tu correo</es>
+  </text>
+
+  <text id="screen.login.register.mail">
+    <en>Not a user? Register here</en>
+    <es>No eres usuario? Registrate aquí</es>
+  </text>
+
+  <text id="screen.login.password">
+    <en>Write your password</en>
+    <es>Escribe tu contraseña</es>
+  </text>
+
+  <text id="screen.login.register">
+    <en>Not a user?+Press here to register</en>
+    <es>No eres ususario?+Apreta aquí para registrarte</es>
+  </text>
+
+  <text id="screen.login.forget.mail">
+    <en>Forget your password?+Press here to reset it</en>
+    <es>Olvidaste tu contraseña?+Apreta aquí para resetarlo.</es>
+  </text>
+
+  <text id="screen.wait.logging.title">
+    <en>Checking...</en>
+    <es>Comprobando...</es>
+  </text>
+
+  <text id="screen.wait.logging.description">
+    <en>Checking your user. Please wait...</en>
+    <es>Comprobando tu usuario. Por favor espere...</es>
+  </text>
+
+  <text id="screen.message.logging.error">
+    <en>You should fill the email and password</en>
+    <es>Debes escribir tu correo y contraseña</es>
+  </text>
+
+  <text id="screen.message.logging.wrong.user">
+    <en>Email and password not found</en>
+    <es>Correo y contraseña no encontrados</es>
+  </text>
+
+  <text id="screen.login.successfull.by.email">
+    <en>Login Successfull!!</en>
+    <es>Exito en entrada!!</es>
+  </text>
+
+  <text id="screen.login.email.reseted.check.email">
+    <en>Check your email to complete the reset password process.</en>
+    <es>Compruebe su correo para completar el cambio de su contraseña.</es>
+  </text>
+
+  <text id="screen.login.email.error.reset">
+    <en>The email has not been found in our database.++Please, check your email address.</en>
+    <es>Su correo no ha sido encontrado en la base de datos++Por favor, compruebelo.</es>
+  </text>
+
+  <!-- SCREEN REGISTER -->
+  <text id="screen.register.email">
+    <en>Write your email</en>
+    <es>Escribe tu correo</es>
+  </text>
+
+  <text id="screen.register.password">
+    <en>Write your password</en>
+    <es>Escribe tu contraseña</es>
+  </text>
+
+  <text id="screen.register.confirm">
+    <en>Confirm your password</en>
+    <es>Confirma tu contraseña</es>
+  </text>
+
+  <text id="screen.register.word">
+    <en>Register</en>
+    <es>Registrar</es>
+  </text>
+
+  <text id="screen.register.mistmatch.password">
+    <en>Password mistmatch confirmation</en>
+    <es>Contraseña diferente de la confirmation</es>
+  </text>
+
+  <text id="screen.wait.register.title">
+    <en>Registering...</en>
+    <es>Registrando...</es>
+  </text>
+
+  <text id="screen.wait.register.description">
+    <en>Registering your user. Please wait...</en>
+    <es>Registrando tu usuario. Por favor espere...</es>
+  </text>
+
+  <text id="screen.register.wrong.register">
+    <en>Register couldn't be completed</en>
+    <es>El registro no se pudo completar</es>
+  </text>
+
+  <text id="screen.register.success.register">
+    <en>Register Successfull</en>
+    <es>Registro Existoso</es>
+  </text>
+
+  <!-- SCREEN VALIDATION CONFIRMATION -->
+  <text id="screen.validation.confirmation.title">
+    <en>Validation</en>
+    <es>Valoración</es>
+  </text>
+
+  <text id="screen.validation.confirmation.description">
+    <en>I've validated the email. Please take me to the app.</en>
+    <es>He confirmado el correo. Por favor llevamé a la aplicación.</es>
+  </text>
+
+  <!-- SCREEN LIST USER MANAGEMENT -->
+  <text id="screen.list.user.title">
+    <en>User Management</en>
+    <es>Gestion de Usuarios</es>
+  </text>
+  
+  <text id="screen.list.user.error.retrieving">
+    <en>There has been an error when retriving the list of users</en>
+    <es>Ha habido un error al obtener la lista de los usuarios</es>
+  </text>
+
+  <text id="screen.list.user.error.to.delete">
+    <en>There has been an error to delete the record</en>
+    <es>Ha habido un error al eliminar el registro del usuario</es>
+  </text>
+
+  <text id="screen.list.user.delete.success">
+    <en>The user's record has been deleted successfully.</en>
+    <es>El registro del usuario ha sido eliminado existosamente.</es>
+  </text>
+
+  <!-- SCREEN REGISTER OPTIONS -->
+  <text id="screen.register.options.title">
+    <en>Register Options</en>
+    <es>Opciones de Registro</es>
+  </text>
+
+  <text id="screen.register.options.with.email">
+    <en>Register With Email</en>
+    <es>Registrar con correo</es>
+  </text>
+
+  <text id="screen.register.options.with.facebook">
+    <en>Register With Facebook</en>
+    <es>Registrar con Facebook</es>
+  </text>
+
+  <text id="screen.resgister.login.facebook.error">
+    <en>Error to login with Facebook</en>
+    <es>Error al registrarse con Facebook</es>
+  </text>
+
+  <text id="screen.resgister.login.facebook.success">
+    <en>Login with Facebook Success</en>
+    <es>Exito al registrarse con Facebook</es>
+  </text>
+
+  <text id="screen.register.options.with.google">
+    <en>Register With Google</en>
+    <es>Registrar con Google</es>
+  </text>
+
+  <text id="screen.resgister.login.google.error">
+    <en>Error to login with Google</en>
+    <es>Error al registrarse con Google</es>
+  </text>
+
+  <text id="screen.resgister.login.google.success">
+    <en>Login with Google Success</en>
+    <es>Exito al registrarse con Google</es>
+  </text>
+
+  <!-- SCREEN PROFILE -->
+  <text id="screen.profile.title.display">
+    <en>User Profile</en>
+    <es>Perfil de usuario</es>
+  </text>
+
+  <text id="screen.profile.description.title.display">
+    <en>Description about the user</en>
+    <es>Descripción sobre el usuario</es>
+  </text>
+
+  <text id="screen.profile.title.edit">
+    <en>Edit User Profile</en>
+    <es>Editar Perfil de Usuario</es>
+  </text>
+
+  <text id="screen.profile.description.title.edit">
+    <en>Write some words to describe yourself</en>
+    <es>Escribe unas palabras sobre ti mismo</es>
+  </text>
+
+  <text id="screen.register.check.email">
+    <en>Check your email to complete the registration</en>
+    <es>Comprueba tu correo para completar el registro</es>
+  </text>
+
+	<text id="screen.main.user.input.form">
+		<en>Input Form</en>
+		<es>Formulario</es>
+	</text>
+
+	<text id="screen.register.options.next.question">
+		<en>Next Question</en>
+		<es>Siguiente Pregunta</es>
+	</text>
+
+	<text id="screen.register.options.complete.form">
+		<en>Send Responses</en>
+		<es>Enviar Respuestas</es>
+	</text>
+
+	<text id="question.form.1">
+		<en>First question of the formularie?</en>
+		<es>Primera pregunta del formulario?</es>
+	</text>
+
+	<text id="question.form.2">
+		<en>Second question of the formularie?</en>
+		<es>Segunda pregunta del formulario?</es>
+	</text>
+
+	<text id="question.form.3">
+		<en>Third question of the formularie?</en>
+		<es>Tercera pregunta del formulario?</es>
+	</text>
+
+	<text id="question.form.4">
+		<en>Fourth question of the formularie?</en>
+		<es>Quarta pregunta del formulario?</es>
+	</text>
+
+	<text id="screen.register.options.input.form.completed">
+		<en>Formulary registered!</en>
+		<es>Formulario registrado!</es>
+	</text>
+
+</texts>
+
+

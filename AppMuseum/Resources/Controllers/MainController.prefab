@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7132078240534092855
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7132078240534092857}
+  - component: {fileID: 1427094817508742557}
+  m_Layer: 0
+  m_Name: MainController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7132078240534092857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7132078240534092855}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 30}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1427094817508742557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7132078240534092855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b110017104753804f9578f916da2b0dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arMaxSTCamera: {fileID: 0}
+  arVuforiaCamera: {fileID: 0}
+  arNianticCamera: {fileID: 0}
+  narrationData: {fileID: 11400000, guid: e2bd9a18b222ef2458ad54f61c0c3a91, type: 2}
+  aiData: {fileID: 11400000, guid: 404a540f2eb6fae4d9923b8f813c1647, type: 2}
+  template6DOFAIData: {fileID: 11400000, guid: dc873209c1c46b24aac04d51757da40b, type: 2}
+  inputPanelTextAction: {fileID: 249407189702196918, guid: f2ad5a1cb4a562e4481cdf96e33d931a,
+    type: 3}
+  desktopPlayer: {fileID: 3539457018542658622, guid: 30340e24240497b489025a68777eca18,
+    type: 3}
+  VRPlayer: {fileID: 6026387648682935036, guid: 859d62866622d3746bd345a4f3fdcb33,
+    type: 3}
+  PlayerViewHandLeftPrefab: {fileID: 5313814839400837218, guid: 2c2463676b757e449b34939267adc1d7,
+    type: 3}
+  PlayerViewHandRightPrefab: {fileID: 2805867803795491185, guid: 941c5cd043ba4a24e8750067655e3385,
+    type: 3}
+  MenuLevel: {fileID: 8437907554305073158, guid: 14d17380ed9a84540b680bddea983474,
+    type: 3}
+  GameLevel:
+  - GameLevel_00
+  - GameLevel_01
+  - GameLevel_02
+  - GameLevel_00
+  - GameLevel_01
+  - GameLevel_02
+  - GameLevel_00
+  - GameLevel_01
+  - GameLevel_02
+  LevelPrefabs: []
+  ARMaps:
+  - {fileID: 102900000, guid: 33778a2849a6d4e6d9b6f6ea9624509d, type: 3}
+  - {fileID: 102900000, guid: 0fa1ee682754f4d2a9fd41700f0cf7b5, type: 3}
+  - {fileID: 102900000, guid: 05c2e195680de4b1fbf477ee31f2472a, type: 3}
+  - {fileID: 102900000, guid: 33778a2849a6d4e6d9b6f6ea9624509d, type: 3}
+  - {fileID: 102900000, guid: 0fa1ee682754f4d2a9fd41700f0cf7b5, type: 3}
+  - {fileID: 102900000, guid: 05c2e195680de4b1fbf477ee31f2472a, type: 3}
+  - {fileID: 102900000, guid: 33778a2849a6d4e6d9b6f6ea9624509d, type: 3}
+  - {fileID: 102900000, guid: 0fa1ee682754f4d2a9fd41700f0cf7b5, type: 3}
+  - {fileID: 102900000, guid: 05c2e195680de4b1fbf477ee31f2472a, type: 3}
+  CameraFade: {fileID: 1309481844691025068, guid: b7bb517add0b0bf4fb87a4e8ff604d25,
+    type: 3}
+  BulletsController: {fileID: 849070180826173299, guid: 39a0ac064db59364cbf5f4fc224098e1,
+    type: 3}
+  FXsController: {fileID: 8403932002805488915, guid: 69fd6f11b0fb2d248b39ff990ea9b678,
+    type: 3}
+  SplineController: {fileID: 0}
+  SkyBoxMenu: {fileID: 2100000, guid: 67a9a41a1795d5f43b0596c1e2094a0b, type: 2}
+  SkyBoxGame: {fileID: 2100000, guid: 71b634fec31b38b46a30f6185273a772, type: 2}
+  NarrationPrefabController: {fileID: 4927953380847823807, guid: 01386bf70dc2a9c4cb5b1796d03ecfbd,
+    type: 3}
+  TourGuidePrefab: {fileID: 8977189916190620166, guid: 0dc254b77dbb31a4ea2e555fd8a4e6b8,
+    type: 3}
+  GoalTarget: {fileID: 8503120628737546035, guid: df08f6ba295260440a9524cc601c1496,
+    type: 3}
+  POIVideo: {fileID: 2443486060869107738, guid: 37548d67631154204bcbbcda233d427f,
+    type: 3}
+  POIPhotos: {fileID: 8870653239413512345, guid: 23f0217a5961997418d690e5c8cf4b53,
+    type: 3}
+  POIModel3D: {fileID: 6386910077111635833, guid: 3dd0f150e199b7340845c1e15a231bdc,
+    type: 3}
+  EditionHighlightedPOI: {fileID: 5615541208400750894, guid: 5497dd702aa688c46ae9a17f596af5e9,
+    type: 3}
+  EditionSelectedPOI: {fileID: 8606221406498169460, guid: 1119db069c0889e43b82a83dfe0aded7,
+    type: 3}
+  POIBase: {fileID: 901288731991317655, guid: 036fda300c0de8d448b15578756d187f, type: 3}
+  EasterEggBase: {fileID: 4362684449310358330, guid: 6233e695f7ccc984da8a74496ccd5053,
+    type: 3}
+  occlusionMaterial: {fileID: 2100000, guid: 82c2b62b206c509449a3b774f7fe559d, type: 2}
+  occlusionVuforia: {fileID: 2100000, guid: b34c40b69213a4697aaae575a7fd697f, type: 2}

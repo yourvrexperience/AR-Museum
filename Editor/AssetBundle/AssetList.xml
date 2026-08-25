@@ -1,0 +1,175 @@
+<assets>
+
+	<asset type="image" name="Deer" value="deer"/>
+
+	<asset type="image" name="Desert" value="desert"/>
+	
+	<asset type="image" name="Humming Bird" value="hummingbird"/>
+	
+	<asset type="image" name="Sunset" value="sunset"/>
+	
+	<asset type="image" name="Yosemite" value="yosemite"/>
+	
+	<asset type="image" name="Pangea" value="pangea"/>
+	
+	<asset type="image" name="Triassic Fauna" value="TriassicFauna"/>
+	
+	<asset type="image" name="Triassic Flora" value="TriassicFlora"/>
+	
+	<asset type="image" name="Cosesaurus" value="Cosesaurus"/>		
+	
+	<asset type="image" name="Rock Fossile" value="RockFossile"/>		
+	
+	<asset type="image" name="Timeline1" value="Timeline1"/>		
+	
+	<asset type="image" name="Timeline2" value="Timeline2"/>
+	
+	<asset type="image" name="Anfora" value="Anfora"/>		
+	
+	<asset type="image" name="MolinoGris" value="MolinoGris"/>	
+	
+	<asset type="image" name="MolinoOlson" value="MolinoOlson"/>	
+	
+	<asset type="image" name="RuinasEmpuries" value="RuinasEmpuries"/>	
+	
+	<asset type="image" name="RuinasEmpuries2" value="RuinasEmpuries2"/>	
+	
+	<asset type="image" name="ToolsBronze" value="ToolsBronze"/>							
+
+	<asset type="image" name="LifeBronzeAge" value="LifeBronzeAge"/>
+	
+	<asset type="image" name="AbadiaMonestir" value="abadiamonestir"/>							
+
+	<asset type="image" name="CastleTower" value="castletower"/>
+	
+	<asset type="image" name="CatalanChurch" value="catalanchurch"/>
+	
+	<asset type="image" name="KinghtShield" value="kinghtshield"/>
+			
+	<asset type="image" name="MolinoAgua" value="molinoagua"/>
+				
+	<asset type="image" name="NewChurch" value="newchurch"/>
+					
+	<asset type="image" name="SantVicentCardona2" value="santvicentcardona2"/>
+						
+	<asset type="image" name="SantVicenteCardona" value="SantVicenteCardona"/>
+	
+	<asset type="image" name="FabricaTextil" value="fabricatextilcatalana"/>
+
+	<asset type="image" name="Fragata-Diana" value="fragata-diana"/>
+
+	<asset type="image" name="PrensaVino" value="prensavino"/>
+
+	<asset type="image" name="Puerto_BCN" value="Puerto_BCN"/>
+
+	<asset type="image" name="Sardana" value="sardana_0"/>
+		
+	<asset type="sound" name="Surpise 1" value="FX_SURPRISE_1"/>
+	
+	<asset type="sound" name="Surpise 2" value="FX_SURPRISE_2"/>
+	
+	<asset type="sound" name="Congratulations" value="FX_CONGRATULATIONS"/>
+	
+	<asset type="sound" name="Water Splash" value="FX_WATER_SPLASH"/>
+	
+	<asset type="sound" name="Volcano Eruption" value="VolcanoEruption"/>
+	
+	<asset type="sound" name="Jungle Life" value="JungleLife"/>
+	
+	<asset type="sound" name="Ocean Waves" value="OceanWaves"/>	
+
+	<asset type="video" name="Big Bunny" value="BigBuckBunny640"/>
+	
+	<asset type="video" name="Test" value="TestPOIVideo"/>
+	
+	<asset type="video" name="Monks" value="Monks"/>
+	
+	<asset type="video" name="Rings" value="Rings"/>
+	
+	<asset type="video" name="Sailors" value="Sailors"/>
+	
+	<asset type="model3d" name="Eiffel Tower" value="EiffelTower"/>
+	
+	<asset type="model3d" name="Pyramid" value="Pyramid"/>
+	
+	<asset type="model3d" name="Statue of Liberty" value="StatueOfLiberty"/>
+	
+	<asset type="model3d" name="Sydney Opera House" value="SydneyOperaHouse"/>
+	
+	<asset type="model3d" name="TajMahal" value="TajMahal"/>
+	
+	<asset type="model3d" name="Tiananmen Square" value="TiananmenSquare"/>
+	
+	<asset type="model3d" name="Fish" value="Fish"/>
+	
+	<asset type="model3d" name="Volcanic Animation" value="VolcanicAnimation"/>
+	
+	<asset type="model3d" name="Jellyfish" value="Jellyfish"/>
+	
+	<asset type="model3d" name="Rhinoceros" value="Rhinoceros"/>	
+	
+	<asset type="model3d" name="Pangea Earth" value="PangeaEarth"/>	
+	
+	<asset type="model3d" name="Alchemist" value="Alchemist" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Armorer" value="Armorer" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Artist" value="Artist" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Blacksmith_01" value="Blacksmith_01" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Blacksmith_02" value="Blacksmith_02" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Boy_Cook" value="Boy_Cook" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Butcher" value="Butcher" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Carpenter" value="Carpenter" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Doctor" value="Doctor" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Executioner" value="Executioner" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_01" value="Female_01" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_02" value="Female_02" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_03" value="Female_03" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_Cook" value="Female_Cook" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_InnKeeper" value="Female_InnKeeper" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Female_Old" value="Female_Old" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Hunter" value="Hunter" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Jester" value="Jester" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Male_Cook" value="Male_Cook" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Male_InnKeeper" value="Male_InnKeeper" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+		
+	<asset type="model3d" name="Male_Old" value="Male_Old" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+	
+	<asset type="model3d" name="Merchant_01" value="Merchant_01" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Merchant_02" value="Merchant_02" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Minstre" value="Minstre" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Priest_01" value="Priest_01" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+
+	<asset type="model3d" name="Priest_02" value="Priest_02" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+	
+	<asset type="model3d" name="Knight" value="Knight" animations="Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing"/>	
+	
+	<asset type="model3d" name="Horse" value="Horse"/>	
+		
+	<asset type="interactable" name="Discover 01" value="POIPhotoDiscover01"/>
+	
+	<asset type="interactable" name="Discover 02" value="POIPhotoDiscover02"/>
+	
+	<asset type="waypoints" name="Waypoint" value="Waypoint"/>
+	
+</assets>

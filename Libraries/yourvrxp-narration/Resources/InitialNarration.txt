@@ -1,0 +1,20 @@
+<narrations>
+	<narration id = "0" startEvent = "" endEvent = "" title="">
+		<title id = "0" audioclip = "" startEvent = "" endEvent = "">
+			<languages>
+				<ca>Title</ca>
+				<en>Titulo</en>
+				<es>Titol</es>
+				<fr>Titre</fr>
+			</languages>
+		</title>
+		<token id = "0" audioclip = "" startEvent = "" endEvent = "">
+			<languages>
+				<en>First description text</en>
+				<es>Primer texto descriptivo</es>
+				<ca>Primer texte descriptiu</ca>
+				<fr>Texte de description du premier</fr>
+			</languages>
+		</token>
+	</narration>
+</narrations>	

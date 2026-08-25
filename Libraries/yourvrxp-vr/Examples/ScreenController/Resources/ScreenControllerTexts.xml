@@ -1,0 +1,63 @@
+<texts>
+
+	<text id="text.exit">
+		<en>Exit</en>
+		<es>Salir</es>
+	</text>
+
+	<text id="text.back">
+		<en>Back</en>
+		<es>Atrás</es>
+	</text>
+
+	<text id="text.ok">
+		<en>Ok</en>
+		<es>Ok</es>
+	</text>
+
+	<text id="text.cancel">
+		<en>Cancel</en>
+		<es>Cancel</es>
+	</text>
+
+	<text id="screen.main.menu.title">
+		<en>Main Menu Title</en>
+		<es>Menu Principal</es>
+	</text>
+
+	<text id="screen.main.menu.description">
+		<en>This is a basic example of the use of the ScreenController to create a screen system that can work in VR/AR, Desktop and mobile.</en>
+		<es>Esto es un ejemplo básico del uso del ScreenController para crear una aplicación que funcione bien en VR/AR, Desktop y móvil.</es>
+	</text>
+
+	<text id="screen.main.menu.profile">
+		<en>Profile</en>
+		<es>Perfil</es>
+	</text>
+
+	<text id="screen.main.menu.settings">
+		<en>Settings</en>
+		<es>Ajustes</es>
+	</text>
+
+	<text id="text.warning">
+		<en>Warning</en>
+		<es>Atención</es>
+	</text>
+
+	<text id="screen.main.do.you.want.to.exit">
+		<en>Do you want to exit the app?</en>
+		<es>Deseas salir de la aplicación?</es>
+	</text>
+
+	<text id="text.info">
+		<en>Information</en>
+		<es>Información</es>
+	</text>
+
+	<text id="screen.main.now.exiting">
+		<en>Now exiting app...</en>
+		<es>Saliendo de la aplicación...</es>
+	</text>
+
+</texts>

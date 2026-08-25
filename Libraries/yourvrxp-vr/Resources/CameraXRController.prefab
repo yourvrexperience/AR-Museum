@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9108928975202133048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6527370259996912294}
+  - component: {fileID: 5758529597454782226}
+  m_Layer: 0
+  m_Name: CameraXRController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6527370259996912294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9108928975202133048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 352.99997, y: 385.925, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5758529597454782226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9108928975202133048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad82865a75640fb41bf0f8dfe6348de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraDesktop: {fileID: 4436725458187951097, guid: 270cef65ade076c458194466255d9039, type: 3}
+  EventSystemDesktop: {fileID: 3556286894375166729, guid: 01bb4f93d56a79347ae7391d9361ca56, type: 3}
+  CameraOculus: {fileID: 5366145357289302754, guid: a903dfd28ac1c534f8222334e7411f4d, type: 3}
+  GazePointerOculus: {fileID: 2537908219898283205, guid: 1235b7aa28a8d0846ae8d49ed19e392e, type: 3}
+  HandManagerOculus: {fileID: 715496733819477020, guid: db2d6c4c0a5757b468afb12c6ff25a12, type: 3}
+  EventSystemOculus: {fileID: 6301849579435477220, guid: 134853a9995a16a43ab9d3ef6701fc6e, type: 3}
+  CameraOpenXR: {fileID: 3394743386847718706, guid: 35fb0cd4b85d73e40b42b33c9afa9173, type: 3}
+  EventSystemOpenXR: {fileID: 5020363476972235742, guid: 1d3d8f7081a81304a8ee639e50c6470f, type: 3}
+  CameraUltimateXR: {fileID: 4356297171914934379, guid: 46da02a430e3c634294efc421e7dbac9, type: 3}
+  EventSystemUltimateXR: {fileID: 2257695969563378697, guid: 89588bbb8f7e79e4f855e932def82469, type: 3}
+  DesktopInputControllerPrefab: {fileID: 2251129675096411929, guid: 12a47d11d36ecf44c970f29d3fe83861, type: 3}
+  VRInputControllerPrefab: {fileID: 3745954290812699367, guid: d8dcf7e7c916094478b410b04e076343, type: 3}
+  Offset: {x: 0, y: 3, z: 5}
+  Speed: 20
+  Sensitivity: 7

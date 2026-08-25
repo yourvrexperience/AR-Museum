@@ -1,0 +1,158 @@
+<texts>
+
+	<text id="text.exit">
+		<en>Exit</en>
+		<es>Salir</es>
+	</text>
+
+	<text id="text.back">
+		<en>Back</en>
+		<es>Atrás</es>
+	</text>
+
+	<text id="text.ok">
+		<en>Ok</en>
+		<es>Ok</es>
+	</text>
+
+	<text id="text.cancel">
+		<en>Cancel</en>
+		<es>Cancel</es>
+	</text>
+
+	<text id="text.loading">
+		<en>Loading</en>
+		<es>Loading</es>
+	</text>
+
+	<text id="screen.main.menu.title">
+		<en>Main Menu Title</en>
+		<es>Menu Principal</es>
+	</text>
+
+	<text id="screen.main.menu.description">
+		<en>This is a basic example of the use of the ScreenController to create a normal application for desktop or mobile.</en>
+		<es>Esto es un ejemplo básico del uso del ScreenController para crear una aplicación normal para desktop o móvil.</es>
+	</text>
+
+	<text id="screen.main.menu.profile">
+		<en>Profile</en>
+		<es>Perfil</es>
+	</text>
+
+	<text id="screen.main.menu.settings">
+		<en>Settings</en>
+		<es>Ajustes</es>
+	</text>
+
+	<text id="text.warning">
+		<en>Warning</en>
+		<es>Atención</es>
+	</text>
+
+	<text id="screen.main.do.you.want.to.exit">
+		<en>Do you want to exit the app?</en>
+		<es>Deseas salir de la aplicación?</es>
+	</text>
+
+	<text id="text.info">
+		<en>Information</en>
+		<es>Información</es>
+	</text>
+
+	<text id="screen.main.now.exiting">
+		<en>Now exiting app...</en>
+		<es>Saliendo de la aplicación...</es>
+	</text>
+
+	<text id="screen.loading.title">
+		<en>Loading</en>
+		<es>Cargando</es>
+	</text>
+
+	<text id="screen.loading.progress">
+		<en>Progress</en>
+		<es>Progreso</es>
+	</text>
+
+	<text id="screen.loading.completed">
+		<en>Loading Completed</en>
+		<es>Carga Completada</es>
+	</text>
+
+	<text id="message.downloading.assets.bundle">
+		<en>Downloading assets</en>
+		<es>Downloading assets</es>
+	</text>
+
+	<text id="screen.main.menu.load.session">
+		<en>Load Session</en>
+		<es>Cargar Session</es>
+	</text>
+
+	<text id="screen.pause.title">
+		<en>Pause</en>
+		<es>Pausa</es>
+	</text>
+
+	<text id="screen.pause.resume">
+		<en>Resume</en>
+		<es>Resumir</es>
+	</text>
+
+	<text id="screen.pause.exit">
+		<en>Exit To Menu</en>
+		<es>Salir al Menu</es>
+	</text>
+
+	<text id="in.level.welcome.instructions">
+		<en>Press "P" to pause #br# #br# Select "BUILD" in order to place a vehicle in the scene</en>
+		<es>Press "P" to pause #br# #br# Select "BUILD" in order to place a vehicle in the scene</es>
+	</text>
+
+	<text id="screen.builder.title">
+		<en>Select item to build</en>
+		<es>Select item to build</es>
+	</text>
+
+	<text id="screen.pause.build.title">
+		<en>Build</en>
+		<es>Build</es>
+	</text>
+
+	<text id="screen.builder.build.selected">
+		<en>Build</en>
+		<es>Build</es>
+	</text>
+
+	<text id="screen.builder.object.Car_1">
+		<en>Utility car</en>
+		<es>Coche Utilitario</es>
+	</text>
+
+	<text id="screen.builder.object.Car_2">
+		<en>Sport Car</en>
+		<es>Coche Deportivo</es>
+	</text>
+
+	<text id="screen.builder.object.Bike_1">
+		<en>Motorbike 1</en>
+		<es>Motocicleta 1</es>
+	</text>
+
+	<text id="screen.builder.object.Bike_2">
+		<en>Motorbike 2</en>
+		<es>Motocicleta 2</es>
+	</text>
+
+	<text id="screen.builder.object.Bike_3">
+		<en>Motorbike 3</en>
+		<es>Motocicleta 3</es>
+	</text>
+
+	<text id="screen.pause.next.level">
+		<en>Next Level</en>
+		<es>Next Level</es>
+	</text>
+
+</texts>

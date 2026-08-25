@@ -79,6 +79,8 @@ You are responsible for obtaining your own keys for every third-party service yo
 
 ### 1. Create the Unity project
 
+[Video Tutorial for sections 1 to 4](https://youtu.be/eIoQCUUrVTU)
+
 1. Create a new project with Unity `6000.3.18f1`.
 2. Copy the contents of this repository into the project's `Assets` folder.
 3. Switch the build target to **Android**.
@@ -150,6 +152,8 @@ You should now be able to run the experience in production mode.
 
 ### 5. Set up the AI backend
 
+[Video Tutorial for AI set up](https://youtu.be/eIoQCUUrVTU)
+
 The AI layer is fully removable — some clients don't want AI in any capacity, and the `ENABLE_AI_OPERATIONS` define strips every AI operation from the build.
 
 1. Add the `ENABLE_AI_OPERATIONS` define.
@@ -205,6 +209,8 @@ Speech recognition itself must be verified in a mobile build.
 
 ### 6. Set up networking
 
+[Video Tutorial for Networking set up](https://youtu.be/eIoQCUUrVTU)
+
 The multiplayer session exists so a human guide can drive the experience, extending their explanations with virtual objects. The first client to run becomes the server on the local Wi-Fi network and controls the clients that connect afterwards.
 
 Two backends are supported — pick one.
@@ -230,6 +236,8 @@ Two backends are supported — pick one.
 
 ### 7. Set up VR
 
+[Video Tutorial for VR set up](https://youtu.be/eIoQCUUrVTU)
+
 1. Import the [Meta XR SDK](https://assetstore.unity.com/packages/sdk/meta-xr-sdk-9022845).
 2. From **Package Manager > Unity Registry**, install **XR Interaction Toolkit**.
 3. In **XR Plug-in Management > PC**, enable **Initialize XR on Startup** and select **OpenXR > Meta XR** feature group.
@@ -242,9 +250,9 @@ Three providers are supported. The workflow is the same for all of them — only
 
 | Provider | SDK | Scanner app | Define |
 | --- | --- | --- | --- |
-| MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` |
-| Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA` |
-| Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC` |
+| MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` | [Video How-To](https://youtu.be/eIoQCUUrVTU) |
+| Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA`  | [Video How-To](https://youtu.be/eIoQCUUrVTU) |
+| Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC`  | [Video How-To](https://youtu.be/eIoQCUUrVTU) |
 
 Then, for any provider:
 
@@ -333,6 +341,8 @@ It will report missing libraries one at a time. Install each one until the scrip
 ---
 
 ## Project structure
+
+[Video Tutorial for Project structure](https://youtu.be/eIoQCUUrVTU)
 
 The code lives under `Assets/Application`. Each folder has its own README:
 

@@ -114,7 +114,7 @@ At this point the project should compile without errors.
 3. Open **phpMyAdmin** and create a database named `template6dof`.
 4. Import the sample database, which already comes filled with sample data:
 
-	- Download [MySQL history sample database](https://www.ar-museum.com/template6dof.sql)	
+	- [Download MySQL history sample database](https://www.ar-museum.com/template6dof.zip)	
 
 ### 3. Connect Unity to the backend
 
@@ -167,7 +167,20 @@ The AI layer is fully removable — some clients don't want AI in any capacity, 
    http://<host>:5001/ai/
    ```
 
-6. Add the `ENABLE_SPEECH` and `ENABLE_GOOGLE_SPEECH` defines to enable text-to-speech.
+6. Login with the test demo credentials:
+
+   ```
+    • user: esteban@yourvrexperience.com 
+    • password: 12345
+   ```
+
+7. In the case it didn’t work, check these prefabs **CommsUsersConstants,CommsAnalysisConstants**  in the scene and update their URL field to:
+
+	```	
+	http://localhost:8080/template6dof/
+	```
+	
+8. Add the `ENABLE_SPEECH` and `ENABLE_GOOGLE_SPEECH` defines to enable text-to-speech.
 
 #### Choosing providers
 
@@ -231,7 +244,7 @@ Three providers are supported. The workflow is the same for all of them — only
 | --- | --- | --- | --- |
 | MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` |
 | Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA` |
-| Niantic Spatial | `TODO: add SDK download link` | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC` |
+| Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC` |
 
 Then, for any provider:
 

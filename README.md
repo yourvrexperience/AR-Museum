@@ -342,7 +342,7 @@ It will report missing libraries one at a time. Install each one until the scrip
 
 ## Project structure
 
-[Video Tutorial for Project structure](https://youtu.be/eIoQCUUrVTU)
+🎬 [Video Tutorial for Project structure](https://youtu.be/FwBn5uD0lKI)
 
 The code lives under `Assets/Application`. Each folder has its own README:
 

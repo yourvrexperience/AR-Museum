@@ -1,5 +1,7 @@
 # AppMuseum
 
+🎬 [Video Tutorial for Project structure](https://youtu.be/FwBn5uD0lKI)
+
 The main application. It contains the project's specific scripts and assets, and its architecture is based on the **MVC (Model–View–Controller)** design pattern.
 
 ## Folder structure

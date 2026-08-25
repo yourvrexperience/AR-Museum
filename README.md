@@ -1,5 +1,8 @@
 # AR Museum
 
+🎬 [Augmented Reality Museum — Add a new dimension to every exhibition: Presentation](https://youtu.be/89qJGx5CRBA)
+🎬 [Augmented Reality Museum — Add a new dimension to every exhibition: Edition Tools](https://youtu.be/QavR47GALOA)
+
 An augmented reality guide for museums and cultural institutions, built in Unity. Visitors follow a virtual tour guide through a scanned museum area, listen to narration in their own language, and ask questions out loud that are answered by an LLM. Museum staff can edit the narration and regenerate the audio themselves, without technical support.
 
 This README is the setup guide: it takes you from an empty Unity project to a running experience, then to each optional subsystem (AI, networking, VR, AR space tracking).
@@ -31,6 +34,8 @@ This README is the setup guide: it takes you from an empty Unity project to a ru
 ---
 
 ## Who this is for
+
+🎬 [Walkthrough Introduction](https://youtu.be/loLGkMXzmi4)
 
 This project is aimed at professionals. You need to be proficient in general programming and, above all, in Unity. The other languages involved (PHP, Python) are far less critical — with a solid programming background you should pick them up easily. Use an AI assistant to clear up questions, especially around the backend endpoints, where configuration and testing can be hard to debug.
 

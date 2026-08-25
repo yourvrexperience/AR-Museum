@@ -338,10 +338,10 @@ The code lives under `Assets/Application`. Each folder has its own README:
 
 | Folder | Contents |
 | --- | --- |
-| [`AppMuseum`](Application/AppMuseum) | Scripts specific to this project, organised as MVC. |
-| [`AppResources`](Application/AppResources) | The project's resources. |
-| [`Editor/AssetBundle`](Application/Editor/AssetBundle) | The graphic resources packed into the asset bundle. |
-| [`Libraries`](Application/Libraries) | Self-contained libraries handling AI, analytics, narration, networking, social, speech, users, voice, VR and utilities. |
+| [`AppMuseum`](AppMuseum) | Scripts specific to this project, organised as MVC. |
+| [`AppResources`](AppResources) | The project's resources. |
+| [`Editor/AssetBundle`](Editor/AssetBundle) | The graphic resources packed into the asset bundle. |
+| [`Libraries`](Libraries) | Self-contained libraries handling AI, analytics, narration, networking, social, speech, users, voice, VR and utilities. |
 
 The backend is split in three:
 

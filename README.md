@@ -1,7 +1,7 @@
 # AR Museum
 
-- 🎬 [Augmented Reality Museum — Add a new dimension to every exhibition: Presentation](https://youtu.be/89qJGx5CRBA)
-- 🎬 [Augmented Reality Museum — Add a new dimension to every exhibition: Edition Tools](https://youtu.be/QavR47GALOA)
+- 🎬 [Augmented Reality Museum — Add a new dimension to every exhibition](https://youtu.be/89qJGx5CRBA)
+- 🎬 [Augmented Reality Museum — The editing tools: how museums create their own content](https://youtu.be/QavR47GALOA)
 
 An augmented reality guide for museums and cultural institutions, built in Unity. Visitors follow a virtual tour guide through a scanned museum area, listen to narration in their own language, and ask questions out loud that are answered by an LLM. Museum staff can edit the narration and regenerate the audio themselves, without technical support.
 

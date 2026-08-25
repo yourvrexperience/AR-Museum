@@ -248,8 +248,8 @@ Two backends are supported — pick one.
 
 Three providers are supported. The workflow is the same for all of them — only the SDK, the scanner app and the define change.
 
-| Provider | SDK | Scanner app | Define |
-| --- | --- | --- | --- |
+| Provider | SDK | Scanner app | Define | How-To |
+| --- | --- | --- | --- | --- |
 | MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` | [Video How-To](https://youtu.be/eIoQCUUrVTU) |
 | Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA`  | [Video How-To](https://youtu.be/eIoQCUUrVTU) |
 | Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC`  | [Video How-To](https://youtu.be/eIoQCUUrVTU) |

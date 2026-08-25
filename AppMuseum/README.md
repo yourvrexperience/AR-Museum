@@ -92,7 +92,7 @@ Scripts that implement the backend endpoints for managing the database and the A
 
 | Folder | Description |
 | --- | --- |
-| `Server/Editor/Database` | Contains the database with existing sample data. |
+| `Server/Editor/Database` | Contains the empty database with the structure. For the **full database sample** [download from this link](https://www.ar-museum.com/template6dof.zip)	 |
 | `Server/Editor/PHP` | Backend scripts, run against the database, that handle museum content creation, user management and analytics. The most critical one is **`ConfigurationUserManagement.php`**, which establishes the database connection and holds a collection of functions used by the other scripts. |
 | `Server/Editor/Python` | Backend scripts that handle the AI operations and the endpoints for Google authentication. The most critical script is **`AILLMEndpoints.py`**, where the endpoints are implemented. |
 | `Server/Editor/Administration` | Frontend scripts that display the pages for handling analytics and user management. |

@@ -114,9 +114,7 @@ At this point the project should compile without errors.
 3. Open **phpMyAdmin** and create a database named `template6dof`.
 4. Import the sample database, which already comes filled with sample data:
 
-   ```
-   URL_LINK_TO_DATABASE_SQL_TO_IMPORT
-   ```
+	- Download [MySQL history sample database](https://www.ar-museum.com/template6dof.sql)	
 
 ### 3. Connect Unity to the backend
 

@@ -152,7 +152,7 @@ You should now be able to run the experience in production mode.
 
 ### 5. Set up the AI backend
 
-🎬 [Video Tutorial for AI set up](https://youtu.be/eIoQCUUrVTU)
+🎬 [Video Tutorial for AI set up](https://youtu.be/msdGy-4cz4c)
 
 The AI layer is fully removable — some clients don't want AI in any capacity, and the `ENABLE_AI_OPERATIONS` define strips every AI operation from the build.
 
@@ -209,7 +209,7 @@ Speech recognition itself must be verified in a mobile build.
 
 ### 6. Set up networking
 
-🎬 [Video Tutorial for Networking set up](https://youtu.be/eIoQCUUrVTU)
+🎬 [Video Tutorial for Networking set up](https://youtu.be/fBAI9mJPTU4)
 
 The multiplayer session exists so a human guide can drive the experience, extending their explanations with virtual objects. The first client to run becomes the server on the local Wi-Fi network and controls the clients that connect afterwards.
 
@@ -236,7 +236,7 @@ Two backends are supported — pick one.
 
 ### 7. Set up VR
 
-🎬 [Video Tutorial for VR set up](https://youtu.be/eIoQCUUrVTU)
+🎬 [Video Tutorial for VR set up](https://youtu.be/FHB5GhnbKqg)
 
 1. Import the [Meta XR SDK](https://assetstore.unity.com/packages/sdk/meta-xr-sdk-9022845).
 2. From **Package Manager > Unity Registry**, install **XR Interaction Toolkit**.
@@ -250,9 +250,9 @@ Three providers are supported. The workflow is the same for all of them — only
 
 | Provider | SDK | Scanner app | Define | How-To |
 | --- | --- | --- | --- | --- |
-| MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` | 🎬 [Video How-To](https://youtu.be/eIoQCUUrVTU) |
-| Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA`  | 🎬 [Video How-To](https://youtu.be/eIoQCUUrVTU) |
-| Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC`  | 🎬 [Video How-To](https://youtu.be/eIoQCUUrVTU) |
+| MaxST | [Download](https://developer.maxst.com/MD/downloadsdk) | [BITMAX AR Scanner](https://developer.maxst.com/MD/downloadtools) | `ENABLE_MAXST` | 🎬 [Video How-To](https://youtu.be/G0asYyqi9_0) |
+| Vuforia | [Download](https://developer.vuforia.com/downloads/sdk) | [Vuforia Creator](https://developer.vuforia.com/downloads/tools) | `ENABLE_VUFORIA`  | 🎬 [Video How-To](https://youtu.be/0df8p8VpvCc) |
+| Niantic Spatial | [Download](https://www.nianticspatial.com/docs/nsdk/downloads) | [Scaniverse – 3D Scanner](https://apps.apple.com/us/app/scaniverse-3d-scanner/id1541433223) | `ENABLE_NIANTIC`  | 🎬 [Video How-To](https://youtu.be/tVWzgvaK0xg) |
 
 Then, for any provider:
 

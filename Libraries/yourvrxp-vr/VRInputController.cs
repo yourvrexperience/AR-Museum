@@ -181,7 +181,13 @@ namespace yourvrexperience.VR
 		public IVRController VRController
 		{
 			get {
-#if ENABLE_OCULUS
+#if ENABLE_NIANTICXR
+				if (_vrController == null)
+				{
+					_vrController = GameObject.FindObjectOfType<NianticXRController>() as IVRController;
+				}
+				return _vrController;
+#elif ENABLE_OCULUS
 				if (_vrController == null)
 				{
 					_vrController = GameObject.FindObjectOfType<OculusController>() as IVRController;
@@ -225,7 +231,7 @@ namespace yourvrexperience.VR
 		public override Camera Camera
 		{
 			get { 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 				return VRController.Camera;
 #else
 				return Camera.main; 
@@ -332,7 +338,7 @@ namespace yourvrexperience.VR
 
         public override bool IsMoving()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
             return _isMovingCamera;
 #else
             return base.IsMoving();
@@ -341,7 +347,7 @@ namespace yourvrexperience.VR
 
         public override Vector2 GetMovementJoystick()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
             	return VRController.GetVector2Joystick(XR_HAND.left);
@@ -357,7 +363,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionPrimaryDown()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
             	return VRController.GetIndexTriggerDown(XR_HAND.both);
@@ -373,7 +379,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionPrimaryUp()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
             	return VRController.GetIndexTriggerUp(XR_HAND.both);
@@ -389,7 +395,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionPrimary()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
             	return VRController.GetIndexTrigger(XR_HAND.both);
@@ -405,7 +411,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionSecondaryDown()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
 				return VRController.GetHandTriggerDown(XR_HAND.both);
@@ -421,7 +427,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionSecondaryUp()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
 				return VRController.GetHandTriggerUp(XR_HAND.both);
@@ -437,7 +443,7 @@ namespace yourvrexperience.VR
 
         public override bool ActionSecondary()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
 				return VRController.GetHandTrigger(XR_HAND.both);
@@ -453,10 +459,10 @@ namespace yourvrexperience.VR
 
 		public override bool ActionMenuPressed()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			if (VRController != null)
 			{
-				return VRController.GetOneButtonDown(XR_HAND.both);
+				return VRController.GetOneButtonUp(XR_HAND.both);
 			}
 			else
 			{
@@ -470,7 +476,7 @@ namespace yourvrexperience.VR
 
         public override bool SwitchedCameraPressed()
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
             return false;
 #else
             return base.SwitchedCameraPressed();
@@ -1005,9 +1011,6 @@ namespace yourvrexperience.VR
 
 		private void UpdateCameraRigPositionWith6DOF()
 		{
-#if ENABLE_NREAL			
-			return;
-#endif
 			if  (VRController != null)
 			{
 #if ENABLE_ULTIMATEXR				
@@ -1061,7 +1064,7 @@ namespace yourvrexperience.VR
 		{
 			ProcessQueuedEvents();
 			
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR
 			UpdateCameraRigPositionWith6DOF();
 			if (_enableLocomotion)
 			{

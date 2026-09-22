@@ -38,5 +38,8 @@ namespace yourvrexperience.VR
 		bool GetTwoButton(XR_HAND hand);		
 		void UpdateHandSideController();
 		void ResetState();
+
+		Vector3 GetOriginByLineRenderer();
+		Vector3 GetForwardByLineRenderer();
     }
 }

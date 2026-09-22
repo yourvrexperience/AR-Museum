@@ -44,6 +44,12 @@ namespace yourvrexperience.ai
 		public int Mode;
 		public string Text;
 
+		public ChatMessage()
+		{
+			Mode = 0;
+			Text = "";
+		}
+
 		public ChatMessage(int mode, string text)
 		{
 			Mode = mode;

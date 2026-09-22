@@ -1852,13 +1852,12 @@ class AILLMServer:
             elif provider == 2:
                 clientImagesOpenAI = OpenAI()
                 response = clientImagesOpenAI.images.generate(
-                                                      model="dall-e-2",
-                                                      prompt=description,
-                                                      size=str(width) + "x" + str(height),
-                                                      quality="standard",
-                                                      n=1
-                                                    )
-                print (response.data[0].url)
+                    model="gpt-image-1.5",
+                    prompt=description,
+                    size=f"{width}x{height}",
+                    quality="medium",
+                    n=1
+                )
                 # DALL-E 2
                 # 1024×1024 ($0.020 / image)
                 # 512×512 ($0.018 / image)
@@ -1869,17 +1868,16 @@ class AILLMServer:
                     self.store_last_operation_cost(username + "_cost", 0.018)
                 else:
                     self.store_last_operation_cost(username + "_cost", 0.02)
-                return requests.get(response.data[0].url).content
+                return base64.b64decode(response.data[0].b64_json)
             elif provider == 3:
                 clientImagesOpenAI = OpenAI()
                 response = clientImagesOpenAI.images.generate(
-                                                      model="dall-e-3",
-                                                      prompt=description,
-                                                      size=str(width) + "x" + str(height),
-                                                      quality="standard",
-                                                      n=1
-                                                    )
-                print (response.data[0].url)
+                    model="gpt-image-2",
+                    prompt=description,
+                    size=f"{width}x{height}",
+                    quality="medium",
+                    n=1
+                )
                 # DALL-E 3
                 # Standard (1024×1024) $0.040 / image
                 # Standard (1024×1792, 1792×1024) $0.080 / image
@@ -1889,7 +1887,7 @@ class AILLMServer:
                     self.store_last_operation_cost(username + "_cost", 0.04)
                 else:
                     self.store_last_operation_cost(username + "_cost", 0.08)
-                return requests.get(response.data[0].url).content
+                return base64.b64decode(response.data[0].b64_json)
             elif provider == 4:
                 url_scenario = self.scenario_base_url + "/generate/txt2img"
                 model_id = self.scenario_model_landscape

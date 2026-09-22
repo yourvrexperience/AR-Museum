@@ -71,6 +71,8 @@ namespace yourvrexperience.VR
 		private OVRGazePointer _gazePointer;
 		private OVRInputModule _inputModule;
 		private OculusHandsManager _handsManager;
+#elif ENABLE_NIANTICXR			
+		private GameObject _eventSystemNianticXR;
 #elif ENABLE_OPENXR			
 		private GameObject _eventSystemOpenXR;
 #elif ENABLE_ULTIMATEXR					
@@ -135,7 +137,14 @@ namespace yourvrexperience.VR
 
         public void Initialize()
         {
-#if ENABLE_OCULUS
+#if ENABLE_NIANTICXR            
+            if (!_instantiated)
+            {
+                _instantiated = true;
+                _eventSystemNianticXR = Instantiate(EventSystemOpenXR) as GameObject;
+                Instantiate(VRInputControllerPrefab);
+            }
+#elif ENABLE_OCULUS
 			if ((GameObject.FindFirstObjectByType<OVRCameraRig>() == null) && (CameraOculus != null))
 			{
 				if (!_instantiated)
@@ -236,7 +245,7 @@ namespace yourvrexperience.VR
 
 		private void LinkAvatarWithVRCamera()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
 			if ((_player != null) && (_inputControls != null))
 			{
 				VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerLinkWithAvatar, _player.GetGameObject());
@@ -278,7 +287,9 @@ namespace yourvrexperience.VR
 				if (Instance)
 				{
 					DontDestroyOnLoad(Instance.gameObject);
-#if ENABLE_OCULUS
+#if ENABLE_NIANTICXR
+                    DontDestroyOnLoad(_eventSystemNianticXR);
+#elif ENABLE_OCULUS
 					DontDestroyOnLoad(_inputModule.gameObject);
 					DontDestroyOnLoad(_gazePointer.gameObject);
 					DontDestroyOnLoad(_handsManager.gameObject);
@@ -303,7 +314,9 @@ namespace yourvrexperience.VR
 				{
 					_instance = null;
 					GameObject.Destroy(this.gameObject);
-#if ENABLE_OCULUS
+#if ENABLE_NIANTICXR
+                    if (_eventSystemNianticXR != null) GameObject.Destroy(_eventSystemNianticXR);
+#elif ENABLE_OCULUS
 					if (_gazePointer != null) GameObject.Destroy(_gazePointer.gameObject);
 					if (_inputModule != null) GameObject.Destroy(_inputModule.gameObject);
 					if (_handsManager != null) GameObject.Destroy(_handsManager.gameObject);

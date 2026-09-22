@@ -11,6 +11,14 @@ using yourvrexperience.Utils;
 
 namespace yourvrexperience.Narration
 {
+    [System.Serializable]
+    public struct GeoLocation {
+        public double Latitude;
+        public double Longitude;
+        public double Altitude;
+        public double Heading;
+    }
+
     [CreateAssetMenu(menuName = "Game/NarrationLevelData")]
 	public class GameLevelData : ScriptableObject
     {
@@ -103,16 +111,19 @@ namespace yourvrexperience.Narration
         {
             public int ID = 0;
             public Vector3 Position = Vector3.zero;
+            public GeoLocation GeoPosition;
 
-            public POIPosition(int id, Vector3 position)
+            public POIPosition(int id, Vector3 position, GeoLocation geoPosition)
             {
                 ID = id;
                 Position = position;
+                GeoPosition = geoPosition;
             }
             public POIPosition(POIPosition data)
             {
                 ID = data.ID;
                 Position = data.Position;
+                GeoPosition = data.GeoPosition;
             }
         }
 
@@ -127,6 +138,7 @@ namespace yourvrexperience.Narration
         {
             public int ID = 0;
             public Vector3 Position = Vector3.zero;
+            public GeoLocation GeoPosition;
             public string CustomEvent = "";
             public string Narration = "";
 
@@ -156,18 +168,20 @@ namespace yourvrexperience.Narration
                 }                
             }
 
-            public SecretPosition(int id, Vector3 position, string customEvent, string narration)
+            public SecretPosition(int id, Vector3 position, GeoLocation geoPosition, string customEvent, string narration)
             {
                 ID = id;
                 Position = position;
+                GeoPosition = geoPosition;
                 CustomEvent = customEvent;
-                Narration = narration;
+                Narration = narration;                
                 GetRealNarration(Narration);
             }
             public SecretPosition(SecretPosition data)
             {
                 ID = data.ID;
                 Position = data.Position;
+                GeoPosition = data.GeoPosition;
                 Narration = data.Narration;
                 CustomEvent = data.CustomEvent;
                 GetRealNarration(Narration);
@@ -562,7 +576,7 @@ namespace yourvrexperience.Narration
                 areasMuseum[level].Positions = new POIPosition[positionsData.Length];
                 for (int i = 0; i < positionsData.Length; i++)
                 {
-                    areasMuseum[level].Positions[i] = new POIPosition(positionsData[i].ID, positionsData[i].Position);
+                    areasMuseum[level].Positions[i] = new POIPosition(positionsData[i].ID, positionsData[i].Position, positionsData[i].GeoPosition);
                 }
             }
         }
@@ -573,7 +587,7 @@ namespace yourvrexperience.Narration
                 areasMuseum[level].SecretsData = new SecretPosition[secretsData.Length];
                 for (int i = 0; i < secretsData.Length; i++)
                 {
-                    areasMuseum[level].SecretsData[i] = new SecretPosition(secretsData[i].ID, secretsData[i].Position, secretsData[i].CustomEvent, secretsData[i].Narration);
+                    areasMuseum[level].SecretsData[i] = new SecretPosition(secretsData[i].ID, secretsData[i].Position, secretsData[i].GeoPosition, secretsData[i].CustomEvent, secretsData[i].Narration);
                 }
             }
         }
@@ -595,7 +609,7 @@ namespace yourvrexperience.Narration
             serializedPOIs.Positions = new POIPosition[data.Length];
             for (int i = 0; i < data.Length; i++)
             {
-                serializedPOIs.Positions[i] = new POIPosition(i, data[i].Position);
+                serializedPOIs.Positions[i] = new POIPosition(i, data[i].Position, data[i].GeoPosition);
                 Debug.LogError("PackPOIsContent: " + i + " - " + serializedPOIs.Positions[i].Position);
             }
 
@@ -609,7 +623,7 @@ namespace yourvrexperience.Narration
             serializedPOIs.Secrets = new SecretPosition[data.Length];
             for (int i = 0; i < data.Length; i++)
             {
-                serializedPOIs.Secrets[i] = new SecretPosition(i, data[i].Position, data[i].CustomEvent, data[i].Narration);
+                serializedPOIs.Secrets[i] = new SecretPosition(i, data[i].Position, data[i].GeoPosition, data[i].CustomEvent, data[i].Narration);
             }
 
             string jsonData = JsonUtility.ToJson(serializedPOIs, true);
@@ -628,7 +642,7 @@ namespace yourvrexperience.Narration
                 POIPosition[] poisPositions = new POIPosition[serializedPOIs.Positions.Length];
                 for (int i = 0; i < serializedPOIs.Positions.Length; i++)
                 {
-                    poisPositions[i] = new POIPosition(i, serializedPOIs.Positions[i].Position);
+                    poisPositions[i] = new POIPosition(i, serializedPOIs.Positions[i].Position, serializedPOIs.Positions[i].GeoPosition);
                 }
 
                 return poisPositions;
@@ -647,7 +661,7 @@ namespace yourvrexperience.Narration
                 SecretPosition[] secretsPositions = new SecretPosition[serializedSecrets.Secrets.Length];
                 for (int i = 0; i < serializedSecrets.Secrets.Length; i++)
                 {
-                    secretsPositions[i] = new SecretPosition(i, serializedSecrets.Secrets[i].Position, serializedSecrets.Secrets[i].CustomEvent, serializedSecrets.Secrets[i].Narration);
+                    secretsPositions[i] = new SecretPosition(i, serializedSecrets.Secrets[i].Position, serializedSecrets.Secrets[i].GeoPosition, serializedSecrets.Secrets[i].CustomEvent, serializedSecrets.Secrets[i].Narration);
                 }
 
                 return secretsPositions;
@@ -1160,12 +1174,14 @@ namespace yourvrexperience.Narration
                         {
                             int nextIndex = (_indexPOIListSelection + 1) % dataBackup.Count;
                             Vector3 newPositionPOI = (Vector3)parameters[0];
-                            dataBackup.Insert(_indexPOIListSelection + 1, new POIPosition(dataBackup.Count, newPositionPOI));
+                            GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                            dataBackup.Insert(_indexPOIListSelection + 1, new POIPosition(dataBackup.Count, newPositionPOI, newGeolocationPOI));
                         }
                         else
                         {
                             Vector3 newPositionPOI = (Vector3)parameters[0];
-                            dataBackup.Add(new POIPosition(dataBackup.Count, newPositionPOI));
+                            GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                            dataBackup.Add(new POIPosition(dataBackup.Count, newPositionPOI, newGeolocationPOI));
                             _indexPOIListSelection = currentTotal;
                             isLastElement = true;
                         }
@@ -1173,7 +1189,8 @@ namespace yourvrexperience.Narration
                     else
                     {
                         Vector3 newPositionPOI = (Vector3)parameters[0];
-                        dataBackup.Add(new POIPosition(0, newPositionPOI));
+                        GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                        dataBackup.Add(new POIPosition(0, newPositionPOI, newGeolocationPOI));
                         _indexPOIListSelection = -1;
                         isLastElement = true;
                     }
@@ -1218,12 +1235,14 @@ namespace yourvrexperience.Narration
                         if (_indexPOIListSelection != -1)
                         {
                             Vector3 newPositionPOI = (Vector3)parameters[0];
-                            dataSecretBackup.Insert(_indexPOIListSelection + 1, new SecretPosition(dataSecretBackup.Count, newPositionPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
+                            GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                            dataSecretBackup.Insert(_indexPOIListSelection + 1, new SecretPosition(dataSecretBackup.Count, newPositionPOI, newGeolocationPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
                         }
                         else
                         {
                             Vector3 newPositionPOI = (Vector3)parameters[0];
-                            dataSecretBackup.Add(new SecretPosition(dataSecretBackup.Count, newPositionPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
+                            GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                            dataSecretBackup.Add(new SecretPosition(dataSecretBackup.Count, newPositionPOI, newGeolocationPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
                             _indexPOIListSelection = currentTotalSecrets;
                             isLastElement = true;
                         }
@@ -1231,7 +1250,8 @@ namespace yourvrexperience.Narration
                     else
                     {
                         Vector3 newPositionPOI = (Vector3)parameters[0];
-                        dataSecretBackup.Add(new SecretPosition(0, newPositionPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
+                        GeoLocation newGeolocationPOI = (GeoLocation)parameters[1];
+                        dataSecretBackup.Add(new SecretPosition(0, newPositionPOI, newGeolocationPOI, "", HexadecimalEncoding.ToHexString(InitialNarration.text)));
                         _indexPOIListSelection = -1;
                         isLastElement = true;                        
                     }

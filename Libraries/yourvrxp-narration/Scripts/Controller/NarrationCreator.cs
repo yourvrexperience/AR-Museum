@@ -175,7 +175,7 @@ namespace yourvrexperience.Narration
 			public float TotalTime = -1;
 			public float CurrentTime = -1;
 
-			public NarrationCreatorData(int id, string startEvent, string endEvent)
+			public NarrationCreatorData(int id, string startEvent, string endEvent, string titleNarration = "")
 			{
 				Id = id;
 				StartEvent = startEvent;

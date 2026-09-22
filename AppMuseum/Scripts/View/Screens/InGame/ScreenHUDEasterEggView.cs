@@ -280,7 +280,7 @@ namespace yourvrexperience.template6dof
 
 		void Update()
         {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 			this.transform.forward =  (this.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
 #endif
 

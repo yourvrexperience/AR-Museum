@@ -70,6 +70,14 @@ namespace yourvrexperience.template6dof
 		private string[] _animations = null;
 		private string _animationSelected = "";
 
+		private string _toBuildAssetName;
+		private Vector3 _toBuildPosition; 
+		private Quaternion _toBuildRotation;
+		private Vector3 _toBuildScale;
+		private string _toBuildAnimation;
+
+		private bool _animationScreenSelected = false;
+
 		public override string NameScreen
 		{ 
 			get { return ScreenName; }
@@ -261,7 +269,7 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, true);
 
 			Content.gameObject.SetActive(false);
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 			ContentScale.SetActive(true);
 
 			buttonUp.gameObject.SetActive(_typePOIObject != TypeObjectNarration.Waypoints);
@@ -279,6 +287,12 @@ namespace yourvrexperience.template6dof
 
 			if (_assetSelected.Count > 0)
 			{
+				if (!((_typePOIObject == TypeObjectNarration.Model3D) && (_animations != null) && (_animations.Length > 0)))
+				{
+					MainController.Instance.CreateNarrationObjects();
+				}
+				
+				_animationScreenSelected = false;
 				switch (_typePOIObject)
 				{
 					case TypeObjectNarration.Image:						
@@ -301,16 +315,23 @@ namespace yourvrexperience.template6dof
 
 					case TypeObjectNarration.Model3D:						
 						_nameAsset = _assetSelected[0].Value;
-						_model3DController = MainController.Instance.CreateModel3DController(false, _nameAsset, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, Vector3.one, "");
 						_animations = GameLevelData.Instance.GetAnimationsByAsset(_nameAsset);						
 						if ((_animations == null) || (_animations.Length == 0))
 						{
+							_model3DController = MainController.Instance.CreateModel3DController(false, _nameAsset, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, Vector3.one, "");
 							_enableModel3DPositioning = true;
 							HideToPositionObject();
 						}
 						else
 						{
 							_enableModel3DPositioning = false;
+							_toBuildAssetName = _nameAsset;
+							_toBuildPosition = Vector3.zero;
+							_toBuildRotation = Quaternion.identity;
+							_toBuildScale = Vector3.one;
+							_toBuildAnimation = "";			
+							_animationScreenSelected = true;	
+							SystemEventController.Instance.DelaySystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects, 0.05f);	
 							ScreenController.Instance.CreateScreen(ScreenXMLGenericSelectionView.ScreenName, false, true, _animations, EventScreenXMLPOIObjectsViewAnimationSelected);
 						}
 						break;
@@ -361,6 +382,13 @@ namespace yourvrexperience.template6dof
 					if (_selectedEntry.Assets.Remove(_objectSelected))
 					{
 						_nameAsset = _objectSelected.AssetName;
+
+						if (!((_typePOIObject == TypeObjectNarration.Model3D) && (_animations != null) && (_animations.Length > 0)))
+						{
+							MainController.Instance.CreateNarrationObjects();
+						}
+
+						_animationScreenSelected = false;
 						switch (_typePOIObject)
 						{
 							case TypeObjectNarration.Image:
@@ -375,16 +403,23 @@ namespace yourvrexperience.template6dof
 								break;
 
 							case TypeObjectNarration.Model3D:
-								_model3DController = MainController.Instance.CreateModel3DController(false, _objectSelected.AssetName, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, _objectSelected.Scale, _objectSelected.Animation);
 								_animations = GameLevelData.Instance.GetAnimationsByAsset(_nameAsset);						
 								if ((_animations == null) || (_animations.Length == 0))
 								{
+									_model3DController = MainController.Instance.CreateModel3DController(false, _objectSelected.AssetName, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, _objectSelected.Scale, _objectSelected.Animation);
 									_enableModel3DPositioning = true;
 									HideToPositionObject();
 								}
 								else
 								{
 									_enableModel3DPositioning = false;
+									_toBuildAssetName = _objectSelected.AssetName;
+									_toBuildPosition = Vector3.zero;
+									_toBuildRotation = Quaternion.identity;
+									_toBuildScale = _objectSelected.Scale;
+									_toBuildAnimation = _objectSelected.Animation;	
+									_animationScreenSelected = true;	
+									SystemEventController.Instance.DelaySystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects, 0.05f);
 									ScreenController.Instance.CreateScreen(ScreenXMLGenericSelectionView.ScreenName, false, true, _animations, EventScreenXMLPOIObjectsViewAnimationSelected);
 								}
 								break;
@@ -434,14 +469,17 @@ namespace yourvrexperience.template6dof
         private void OnUIEvent(string nameEvent, object[] parameters)
         {
 			if (nameEvent.Equals(EventScreenXMLPOIObjectsViewAnimationSelected))
-			{
+			{				
+				MainController.Instance.CreateNarrationObjects();
+				_model3DController = MainController.Instance.CreateModel3DController(false, _toBuildAssetName, NavMeshController.Instance.AreaMaxST.transform, _toBuildPosition, _toBuildRotation, _toBuildScale, _toBuildAnimation);
 				_animationSelected = (string)parameters[0];
-				if (_animationSelected.Length > 0)
+				if ((_animationSelected.Length > 0) && (_model3DController != null))
 				{
 					_model3DController.PlayAnimation(_animationSelected);					
 				}
 				_enableModel3DPositioning = true;
 				HideToPositionObject();
+				_animationScreenSelected = false;
 			}
 			if (nameEvent.Equals(ItemXMLObjectAsset.EventItemXMLObjectAssetSelected))
 			{
@@ -490,15 +528,22 @@ namespace yourvrexperience.template6dof
 
 		void Update()
 		{
-			if (!Content.gameObject.activeSelf)
+			if (!Content.gameObject.activeSelf && !_animationScreenSelected)
 			{
 				MainController.Instance.PlayerView.Run();
 				
 				bool placedObject = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
-				Vector3	positionCurrentController = VRInputController.Instance.VRController.CurrentController.transform.position;
-				Vector3	forwardCurrentController = VRInputController.Instance.VRController.CurrentController.transform.forward;
-				positionCurrentController += forwardCurrentController.normalized * 2;
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+				Vector3	positionCurrentController = Vector3.zero;
+				Vector3	forwardCurrentController = Vector3.zero;
+#if ENABLE_NIANTICXR
+				positionCurrentController = VRInputController.Instance.VRController.GetOriginByLineRenderer();
+				forwardCurrentController = VRInputController.Instance.VRController.GetForwardByLineRenderer();				
+#else
+				positionCurrentController = VRInputController.Instance.VRController.CurrentController.transform.position;
+				forwardCurrentController = VRInputController.Instance.VRController.CurrentController.transform.forward;
+#endif				
+				positionCurrentController += forwardCurrentController.normalized;
 				placedObject = VRInputController.Instance.VRController.GetIndexTriggerDown(XR_HAND.both);
 				Vector2 axisJoystick = VRInputController.Instance.VRController.GetVector2Joystick(XR_HAND.both);
 				_scaleUp = ((axisJoystick.y> 0.5)?true:false);
@@ -524,6 +569,7 @@ namespace yourvrexperience.template6dof
 
 				HeightComponent heightController = null;
 
+				bool shouldDestroyAllObject = false;
 				switch (_typePOIObject)
 				{
 					case TypeObjectNarration.Image:
@@ -573,6 +619,7 @@ namespace yourvrexperience.template6dof
 
 								GameObject.Destroy(_photoController.gameObject);
 								_photoController = null;
+								shouldDestroyAllObject = true;
 							}
 						}
 						break;
@@ -624,6 +671,7 @@ namespace yourvrexperience.template6dof
 
 								GameObject.Destroy(_videoController.gameObject);
 								_videoController = null;
+								shouldDestroyAllObject = true;
 							}
 						}
 						break;
@@ -676,6 +724,7 @@ namespace yourvrexperience.template6dof
 
 								GameObject.Destroy(_model3DController.gameObject);
 								_model3DController = null;
+								shouldDestroyAllObject = true;
 							}
 						}
 						break;			
@@ -727,6 +776,7 @@ namespace yourvrexperience.template6dof
 
 								_interactableController.GetComponent<IGameInteractables>().Destroy();
 								_interactableController = null;
+								shouldDestroyAllObject = true;
 							}
 						}
 						break;			
@@ -766,6 +816,7 @@ namespace yourvrexperience.template6dof
 									GameObject.Destroy(_waypoint);
 								}
 								_waypoint = null;
+								shouldDestroyAllObject = true;
 							}							
 						}
 						break;
@@ -786,6 +837,10 @@ namespace yourvrexperience.template6dof
 							heightController.Height += (Time.deltaTime * 2f);
 						}
 					}
+				}
+				if (shouldDestroyAllObject)
+				{
+					SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects);
 				}
 			}
 		}

@@ -139,7 +139,9 @@ namespace yourvrexperience.template6dof
 			UIEventController.Instance.Event += OnUIEvent;
 
 			bool trackingLost = false;
-#if UNITY_EDITOR || UNITY_WEBGL
+#if ENABLE_NIANTICXR && !UNITY_EDITOR
+			trackingLost = !NianticController.Instance.HasAreaBeenDetected;
+#elif UNITY_EDITOR || UNITY_WEBGL
 			// trackingLost = true;
 #elif !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
 #if ENABLE_VUFORIA
@@ -236,7 +238,7 @@ namespace yourvrexperience.template6dof
 				refocusComponent = this.gameObject.AddComponent<RefocusScreen>();
 			}
 			refocusComponent.Activate(VRInputController.Instance.Camera, ScreenController.Instance.DistanceScreen, 1, 0.4f);
-#elif ENABLE_NREAL
+#elif ENABLE_NREAL || ENABLE_NIANTICXR
 			containerVRControls.SetActive(false);
 			RefocusScreen refocusComponent = this.gameObject.GetComponent<RefocusScreen>();
 			if (refocusComponent == null)
@@ -1003,6 +1005,12 @@ namespace yourvrexperience.template6dof
 		{
 			if (_player != null)
 			{
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR				
+				if (MainController.Instance.GameInputController.ActionMenuPressed())
+                {
+                    OnButtonResume();
+                }
+#endif
 				UpdatePosition(MainController.Instance.PlayerView, _player);
 				RenderAvatarLogosNetworkPlayers();
 

@@ -191,7 +191,7 @@ namespace yourvrexperience.template6dof
 
         private void UpdateNavigationAgentPosition()
         {
-#if ENABLE_NIANTIC && !UNITY_EDITOR	            
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR	            
             Vector3 agentPosition = NianticController.Instance.WorldToDesignPoint(ArCameraTransform.position);
             _navAgentPlayerView.SetLocalPosition(agentPosition);
 #else
@@ -205,7 +205,7 @@ namespace yourvrexperience.template6dof
         {
             if (_navAgentPlayerView != null)
             {
-#if ENABLE_NIANTIC && !UNITY_EDITOR	            
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR	            
                 _currentDestination = NianticController.Instance.WorldToDesignPoint(destinationTransform.position);
                 _navAgentPlayerView.SetLocalPosition(_currentDestination);
 #else
@@ -220,7 +220,7 @@ namespace yourvrexperience.template6dof
         {
             Vector3 localPositionCorrected = maxSTLocalPosition;
             Vector3 posNavigation = Vector3.zero;
-#if ENABLE_NIANTIC && !UNITY_EDITOR					
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR					
 			posNavigation = NianticController.Instance.WorldToDesignPoint(localPositionCorrected);
             return posNavigation;
 #else            
@@ -249,7 +249,7 @@ namespace yourvrexperience.template6dof
         {
             Vector3 localPositionCorrected = maxSTLocalPosition;
             Vector3 posNavigation = Vector3.zero;
-#if ENABLE_NIANTIC && !UNITY_EDITOR					
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR					
 			posNavigation = NianticController.Instance.WorldToDesignPoint(localPositionCorrected);
             return posNavigation;
 #else            
@@ -285,7 +285,7 @@ namespace yourvrexperience.template6dof
         public Vector3 ConvertNavigationToStandardAR(Vector3 navigationLocalPosition, bool debugShape = false)
         {
             Vector3 posNavigation = Vector3.zero;
-#if ENABLE_NIANTIC && !UNITY_EDITOR					
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR					
 			posNavigation = NianticController.Instance.DesignToWorldPoint(navigationLocalPosition);
             return posNavigation;
 #else            
@@ -320,7 +320,7 @@ namespace yourvrexperience.template6dof
         public Vector3 ConvertNavigationToARWorld(Vector3 navigationLocalPosition, bool debugShape = false)
         {
             Vector3 posNavigation = Vector3.zero;
-#if ENABLE_NIANTIC && !UNITY_EDITOR					
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR					
 			posNavigation = NianticController.Instance.DesignToWorldPoint(navigationLocalPosition);
             return posNavigation;
 #else                

@@ -23,6 +23,8 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private Button buttonAIInteraction;
 
 		private RefocusScreen _refocusComponent;
+		private bool _enablePauseAccess = true;
+		private float _delayToEnablePauseAccess = 1.0f;
 
 		public override void Initialize(params object[] parameters)
 		{
@@ -39,7 +41,7 @@ namespace yourvrexperience.template6dof
 				buttonAIInteraction.gameObject.SetActive(false);
 			}
 			
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			_refocusComponent = this.gameObject.GetComponent<RefocusScreen>();
 			if (_refocusComponent == null)
 			{
@@ -59,8 +61,12 @@ namespace yourvrexperience.template6dof
 
         private void OnButtonPause()
         {
-			UIEventController.Instance.DispatchUIEvent(GameStateRun.EventGameStateRunTriggerPause);            
-        }
+			if (_enablePauseAccess)
+			{	
+				_enablePauseAccess = false;
+				UIEventController.Instance.DispatchUIEvent(GameStateRun.EventGameStateRunTriggerPause);
+			}
+		}
 
         private void OnButtonAIInteraction()
         {
@@ -76,8 +82,37 @@ namespace yourvrexperience.template6dof
 			if (nameEvent.Equals(ScreenNarrationNextButtonView.EventScreenNarrationNextButtonViewPauseVisibility))
 			{
 				bool enablePauseAccess = (bool)parameters[0];
-				buttonAIInteraction.gameObject.SetActive(enablePauseAccess);
+				buttonAIInteraction.gameObject.SetActive(enablePauseAccess);				
 			}			
+			if (nameEvent.Equals(ScreenPauseView.EventScreenPauseViewResumeGame))
+			{
+				_delayToEnablePauseAccess = 1.5f;
+				_enablePauseAccess = true;
+			}
         }
+
+		void Update()
+		{
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR			
+			if (_enablePauseAccess)
+			{
+				if (_delayToEnablePauseAccess > 0)
+				{
+					_delayToEnablePauseAccess -= Time.deltaTime;
+					if (_delayToEnablePauseAccess <= 0)
+					{
+						if (VRInputController.Instance != null) VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerResetAllInputs);
+					}
+				}
+				else
+				{
+					if (MainController.Instance.GameInputController.ActionMenuPressed())
+					{
+						OnButtonPause();
+					}
+				}
+			}
+#endif
+		}
 	}
 }

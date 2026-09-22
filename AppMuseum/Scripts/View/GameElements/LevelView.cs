@@ -43,11 +43,13 @@ namespace yourvrexperience.template6dof
 			public float DetectionDistance = -1;
 			public GameObject ExtraData;
 			public POIReplayView ReplayPOI;
+			public GeoLocation GeoPosition;
 
-			public POIData(GameObject root, GameObject sphere, POIReplayView replayPOI, int index)
+			public POIData(GameObject root, GameObject sphere, POIReplayView replayPOI, int index, GeoLocation geoPosition)
 			{
 				Root = root;
 				GOPosition = sphere;
+				GeoPosition = geoPosition;
 				ReplayPOI = replayPOI;
 				ReplayPOI.SetPOIIndex(index);
 			}
@@ -83,13 +85,15 @@ namespace yourvrexperience.template6dof
 			public bool Active = false;
 			public bool Played = false;
 			public string Narration = "";
+			public GeoLocation GeoPosition;
 			private NarrationCreatorData _narrationForCurrentPOI;
 
-			public EasterEgg(GameObject target, GameObject reference, int index)
+			public EasterEgg(GameObject target, GameObject reference, int index, GeoLocation geoPosition)
 			{
 				Index = index;
 				Target = target;
 				Reference = reference;
+				GeoPosition = geoPosition;
 			}
 
 			public void Destroy()
@@ -254,6 +258,9 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private GameObject aerealCamera;
 		[SerializeField] private GameObject walls;
 		[SerializeField] private string payLoad;
+		[SerializeField] private string latitude;
+		[SerializeField] private string longitude;
+		[SerializeField] private string altitude;
 
 		private Vector3 _initialCenter;
 		
@@ -336,14 +343,14 @@ namespace yourvrexperience.template6dof
 				{
 					Vector3 updatedPosition = POIS[i].Root.transform.localPosition;
 #if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
-#if ENABLE_NIANTIC && !UNITY_EDITOR
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 					updatedPosition = POIS[i].Root.transform.position;
 					updatedPosition = NavMeshController.Instance.ConvertARWorldToNavigation(updatedPosition);
 #else
 					updatedPosition = NavMeshController.Instance.ConvertARWorldToNavigation(updatedPosition);
 #endif
 #endif
-					serializedPOIs.Positions[i] = new POIPosition(i, updatedPosition);
+					serializedPOIs.Positions[i] = new POIPosition(i, updatedPosition, POIS[i].GeoPosition);
 				}
 			}
 
@@ -363,14 +370,14 @@ namespace yourvrexperience.template6dof
 				serializedSecrets.Secrets = new SecretPosition[easterEggs.Length];
 				for (int i = 0; i < easterEggs.Length; i++)
 				{
-#if ENABLE_NIANTIC && !UNITY_EDITOR
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 					Vector3 updatedPosition = easterEggs[i].Target.transform.position;
 					updatedPosition = NavMeshController.Instance.ConvertARWorldToNavigation(updatedPosition);
 #else
 					Vector3 updatedPosition = easterEggs[i].Target.transform.localPosition;
 #endif
 					Vector3 finalPosition = updatedPosition;
-					serializedSecrets.Secrets[i] = new SecretPosition(i, finalPosition, easterEggs[i].ActivationEvent, HexadecimalEncoding.ToHexString(easterEggs[i].Narration));
+					serializedSecrets.Secrets[i] = new SecretPosition(i, finalPosition, easterEggs[i].GeoPosition, easterEggs[i].ActivationEvent, HexadecimalEncoding.ToHexString(easterEggs[i].Narration));
 				}
 			}
 
@@ -400,14 +407,14 @@ namespace yourvrexperience.template6dof
 			}
 			_initialRotation = this.transform.eulerAngles.y;
 
-#if ENABLE_NIANTIC && !UNITY_EDITOR
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 			if (NavMeshController.Instance != null)
 			{
 				NavMeshController.Instance.UnParent();
 			}				
 #endif
 
-#if UNITY_EDITOR || UNITY_WEBGL || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR
+#if UNITY_EDITOR || UNITY_WEBGL || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
 			if (visualMesh != null)
             {
 				foreach (GameObject mesh in visualMesh)
@@ -489,14 +496,14 @@ namespace yourvrexperience.template6dof
 				MainController.Instance.ApplyOclusionNavigation();
 			}
 #endif
-#if !UNITY_WEBGL && ENABLE_NIANTIC	&& !UNITY_EDITOR
+#if !UNITY_WEBGL && (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 			if (NianticController.Instance.HasAreaBeenDetected)
 			{
 				MainController.Instance.ApplyOclusionNavigation();
 			}
 #endif
 
-			SystemEventController.Instance.DelaySystemEvent(EventLevelViewStarted, 0.1f, this, payLoad);
+			SystemEventController.Instance.DelaySystemEvent(EventLevelViewStarted, 0.1f, this, payLoad, latitude, longitude, altitude);
 		}
 
 		void OnDestroy()
@@ -550,7 +557,7 @@ namespace yourvrexperience.template6dof
 				for (int i = 0; i < POIS.Length; i++)
 				{
 					POIBaseView poiBase = MainController.Instance.CreatePOIBase();
-					POIS[i] = new POIData(poiBase.gameObject, poiBase.Sphere, poiBase.ReplayView, i);
+					POIS[i] = new POIData(poiBase.gameObject, poiBase.Sphere, poiBase.ReplayView, i, poisStoredPosition[i].GeoPosition);
 					poiBase.Index = i;
 					poiBase.gameObject.name = "POI_" + i;
 					poiBase.gameObject.transform.parent = content.transform;
@@ -572,7 +579,7 @@ namespace yourvrexperience.template6dof
 					{
 						Vector3 updatedPosition = poisStoredPosition[i].Position;
 #if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
-#if ENABLE_VUFORIA || ENABLE_NIANTIC
+#if ENABLE_VUFORIA || ENABLE_NIANTIC || ENABLE_NIANTICXR
 						updatedPosition = NavMeshController.Instance.ConvertNavigationToStandardAR(updatedPosition);
 #else
 						if (isInitialization)
@@ -604,7 +611,7 @@ namespace yourvrexperience.template6dof
 				for (int i = 0; i < easterEggs.Length; i++)
 				{
 					EasterEggBaseView easterEggBase = MainController.Instance.CreateSecretBase();
-					easterEggs[i] = new EasterEgg(easterEggBase.gameObject, easterEggBase.Reference, i);
+					easterEggs[i] = new EasterEgg(easterEggBase.gameObject, easterEggBase.Reference, i, secretStoredPosition[i].GeoPosition);
 					easterEggBase.Index = i;
 					easterEggBase.gameObject.name = "Secret_" + i;
 					easterEggBase.gameObject.transform.parent = content.transform;
@@ -635,7 +642,7 @@ namespace yourvrexperience.template6dof
 						if (!isInitialization)
 						{
 							shouldUpdatePosition = false;
-#if ENABLE_NIANTIC && !UNITY_EDITOR
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 							finalPosition = NianticController.Instance.DesignToWorldPoint(finalPosition);
 							easterEggs[i].Target.transform.position = finalPosition;
 #else
@@ -646,7 +653,7 @@ namespace yourvrexperience.template6dof
 #endif
 						if (shouldUpdatePosition)
 						{
-#if ENABLE_NIANTIC && !UNITY_EDITOR
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 							finalPosition = NianticController.Instance.DesignToWorldPoint(finalPosition);
 #endif							
 							easterEggs[i].Target.transform.position = finalPosition;
@@ -656,6 +663,21 @@ namespace yourvrexperience.template6dof
 					}
 				}
 			}
+		}
+
+		public POIData GetSelectedPOI(Transform selectedPOI)
+		{
+			POIData poiSelected = null;
+			for (int i = 0; i < POIS.Length; i++)
+			{
+				POIData item = POIS[i];
+				if (item.Root.transform == selectedPOI)
+				{
+					poiSelected = item;
+				}
+			}
+
+			return poiSelected;
 		}
 
 		public int GetIndexSelectedPOI(Transform selectedPOI)
@@ -717,7 +739,7 @@ namespace yourvrexperience.template6dof
 
 #if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR  || UNITY_WEBGL)
 				NavMeshController.Instance.RefAreaMaxSTHelper.transform.position = poiA.position;
-#if ENABLE_NIANTIC
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 				posNavigationA = NavMeshController.Instance.ConvertARWorldToNavigation(poiA.position, false);
 #else
 				posNavigationA = NavMeshController.Instance.ConvertARWorldToNavigation(NavMeshController.Instance.RefAreaMaxSTHelper.transform.localPosition, false);
@@ -728,7 +750,7 @@ namespace yourvrexperience.template6dof
 
 #if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
 				NavMeshController.Instance.RefAreaMaxSTHelper.transform.position = poiB.position;
-#if ENABLE_NIANTIC				
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR				
 				posNavigationB = NavMeshController.Instance.ConvertARWorldToNavigation(poiB.position, false);
 #else
 				posNavigationB = NavMeshController.Instance.ConvertARWorldToNavigation(NavMeshController.Instance.RefAreaMaxSTHelper.transform.localPosition, false);
@@ -799,8 +821,8 @@ namespace yourvrexperience.template6dof
         {
 			if (nameEvent.Equals(ARMaxSTController.EventARMaxSTControllerAreaRecognized))
 			{
-#if ENABLE_NIANTIC && !UNITY_EDITOR
-				this.transform.SetParent(NianticController.Instance.Anchor.transform, false);
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+				this.transform.SetParent(NianticController.Instance.Anchor, false);
 				this.transform.localPosition = Vector3.zero;
 				this.transform.localRotation = Quaternion.identity;
 				this.transform.localScale    = Vector3.one;

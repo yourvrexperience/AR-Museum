@@ -233,7 +233,7 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(NarrationToken.EventNarrationTokenDestroyNarrationObject, true);
 			UIEventController.Instance.DispatchUIEvent(ScreenPauseView.EventScreenPauseViewResumeGame);
 			UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)							
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)							
 			SystemEventController.Instance.DelaySystemEvent(ScreenInfoNextButtonView.EventScreenInfoNextButtonViewVisibilityContent, 0.1f, false);
 #endif			
         }
@@ -459,10 +459,10 @@ namespace yourvrexperience.template6dof
 
 		void Update()
         {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)				
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)				
 			Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 			GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
-			Vector3 posScreen = contentVRScreen.transform.position;
+			Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, GameStateRun.SHIFT_VR_SCREEN, 0);
 			this.transform.position = posScreen;
 			this.transform.forward = forwardGuide;
 #endif

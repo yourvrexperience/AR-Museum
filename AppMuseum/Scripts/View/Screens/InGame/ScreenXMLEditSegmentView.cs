@@ -250,7 +250,7 @@ namespace yourvrexperience.template6dof
 			UIEventController.Instance.Event += OnUIEvent;
 			SystemEventController.Instance.Event += OnSystemEvent;
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL		
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			eventStartInput.OnFocusEvent += OnFocusEventStartInput;
 			eventEndInput.OnFocusEvent += OnFocusEventEndInput;
 			englishInput.OnFocusDownEvent += OnFocusEnglishInput;
@@ -335,7 +335,7 @@ namespace yourvrexperience.template6dof
 				GameLevelData.Instance.SaveGameProgressLocally();
 			}
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			UIEventController.Instance.DispatchUIEvent(PanelInputTextAction.EventPanelInputExternalClose);
 			if (eventStartInput != null) eventStartInput.OnFocusEvent -= OnFocusEventStartInput;
 			if (eventEndInput != null) eventEndInput.OnFocusEvent -= OnFocusEventEndInput;
@@ -521,7 +521,7 @@ namespace yourvrexperience.template6dof
 
         private void OnUIEvent(string nameEvent, object[] parameters)
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL        
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR      
             if (nameEvent.Equals(ScreenVRKeyboardView.EventScreenVRKeyboardSetNewText))
 			{
 				if (eventStartInput.gameObject == (GameObject)parameters[0])
@@ -538,7 +538,7 @@ namespace yourvrexperience.template6dof
 #endif
         }
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
         private void OnFocusEventStartInput()
 		{
 			ScreenController.Instance.CreateScreen(ScreenVRKeyboardView.ScreenName, false, true,  eventStartInput.gameObject, eventStartInput, TOTAL_CHARACTERS_SECTION);
@@ -968,6 +968,13 @@ namespace yourvrexperience.template6dof
         {
 			if (contentProcessing.gameObject.activeSelf)
 			{
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+				if (MainController.Instance.GameInputController.ActionMenuPressed())
+				{
+					OnButtonExit();
+				}
+#endif
+
 #if ENABLE_SPEECH
 				if (_timeToRecord > 0)
 				{

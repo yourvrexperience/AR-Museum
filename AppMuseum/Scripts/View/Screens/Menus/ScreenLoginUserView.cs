@@ -46,7 +46,7 @@ namespace yourvrexperience.template6dof
             _emailValue = _container.Find("EmailValue").GetComponent<CustomInput>();
             _passwordValue = _container.Find("PasswordValue").GetComponent<CustomInput>();
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || ENABLE_NIANTICXR
             _emailValue.text = "esteban@yourvrexperience.com";
             _passwordValue.text = "12345";
 #endif

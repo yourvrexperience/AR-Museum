@@ -42,6 +42,8 @@ namespace yourvrexperience.template6dof
 		public const float SizeEasterEggScreen = 0.001f;		
 		public const float SizeEasterEggNarration = 0.0005f;		
 
+		public const float SHIFT_VR_SCREEN = 0.75f;				
+
 		public enum ConfigurationEasterEggScreen { None = 0, Video, Photos, Discover, Narration }
 
 		private GameLevelStates _gameLevelState = GameLevelStates.Initialization;
@@ -117,7 +119,7 @@ namespace yourvrexperience.template6dof
 
         private void PlayerShoot()
 		{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 			Vector3 positionCurrentController = Vector3.zero;
 			Vector3 forwardCurrentController = Vector3.zero;
 			if (VRInputController.Instance.VRController.CurrentController != null)
@@ -218,7 +220,7 @@ namespace yourvrexperience.template6dof
 							{
 								string title = LanguageController.Instance.GetText(_currentEggFound.GetTitle());
 								string description = LanguageController.Instance.GetText(_currentEggFound.GetDescription());								
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 								Vector3 normalToTarget = (_currentEggFound.Star.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
 								Vector3 posScreen = _currentEggFound.Star.transform.position;
 								ScreenController.Instance.CreateScreen3DAnchor(ScreenFoundEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggScreen, false, true, title, description, _currentEggFound);
@@ -273,10 +275,10 @@ namespace yourvrexperience.template6dof
 		private void PresentationScreenForNarration()
 		{
 			string descriptionStart = "screen.next.button.press.to.start.narration";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 			Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 			GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
-			Vector3 posScreen = contentVRScreen.transform.position;
+			Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, SHIFT_VR_SCREEN, 0);
 			ScreenController.Instance.CreateScreen3DAnchor(ScreenInfoNextButtonView.ScreenName, MainController.Instance.GuideTourView.ScreenVR, posScreen, forwardGuide, SizeInfoScreen, true, false, MainController.Instance.IsMultiplayer, GameLevelData.Instance.EnablePauseAccess, descriptionStart);
 #else
 			ScreenController.Instance.CreateScreen(ScreenInfoNextButtonView.ScreenName, true, false, MainController.Instance.IsMultiplayer, GameLevelData.Instance.EnablePauseAccess, descriptionStart);
@@ -744,7 +746,7 @@ namespace yourvrexperience.template6dof
 							}						
 							if (shouldShowScreen)
 							{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 								Transform prevPOI = (Transform)parameters[1];
 								Vector3 normalToTarget = (prevPOI.position - MainController.Instance.PlayerView.transform.position).normalized;
 								Vector3 posScreen = prevPOI.position;
@@ -878,7 +880,7 @@ namespace yourvrexperience.template6dof
 					switch (_configurationEasterEgg)
                     {
 						case ConfigurationEasterEggScreen.Narration:
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 							Vector3 normalToTarget = (_currentEggFound.Star.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
 							Vector3 posScreen = _currentEggFound.Star.transform.position;
 							GameObject screenNarration = ScreenController.Instance.CreateScreen3DAnchor(ScreenHUDEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggNarration, false, true, _totalTimeEasterEgg, LanguageController.Instance.GetText(_currentEggFound.GetTitle()));
@@ -939,7 +941,7 @@ namespace yourvrexperience.template6dof
 					break;
 
 				case GameLevelStates.EditPOIs:
-					// UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyAllScreens);
+					SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, true);
 					if (_subStateEditPOI == null)
 					{
 						_subStateEditPOI = new GameSubStateEditPOI();
@@ -1035,10 +1037,10 @@ namespace yourvrexperience.template6dof
 					InitializeGuideTour();
 					description = "screen.initial.presentation.everything.ready";
 					buttonText = "screen.initial.presentation.next.action";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 					Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 					GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
-					Vector3 posScreen = contentVRScreen.transform.position;
+					Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, SHIFT_VR_SCREEN, 0);
 					ScreenController.Instance.CreateScreen3DAnchor(ScreenInfoNextButtonView.ScreenName, MainController.Instance.GuideTourView.ScreenVR, posScreen, forwardGuide, SizeInfoScreen, true, false, MainController.Instance.IsMultiplayer, GameLevelData.Instance.EnablePauseAccess, description, buttonText);
 #else
 					ScreenController.Instance.CreateScreen(ScreenInfoNextButtonView.ScreenName, true, false, MainController.Instance.IsMultiplayer, GameLevelData.Instance.EnablePauseAccess, description, buttonText);
@@ -1204,7 +1206,7 @@ namespace yourvrexperience.template6dof
 					{
 #if ENABLE_VUFORIA
 						hasBeenARRecognized = VuforiaController.Instance.HasAreaBeenDetected;
-#elif ENABLE_NIANTIC
+#elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 						hasBeenARRecognized = NianticController.Instance.HasAreaBeenDetected;
 #else			
 						hasBeenARRecognized = ARMaxSTController.Instance.HasAreaBeenDetected;
@@ -1263,13 +1265,6 @@ namespace yourvrexperience.template6dof
 							}
 						}
 					}
-
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
-					if (VRInputController.Instance.ActionMenuPressed())
-					{
-						ChangeToPause();
-					}
-#endif					
 					break;
 
 				case GameLevelStates.InGame:
@@ -1286,13 +1281,6 @@ namespace yourvrexperience.template6dof
                     {
 						SystemEventController.Instance.DispatchSystemEvent(ARMaxSTController.EventARMaxSTControllerAreaLost);
 					}
-
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
-					if (VRInputController.Instance.ActionMenuPressed())
-					{
-						ChangeToPause();
-					}
-#endif					
 
 					if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N))
                     {

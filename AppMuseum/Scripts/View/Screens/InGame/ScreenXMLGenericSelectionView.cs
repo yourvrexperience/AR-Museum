@@ -93,5 +93,15 @@ namespace yourvrexperience.template6dof
 				}
 			}
         }
+
+		void Update()
+		{
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+            if (MainController.Instance.GameInputController.ActionMenuPressed())
+            {
+                OnButtonExit();
+            }
+#endif
+		}
 	}
 }

@@ -76,7 +76,7 @@ namespace yourvrexperience.template6dof
                 next.onClick.AddListener(OnNextClicked);
                 SystemEventController.Instance.Event += OnSystemEvent;
 
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
                 maximize.onClick.AddListener(OnMaximizeClicked);
                 VREndVideo.gameObject.SetActive(false);
 #else

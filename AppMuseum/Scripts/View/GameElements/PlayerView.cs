@@ -174,21 +174,23 @@ namespace yourvrexperience.template6dof
 			}
 
 			NameAssetBody = "BodyDesktopBlue";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 			NameAssetBody = "BodyVRBlue";
 #endif
 
 			if (!MainController.Instance.IsMultiplayer)
 			{
 				bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 				isVRMode = true;
 #endif
 
 #if UNITY_EDITOR
 				isVRMode = true;
 #endif
-				Body.SetActive(false);				
+				Body.SetActive(false);								
+				Body.transform.localPosition = new Vector3(Body.transform.localPosition.x, Body.transform.localPosition.y, Body.transform.localPosition.z);
+				Body.transform.localScale = new Vector3(1f, 1f, 1f);
 				SystemEventController.Instance.DispatchSystemEvent(CameraXRController.EventCameraPlayerReadyForCamera, this);
 
 				_bodyAsset = new GameObject();
@@ -198,7 +200,7 @@ namespace yourvrexperience.template6dof
 				if (NetworkGameIDView.AmOwner())
 				{
 					bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 					isVRMode = true;
 #endif
 
@@ -267,7 +269,7 @@ namespace yourvrexperience.template6dof
 #if UNITY_EDITOR
 			finalSpeed = 50;
 #endif
-#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
 			finalSpeed = 10;
 #endif
 			Vector3 forward = axisVertical * _camera.transform.forward * finalSpeed * Time.deltaTime;
@@ -275,7 +277,7 @@ namespace yourvrexperience.template6dof
 			Vector3 increment = forward + lateral;
 			increment.y = 0;
 			transform.GetComponent<Rigidbody>().MovePosition(transform.position + increment);
-#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
 			if (_cameraContainer != null) _cameraContainer.transform.position = this.transform.position;
 #else			
 			_camera.transform.position = this.transform.position + new Vector3(0,0.7f,0);
@@ -284,7 +286,7 @@ namespace yourvrexperience.template6dof
 
         public void RotateCamera()
         {
-#if (UNITY_ANDROID && !ENABLE_NIANTIC && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !ENABLE_NIANTIC && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
 			if (_gyro == null)
 			{
 				_gyro = Input.gyro;
@@ -356,7 +358,7 @@ namespace yourvrexperience.template6dof
 					if (NetworkGameIDView.AmOwner())
 					{
 						bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 						isVRMode = true;
 #endif
 
@@ -545,7 +547,7 @@ namespace yourvrexperience.template6dof
 							_timeUpdatePath = 0;
 							Vector3 posPlayerNavigation = this.transform.localPosition;
 #if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL))
-#if ENABLE_NIANTIC
+#if ENABLE_NIANTIC ||  ENABLE_NIANTICXR
 							posPlayerNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.position, false);
 #else
 							posPlayerNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.localPosition, false);
@@ -553,7 +555,7 @@ namespace yourvrexperience.template6dof
 #endif							
 							Vector3 posTargetNavigation = Vector3.zero;
 #if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL))
-#if ENABLE_NIANTIC
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 							posTargetNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(TargetToGo, false);
 #else
 							NavMeshController.Instance.RefAreaMaxSTHelper.transform.position = TargetToGo;
@@ -572,7 +574,9 @@ namespace yourvrexperience.template6dof
 
 		public void Run()
 		{
+#if !ENABLE_NIANTICXR			
 			if (!_enableMovement) return;
+#endif
 
 			bool runLogic = true;
 			if (MainController.Instance.IsMultiplayer)
@@ -592,9 +596,9 @@ namespace yourvrexperience.template6dof
 #if ENABLE_NREAL
 					this.transform.position = VRInputController.Instance.VRController.HeadController.transform.position;
 					this.transform.forward = VRInputController.Instance.VRController.HeadController.transform.forward;
-#else
+#else					
 					this.transform.position = MainController.Instance.GetARWorldCamera().transform.position;
-					this.transform.forward = MainController.Instance.GetARWorldCamera().transform.forward;
+					this.transform.forward = MainController.Instance.GetARWorldCamera().transform.forward;	
 #endif
 				}
 				else

@@ -89,7 +89,7 @@ namespace yourvrexperience.template6dof
 
                 CurrentImage = 0;
 
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
                 maximize.onClick.AddListener(OnMaximizeClicked);
                 VREndPhoto.gameObject.SetActive(false);
 #else

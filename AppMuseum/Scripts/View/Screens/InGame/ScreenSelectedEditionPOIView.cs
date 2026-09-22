@@ -55,77 +55,7 @@ namespace yourvrexperience.template6dof
 			buttonMovePOI.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = LanguageController.Instance.GetText("screen.poi.select.edition.move.poi");
 			buttonManageNarration.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = LanguageController.Instance.GetText("screen.poi.select.edition.narration");
 
-			CreateNarrationObjects();
-		}
-
-		private void CreateNarrationObjects()
-		{
-			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects);
-
-			int currentLevel = GameLevelData.Instance.GetLevel(GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel);
-			NarrationCreator narrationCreator = new NarrationCreator();
-			NarrationCreatorData narrationForCurrentPOI;
-			if (_isPOI)
-			{
-				TextAsset narrationData = GameLevelData.Instance.GetLevelNarration(currentLevel);
-				narrationCreator.LoadNarrationTexts(narrationData);
-				narrationForCurrentPOI = narrationCreator.Narration[GameLevelData.Instance.IndexPOILevelEdited];
-			}
-			else
-			{
-				string contentNarrationSecret = _narrationSecret.Narration;
-				if ((_narrationSecret.Narration == null) || (_narrationSecret.Narration.Length == 0))
-				{
-					contentNarrationSecret = GameLevelData.Instance.GetInitialNarration();
-					_narrationSecret.Narration = contentNarrationSecret;
-				}
-				narrationCreator.LoadNarrationTexts(new TextAsset(contentNarrationSecret));
-				narrationForCurrentPOI = narrationCreator.Narration[0];
-			}
-			
-			foreach (NarrationCreatorToken token in narrationForCurrentPOI.Segments)
-			{
-				foreach (NarrationObject narrationObj in token.Assets)
-				{
-					switch (narrationObj.Type)
-					{
-						case TypeObjectNarration.Image:
-							string[] photos = narrationObj.AssetName.Split(',');
-							POIPhotoGalleryController photoGallery = MainController.Instance.CreatePhotoGalleryController(false, photos, NavMeshController.Instance.AreaMaxST.transform,  narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
-							yourvrexperience.Utils.Utilities.ApplyLayer(photoGallery.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
-							yourvrexperience.Utils.Utilities.DisableGraphicRaycaster(photoGallery.gameObject.transform);
-							break;
-
-						case TypeObjectNarration.Video:
-							POIVideoController videoControl = MainController.Instance.CreateVideoController(false, narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale, true, false);
-							yourvrexperience.Utils.Utilities.ApplyLayer(videoControl.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
-							yourvrexperience.Utils.Utilities.DisableGraphicRaycaster(videoControl.gameObject.transform);
-							break;
-
-						case TypeObjectNarration.Model3D:
-							POIModel3DController model3D = MainController.Instance.CreateModel3DController(false, narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale, narrationObj.Animation);
-							yourvrexperience.Utils.Utilities.ApplyLayer(model3D.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
-							break;
-
-						case TypeObjectNarration.Interaction:
-							GameObject interactable = MainController.Instance.CreateInteractable(narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
-							interactable.GetComponent<IGameInteractables>().SetEditionMode();
-							yourvrexperience.Utils.Utilities.ApplyLayer(interactable.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
-							break;
-
-						case TypeObjectNarration.Waypoints:
-							GameObject waypoint = MainController.Instance.CreateWaypoint(narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
-							waypoint.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-							yourvrexperience.Utils.Utilities.ApplyLayer(waypoint.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
-							break;
-
-						case TypeObjectNarration.Sound:						
-							AudioClip audioSegment = AssetBundleController.Instance.CreateAudioclip(narrationObj.AssetName);
-							SoundsController.Instance.PlaySoundClipFx(SoundsController.ChannelsAudio.FX3, audioSegment, false, 0.5f);
-							break;
-					}
-				}
-			}
+			MainController.Instance.CreateNarrationObjects(_isPOI, _narrationSecret);
 		}
 
         public override void Destroy()
@@ -172,7 +102,7 @@ namespace yourvrexperience.template6dof
 		{
 			if (!Content.gameObject.activeSelf && value)
 			{
-				CreateNarrationObjects();
+				MainController.Instance.CreateNarrationObjects(_isPOI, _narrationSecret);
 			}
 			base.ActivateContent(value);
 		}
@@ -187,6 +117,12 @@ namespace yourvrexperience.template6dof
 
 		void Update()
 		{
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR			
+			if (MainController.Instance.GameInputController.ActionMenuPressed())
+			{
+				OnButtonResume();
+			}
+#endif			
 		}
 	}
 }

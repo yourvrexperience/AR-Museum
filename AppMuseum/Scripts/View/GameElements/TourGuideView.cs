@@ -104,7 +104,11 @@ namespace yourvrexperience.template6dof
 		public Vector3 PositionPlayer
 		{
 			get {  
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+					return MainController.Instance.PlayerView.transform.position;
+#else				
 					return MainController.Instance.PlayerView.PositionCamera;
+#endif					
 			}
 		}
 		public GameObject ScreenVR
@@ -153,18 +157,21 @@ namespace yourvrexperience.template6dof
 			switch (GameLevelData.Instance.Age)
 			{
 				case GameLevelData.GameAge.Kids:
-					modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-					modelAge.transform.localPosition += new Vector3(0, 0.3f, 0);
+					modelAge.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+					// modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+					modelAge.transform.localPosition -= new Vector3(0, 0.1f, 0);
 					break;
 
 				case GameLevelData.GameAge.Adults:
+					// modelAge.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 					modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-					modelAge.transform.localPosition += new Vector3(0, 0.3f, 0);
+					modelAge.transform.localPosition += new Vector3(0, 0.5f, 0);
 					break;
 
 				case GameLevelData.GameAge.Experts:
+					// modelAge.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 					modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-					modelAge.transform.localPosition += new Vector3(0, 0.3f, 0);
+					modelAge.transform.localPosition += new Vector3(0, 0.5f, 0);
 					break;
 			}
 			GameObject.Destroy(Model);
@@ -276,7 +283,7 @@ namespace yourvrexperience.template6dof
 			targetPOI.Root.transform.parent = NavMeshController.Instance.ContainerAreaMaxST.transform;
 			targetPOI.GOPosition.transform.parent = NavMeshController.Instance.ContainerAreaMaxST.transform;
 
-#if ENABLE_NIANTIC
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 			Vector3 targetNavigation = targetPOI.Root.transform.position;
 #else
 			Vector3 targetNavigation = targetPOI.Root.transform.localPosition;
@@ -286,7 +293,7 @@ namespace yourvrexperience.template6dof
 			targetPOI.Root.transform.parent = originalParentRoot;
 			targetPOI.GOPosition.transform.parent = originalParentGOPosition;
 
-#if ENABLE_NIANTIC
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 			Vector3 oriNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.position, false);
 #else
 			Vector3 oriNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.localPosition, false);
@@ -322,7 +329,7 @@ namespace yourvrexperience.template6dof
 
 		private bool InitNavigationPath(bool applyNavigation)
         {
-#if ENABLE_NIANTIC			
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 			Vector3 oriNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.position, false);
 #else			
 			Vector3 oriNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.localPosition, false);
@@ -486,7 +493,7 @@ namespace yourvrexperience.template6dof
 					break;
 				case TourGuideStates.WaitForPlayerNear:
 					ChangeGuideAnimation(AnimationIdle);
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
 					SystemEventController.Instance.DelaySystemEvent(ScreenInfoNextButtonView.EventScreenInfoNextButtonViewVisibilityContent, 0.1f, true);
 #endif						
 					break;

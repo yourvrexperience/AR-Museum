@@ -86,7 +86,12 @@ namespace yourvrexperience.template6dof
 #endif				
 			}
 #endif		
-			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataAddNewPOI, positionInFront);
+
+			GeoLocation geoLocation = new GeoLocation();			
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+			geoLocation = NianticController.Instance.CurrentGeoLocation;
+#endif
+			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataAddNewPOI, positionInFront, geoLocation);
 		}
 
 		private void OnRemovePOI()

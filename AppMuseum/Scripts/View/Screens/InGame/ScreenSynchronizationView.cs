@@ -38,7 +38,7 @@ namespace yourvrexperience.template6dof
 				bool hasBeenDetected = false;
 #if ENABLE_VUFORIA
 				hasBeenDetected = VuforiaController.Instance.HasAreaBeenDetected;
-#elif ENABLE_NIANTIC
+#elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 				hasBeenDetected = NianticController.Instance.HasAreaBeenDetected;
 #else
 				hasBeenDetected = ARMaxSTController.Instance.HasAreaBeenDetected;

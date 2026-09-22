@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using yourvrexperience.Narration;
 using yourvrexperience.Utils;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)	     
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)	     
 using yourvrexperience.VR;
 #endif
 
@@ -194,7 +194,7 @@ namespace yourvrexperience.template6dof
 					    bool isPhotoVisible = yourvrexperience.Utils.Utilities.IsVisibleFrom(CenterDetection.transform.position, Camera.main);
 #if ENABLE_VUFORIA
 					    isPhotoVisible = VuforiaController.Instance.CheckVisiblePoint(CenterDetection.transform.position);
-#elif !UNITY_EDITOR && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || UNITY_WEBGL)
+#elif !UNITY_EDITOR && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || UNITY_WEBGL)
 					    isPhotoVisible = ARMaxSTController.Instance.CheckVisiblePoint(CenterDetection.transform.position);
 #endif
                         if (isPhotoVisible)
@@ -211,7 +211,7 @@ namespace yourvrexperience.template6dof
                     break;
                 case StatesDiscover.Discover:
                     Vector3 collisionPoint = Vector3.zero;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
                     Vector3	positionCurrentController = VRInputController.Instance.VRController.CurrentController.transform.position;
                     Vector3	forwardCurrentController = VRInputController.Instance.VRController.CurrentController.transform.forward;
                     RaycastHit ray = new RaycastHit();
@@ -219,7 +219,7 @@ namespace yourvrexperience.template6dof
 #endif
                     if (!_isErasing)
                     {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
                         if (MainController.Instance.GameInputController.ActionPrimaryDown())
                         {
                             if (collisionPoint != Vector3.zero)
@@ -257,7 +257,7 @@ namespace yourvrexperience.template6dof
                     }
                     else
                     {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
                         if (MainController.Instance.GameInputController.ActionPrimaryUp())
                         {
                             _isErasing = false;
@@ -281,7 +281,7 @@ namespace yourvrexperience.template6dof
                         }
                         else
                         {
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)                            
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)                            
                             RaycastHit rayData = new RaycastHit();
                             if (RaycastingTools.GetMouseCollisionObject(Camera.main, ref rayData, _layerDiscover))
                             {

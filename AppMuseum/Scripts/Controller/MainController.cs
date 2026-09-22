@@ -1,3 +1,4 @@
+using System;
 using yourvrexperience.Utils;
 using UnityEngine;
 using yourvrexperience.VR;
@@ -6,11 +7,12 @@ using yourvrexperience.Narration;
 using static yourvrexperience.Narration.NarrationController;
 using yourvrexperience.ai;
 using static yourvrexperience.Narration.GameLevelData;
+using static yourvrexperience.Narration.NarrationCreator;
 using yourvrexperience.speech;
 using yourvrexperience.UserManagement;
 using yourvrexperience.Social;
-
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+using static yourvrexperience.template6dof.LevelView;
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 using UnityEngine.XR;
 #endif
 using yourvrexperience.Networking;
@@ -54,6 +56,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private GameObject arMaxSTCamera;		
 		[SerializeField] private GameObject arVuforiaCamera;	
 		[SerializeField] private GameObject arNianticCamera;	
+		[SerializeField] private GameObject arNianticXRCamera;
 			
 		[SerializeField] private GameLevelData narrationData;
 		[SerializeField] private GameAIData aiData;
@@ -114,6 +117,7 @@ namespace yourvrexperience.template6dof
 		private TourGuideView _tourGuideView;
 		private bool _completedArea = false;	
 		private bool _mainNarrationPlaying = false;
+		private bool _anyNarrationPlaying = false;
 		private bool _initialPositioningDone = false;
 		private bool _isMultiplayer = true;
 		private bool _enableEditionPOIs = false;
@@ -158,7 +162,9 @@ namespace yourvrexperience.template6dof
 		public bool IsARMode
 		{
 			get { 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR
+#if ENABLE_NIANTICXR
+					return true;				
+#elif ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR
 					return false;
 #else
 					return _isARMode; 
@@ -169,7 +175,9 @@ namespace yourvrexperience.template6dof
 		public bool IsNormalAxis
 		{
 			get {
-#if ENABLE_NREAL
+#if ENABLE_NIANTICXR
+				return true;				
+#elif ENABLE_NREAL
 				return false; 
 #elif UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL			
 				return true; 
@@ -225,6 +233,10 @@ namespace yourvrexperience.template6dof
 		{
 			get { return _mainNarrationPlaying; }
 		}
+		public bool AnyNarrationPlaying
+		{
+			get { return _anyNarrationPlaying; }
+		}
 		public bool InitialPositioningDone
 		{
 			set { _initialPositioningDone = value; }
@@ -244,7 +256,9 @@ namespace yourvrexperience.template6dof
 		}
 		public GameObject GetARWorldCamera()
         {
-#if ENABLE_VUFORIA
+#if ENABLE_NIANTICXR
+			return arNianticXRCamera;
+#elif ENABLE_VUFORIA
 			return arVuforiaCamera;
 #elif ENABLE_NIANTIC
 			return arNianticCamera;
@@ -262,11 +276,6 @@ namespace yourvrexperience.template6dof
 			set { _blockCameraMovement = value; }
 		}
 
-		private void SetNianticController(bool active)
-		{
-			arNianticCamera.transform.root.gameObject.SetActive(active);
-		}
-
 		void Awake()
 		{
 #if (UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
@@ -275,26 +284,41 @@ namespace yourvrexperience.template6dof
 			arVuforiaCamera.SetActive(true);
 #else
 			arVuforiaCamera.SetActive(false);
+#endif
+#if ENABLE_NIANTICXR			
+			arNianticXRCamera.transform.root.gameObject.SetActive(true);
+			GameObject.Destroy(arNianticCamera.transform.root.gameObject);
+#else
+			GameObject.Destroy(arNianticXRCamera.transform.root.gameObject);
+			GameObject.Destroy(arNianticCamera.transform.root.gameObject);
 #endif			
-			SetNianticController(false);
+#elif ENABLE_NIANTICXR
+			_isARMode = true;
+			arNianticXRCamera.transform.root.gameObject.SetActive(true);
+			GameObject.Destroy(arNianticCamera.transform.root.gameObject);
+			GameObject.Destroy(arMaxSTCamera);
+			GameObject.Destroy(arVuforiaCamera);
 #elif ENABLE_VUFORIA
 			_isARMode = true;
 			arVuforiaCamera.AddComponent<InputController>();
 			arVuforiaCamera.SetActive(true);
-			arMaxSTCamera.SetActive(false);
-			SetNianticController(false);
+			GameObject.Destroy(arMaxSTCamera);
+			GameObject.Destroy(arNianticCamera.transform.root.gameObject);
+			GameObject.Destroy(arNianticXRCamera.transform.root.gameObject);
 #elif ENABLE_NIANTIC
 			_isARMode = true;
 			arNianticCamera.transform.root.gameObject.AddComponent<InputController>();
-			SetNianticController(true);
-			arMaxSTCamera.SetActive(false);	
-			arVuforiaCamera.SetActive(false);		
+			arNianticCamera.transform.root.gameObject.SetActive(true);
+			GameObject.Destroy(arMaxSTCamera);
+			GameObject.Destroy(arVuforiaCamera);
+			GameObject.Destroy(arNianticXRCamera.transform.root.gameObject);
 #else
 			_isARMode = true;
 			arMaxSTCamera.AddComponent<InputController>();
 			arMaxSTCamera.SetActive(true);	
-			arVuforiaCamera.SetActive(false);
-			SetNianticController(false);	
+			GameObject.Destroy(arVuforiaCamera);
+			GameObject.Destroy(arNianticCamera.transform.root.gameObject);
+			GameObject.Destroy(arNianticXRCamera.transform.root.gameObject);
 #endif
 
 			narrationData.Initialize();
@@ -330,7 +354,7 @@ namespace yourvrexperience.template6dof
 		public PanelInputTextAction CreateInputActionEditText()
 		{
 			PanelInputTextAction output = null;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
 			output = GameObject.FindAnyObjectByType<PanelInputTextAction>();
 			if (output == null)
 			{
@@ -407,7 +431,7 @@ namespace yourvrexperience.template6dof
 			{			
 				if (!_isMultiplayer)
 				{										
-#if ENABLE_OCULUS || ENABLE_OPENXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_NIANTICXR
 					Instantiate(VRPlayer, Vector3.zero, Quaternion.identity);
 #else
 					Instantiate(desktopPlayer, Vector3.zero, Quaternion.identity);
@@ -415,7 +439,7 @@ namespace yourvrexperience.template6dof
 				}
 				else
 				{
-#if ENABLE_OCULUS || ENABLE_OPENXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_NIANTICXR
 					NetworkController.Instance.CreateNetworkPrefab(false, VRPlayer.name, VRPlayer.gameObject, "GameElements\\Player\\" + VRPlayer.name, Vector3.zero, Quaternion.identity, 0);
 #else
 					NetworkController.Instance.CreateNetworkPrefab(false, desktopPlayer.name, desktopPlayer.gameObject, "GameElements\\Player\\" + desktopPlayer.name, Vector3.zero, Quaternion.identity, 0);
@@ -426,11 +450,11 @@ namespace yourvrexperience.template6dof
 			Instantiate(BulletsController);
 			Instantiate(FXsController);
 
+			_highlightedPOI = Instantiate(EditionHighlightedPOI);
+			_highlightedPOI.SetActive(false);
 			if (EnableEditionPOIs)
 			{
-				_highlightedPOI = Instantiate(EditionHighlightedPOI);
 				_selectedPOI = Instantiate(EditionSelectedPOI);
-				_highlightedPOI.SetActive(false);
 				_selectedPOI.SetActive(false);
 			}
 
@@ -601,6 +625,8 @@ namespace yourvrexperience.template6dof
 				_isARMode = arVuforiaCamera.activeSelf;
 #elif ENABLE_NIANTIC
 				_isARMode = arNianticCamera.activeSelf;
+#elif ENABLE_NIANTICXR				
+				_isARMode = arNianticXRCamera.activeSelf;
 #else
 				_isARMode = arMaxSTCamera.activeSelf;
 #endif
@@ -612,7 +638,7 @@ namespace yourvrexperience.template6dof
 #elif !UNITY_EDITOR && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
 #if ENABLE_VUFORIA
 				_inputController.Camera =  VuforiaController.Instance.ARVuforiaCamera;
-#elif ENABLE_NIANTIC
+#elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 				_inputController.Camera = NianticController.Instance.ARNianticCamera;
 #else
 				_inputController.Camera = ARMaxSTController.Instance.ARMaxSTCamera;
@@ -749,10 +775,12 @@ namespace yourvrexperience.template6dof
 				{
 					_mainNarrationPlaying = true;
 				}
+				_anyNarrationPlaying = true;
 			}
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerFinished))
 			{
 				_mainNarrationPlaying = false;
+				_anyNarrationPlaying = false;
 			}		
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerPlayPOIByIndex))
 			{
@@ -1129,39 +1157,136 @@ namespace yourvrexperience.template6dof
 
 		public void ApplyOclusionNavigation()
         {
-#if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
-			WallOclussion[] wallsDetected = GameObject.FindObjectsOfType<WallOclussion>();
-			foreach (WallOclussion eachGameObject in wallsDetected)
+			if (MainController.Instance.EnableEditionPOIs)
 			{
-#if ENABLE_VUFORIA						
-				Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
-				foreach (Renderer eachRenderer in cullingRenderer)
+#if !UNITY_EDITOR				
+				WallOclussion[] wallsDetected = GameObject.FindObjectsOfType<WallOclussion>();
+				foreach (WallOclussion eachGameObject in wallsDetected)
 				{
-					Material[] materials = eachRenderer.materials;
-					for (int i = 0; i < eachRenderer.materials.Length; i++)
-					{
-						materials[i] = occlusionVuforia;						
-					}
-					eachRenderer.materials = materials;
+					GameObject.Destroy(eachGameObject.gameObject);
 				}
-#else
-				Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
-				foreach (Renderer eachRenderer in cullingRenderer)
-				{
-					Material[] materials = eachRenderer.materials;
-					for (int i = 0; i < eachRenderer.materials.Length; i++)
-					{
-						materials[i] = occlusionMaterial;
-						materials[i].renderQueue = 1900;
-					}
-
-					eachRenderer.materials = materials;
-				}
-#endif												
+#endif				
 			}
+			else
+			{
+#if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR)
+				WallOclussion[] wallsDetected = GameObject.FindObjectsOfType<WallOclussion>();
+				foreach (WallOclussion eachGameObject in wallsDetected)
+				{
+#if ENABLE_VUFORIA						
+					Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
+					foreach (Renderer eachRenderer in cullingRenderer)
+					{
+						Material[] materials = eachRenderer.materials;
+						for (int i = 0; i < eachRenderer.materials.Length; i++)
+						{
+							materials[i] = occlusionVuforia;						
+						}
+						eachRenderer.materials = materials;
+					}
+#else
+					Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
+					foreach (Renderer eachRenderer in cullingRenderer)
+					{
+						Material[] materials = eachRenderer.materials;
+						for (int i = 0; i < eachRenderer.materials.Length; i++)
+						{
+							materials[i] = occlusionMaterial;
+							materials[i].renderQueue = 1900;
+						}
+
+						eachRenderer.materials = materials;
+					}
+#endif				
+				}
 #endif
+			}
 		}
 
+		private bool _lastIsPOI = false;
+		private EasterEgg _lastNarrationSecret = null;
+
+		public void CreateNarrationObjects()
+		{
+			CreateNarrationObjects(_lastIsPOI, _lastNarrationSecret);
+		}
+
+		public void CreateNarrationObjects(bool isPOI, EasterEgg narrationSecret)
+		{
+			_lastIsPOI = isPOI;
+			_lastNarrationSecret = narrationSecret;
+
+			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects);
+
+			int currentLevel = GameLevelData.Instance.GetLevel(GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel);
+			NarrationCreator narrationCreator = new NarrationCreator();
+			NarrationCreatorData narrationForCurrentPOI;
+			if (isPOI)
+			{
+				TextAsset narrationData = GameLevelData.Instance.GetLevelNarration(currentLevel);
+				narrationCreator.LoadNarrationTexts(narrationData);
+				narrationForCurrentPOI = narrationCreator.Narration[GameLevelData.Instance.IndexPOILevelEdited];
+			}
+			else
+			{
+				string contentNarrationSecret = narrationSecret.Narration;
+				if ((narrationSecret.Narration == null) || (narrationSecret.Narration.Length == 0))
+				{
+					contentNarrationSecret = GameLevelData.Instance.GetInitialNarration();
+					narrationSecret.Narration = contentNarrationSecret;
+				}
+				narrationCreator.LoadNarrationTexts(new TextAsset(contentNarrationSecret));
+				narrationForCurrentPOI = narrationCreator.Narration[0];
+			}
+			
+			try {
+				foreach (NarrationCreatorToken token in narrationForCurrentPOI.Segments)
+				{
+					foreach (NarrationObject narrationObj in token.Assets)
+					{
+						switch (narrationObj.Type)
+						{
+							case TypeObjectNarration.Image:
+								string[] photos = narrationObj.AssetName.Split(',');
+								POIPhotoGalleryController photoGallery = MainController.Instance.CreatePhotoGalleryController(false, photos, NavMeshController.Instance.AreaMaxST.transform,  narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
+								yourvrexperience.Utils.Utilities.ApplyLayer(photoGallery.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
+								yourvrexperience.Utils.Utilities.DisableGraphicRaycaster(photoGallery.gameObject.transform);
+								break;
+
+							case TypeObjectNarration.Video:
+								POIVideoController videoControl = MainController.Instance.CreateVideoController(false, narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale, true, false);
+								yourvrexperience.Utils.Utilities.ApplyLayer(videoControl.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
+								yourvrexperience.Utils.Utilities.DisableGraphicRaycaster(videoControl.gameObject.transform);
+								break;
+
+							case TypeObjectNarration.Model3D:
+								POIModel3DController model3D = MainController.Instance.CreateModel3DController(false, narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale, narrationObj.Animation);
+								yourvrexperience.Utils.Utilities.ApplyLayer(model3D.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
+								break;
+
+							case TypeObjectNarration.Interaction:
+								GameObject interactable = MainController.Instance.CreateInteractable(narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
+								interactable.GetComponent<IGameInteractables>().SetEditionMode();
+								yourvrexperience.Utils.Utilities.ApplyLayer(interactable.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
+								break;
+
+							case TypeObjectNarration.Waypoints:
+								GameObject waypoint = MainController.Instance.CreateWaypoint(narrationObj.AssetName, NavMeshController.Instance.AreaMaxST.transform, narrationObj.Position, narrationObj.Rotation, narrationObj.Scale);
+								waypoint.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+								yourvrexperience.Utils.Utilities.ApplyLayer(waypoint.gameObject.transform, LayerMask.NameToLayer("Ignore Raycast"));
+								break;
+
+							case TypeObjectNarration.Sound:						
+								AudioClip audioSegment = AssetBundleController.Instance.CreateAudioclip(narrationObj.AssetName);
+								SoundsController.Instance.PlaySoundClipFx(SoundsController.ChannelsAudio.FX3, audioSegment, false, 0.5f);
+								break;
+						}
+					}
+				}
+			} catch (Exception ex) {
+				Debug.LogError("Error creating narration objects: " + ex.Message);
+			}
+		}
 
 		public void ChangeGameState(StatesGame newGameState)
 		{

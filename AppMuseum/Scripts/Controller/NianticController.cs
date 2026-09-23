@@ -78,13 +78,13 @@ namespace yourvrexperience.template6dof
 		private double _levelAnchorAltitude;
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR
 		private ARVps2Anchor _anchor;		
+		private XRVps2Localization _currentLocalization;
 #endif		
 		private GameObject _anchorGeolocation;
 		private GameObject _coarseMarker;
 		private bool _isAnchorSet;
 		private GeoLocation _currentGeoLocation;
-		private Coroutine _autoLoadCoroutine;
-		private XRVps2Localization _currentLocalization;
+		private Coroutine _autoLoadCoroutine;		
 
 		public bool HasAreaBeenDetected
         {
@@ -449,6 +449,7 @@ namespace yourvrexperience.template6dof
 #endif			
 		}
 
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
 		public void RefreshGeolocationGO(GameObject go, GeoLocation geoLocation)
 		{
 			if (_currentLocalization.TrackingState == Vps2TrackingState.Unavailable)
@@ -465,6 +466,7 @@ namespace yourvrexperience.template6dof
 				go.transform.SetPositionAndRotation(pose.Pose.position, pose.Pose.rotation);
 			}
 		}				
+#endif			
 
 		private void Update()
     	{

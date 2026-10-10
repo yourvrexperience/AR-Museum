@@ -85,10 +85,8 @@ You are responsible for obtaining your own keys for every third-party service yo
 
 - 🎬 [Video Tutorial for sections 1 to 4](https://youtu.be/eIoQCUUrVTU)
 
-1. Create a new project with Unity `6000.3.18f1`.
-2. Copy the contents of this repository into the project's `Assets` folder.
-3. Switch the build target to **Android**.
-4. Install the following packages through the Package Manager:
+1. [Download the Unity project (It already contains this updated repository in Assets)](https://www.dropbox.com/scl/fi/rrb9ih2vi48jgx8r8e4rd/TemplateARMuseum.zip?rlkey=1peynfocd3xobehuxq6n6sdi1&st=pr2zg08c&dl=0)
+2. Install the following packages through the Package Manager:
 
    | Package | Identifier / Source |
    | --- | --- |
@@ -97,18 +95,18 @@ You are responsible for obtaining your own keys for every third-party service yo
    | iTween | [Asset Store](https://assetstore.unity.com/packages/tools/animation/itween-84) |
    | Youtube Video Player | [Asset Store](https://assetstore.unity.com/packages/tools/video/youtube-video-player-302377) |
 
-6. Install the speech packages. Both are needed so visitors can ask questions out loud and hear the reply spoken back:
+3. Install the speech packages. Both are needed so visitors can ask questions out loud and hear the reply spoken back:
 
    | Package | Source |
    | --- | --- |
    | Speech Recognition (Google Cloud) | [Asset Store](https://assetstore.unity.com/packages/tools/ai-ml-integration/speech-recognition-using-google-cloud-pro-2025-321307) |
    | Text-To-Speech (Google Cloud) | [Asset Store](https://assetstore.unity.com/packages/tools/ai-ml-integration/text-to-speech-using-google-cloud-pro-115170) |
 
-7. Add NVorbis for OGG audio decoding:
+4. Add NVorbis for OGG audio decoding:
    - Download `NVorbis.dll` from [the NVorbis repository](https://github.com/NVorbis/NVorbis) and place it in the `Assets` folder.
    - Add the `USE_NVORBIS` define (see [Scripting define symbols](#scripting-define-symbols)).
 
-8. In **Project Settings > Player > Other Settings**:
+5. In **Project Settings > Player > Other Settings**:
    - Set **Allow downloads over HTTP** to `Always allowed`.
    - Set **Active Input Handling** to `Both`.
 

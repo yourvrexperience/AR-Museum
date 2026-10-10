@@ -95,19 +95,20 @@ You are responsible for obtaining your own keys for every third-party service yo
    | Newtonsoft Json | `com.unity.nuget.newtonsoft-json` |
    | SharpZipLib | `com.unity.sharp-zip-lib` |
    | iTween | [Asset Store](https://assetstore.unity.com/packages/tools/animation/itween-84) |
+   | Youtube Video Player | [Asset Store](https://assetstore.unity.com/packages/tools/video/youtube-video-player-302377) |
 
-5. Install the speech packages. Both are needed so visitors can ask questions out loud and hear the reply spoken back:
+6. Install the speech packages. Both are needed so visitors can ask questions out loud and hear the reply spoken back:
 
    | Package | Source |
    | --- | --- |
    | Speech Recognition (Google Cloud) | [Asset Store](https://assetstore.unity.com/packages/tools/ai-ml-integration/speech-recognition-using-google-cloud-pro-2025-321307) |
    | Text-To-Speech (Google Cloud) | [Asset Store](https://assetstore.unity.com/packages/tools/ai-ml-integration/text-to-speech-using-google-cloud-pro-115170) |
 
-6. Add NVorbis for OGG audio decoding:
+7. Add NVorbis for OGG audio decoding:
    - Download `NVorbis.dll` from [the NVorbis repository](https://github.com/NVorbis/NVorbis) and place it in the `Assets` folder.
    - Add the `USE_NVORBIS` define (see [Scripting define symbols](#scripting-define-symbols)).
 
-7. In **Project Settings > Player > Other Settings**:
+8. In **Project Settings > Player > Other Settings**:
    - Set **Allow downloads over HTTP** to `Always allowed`.
    - Set **Active Input Handling** to `Both`.
 

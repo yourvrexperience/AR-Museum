@@ -12,6 +12,7 @@ namespace yourvrexperience.template6dof
 	{
 		public const string EventScreenHUDViewCreate = "EventScreenHUDViewCreate";
 		public const string EventScreenHUDViewPause = "EventScreenHUDViewPause";
+		public const string EventScreenHUDViewSetTextEditionMode = "EventScreenHUDViewSetTextEditionMode";
 
 #if ENABLE_OCULUS || ENABLE_OPENXR
 		public const string ScreenName = "ScreenHUDView";
@@ -25,23 +26,26 @@ namespace yourvrexperience.template6dof
 		private RefocusScreen _refocusComponent;
 		private bool _enablePauseAccess = true;
 		private float _delayToEnablePauseAccess = 1.0f;
+		private TextMeshProUGUI _editionModeText;
 
 		public override void Initialize(params object[] parameters)
 		{
 			base.Initialize(parameters);
 
+			buttonPause.onClick.AddListener(OnButtonPause);
+			_editionModeText = buttonPause.GetComponentInChildren<TextMeshProUGUI>();
+			_editionModeText.text = "";
+			buttonAIInteraction.onClick.AddListener(OnButtonAIInteraction);
+
 			UIEventController.Instance.Event += OnUIEvent;
 			SystemEventController.Instance.Event += OnSystemEvent;
-			
-			buttonPause.onClick.AddListener(OnButtonPause);
-			buttonAIInteraction.onClick.AddListener(OnButtonAIInteraction);
 
 			if (MainController.Instance.EnableEditionPOIs)
 			{
 				buttonAIInteraction.gameObject.SetActive(false);
 			}
 			
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			_refocusComponent = this.gameObject.GetComponent<RefocusScreen>();
 			if (_refocusComponent == null)
 			{
@@ -49,6 +53,8 @@ namespace yourvrexperience.template6dof
 			}
 			_refocusComponent.Activate(VRInputController.Instance.Camera, 3, 1, 0.4f);
 #endif			
+
+			UpdateTitleEditionMode();
 		}
 
         public override void Destroy()
@@ -73,9 +79,34 @@ namespace yourvrexperience.template6dof
             UIEventController.Instance.DispatchUIEvent(GameStateRun.EventGameStateRunAIInteraction);            
         }
 
+		private void UpdateTitleEditionMode()
+		{
+			if (MainController.Instance.EnableEditionPOIs)
+			{
+				if (GameLevelData.Instance.EditPOIsMode)
+				{
+					_editionModeText.text = LanguageController.Instance.GetText("screen.hud.edition.pois");
+				}
+				else
+				{
+					_editionModeText.text = LanguageController.Instance.GetText("screen.hud.edition.secrets");
+				}
+			}				
+		}
+
 		private void OnSystemEvent(string nameEvent, object[] parameters)
-        {
-        }
+		{
+			if (nameEvent.Equals(GameLevelData.EventGameLevelDataEditModeChanged))
+			{
+				UpdateTitleEditionMode();
+			}
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				OnButtonPause();
+			}
+#endif				
+		}
 
         private void OnUIEvent(string nameEvent, object[] parameters)
         {
@@ -93,7 +124,7 @@ namespace yourvrexperience.template6dof
 
 		void Update()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR			
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR	|| ENABLE_QR_XR || ENABLE_QR_META
 			if (_enablePauseAccess)
 			{
 				if (_delayToEnablePauseAccess > 0)

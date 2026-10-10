@@ -65,8 +65,8 @@ namespace yourvrexperience.template6dof
 		{
 			Vector3 positionInFront = MainController.Instance.PlayerView.transform.position + Camera.main.transform.forward * 1;
 			positionInFront.y = MainController.Instance.LevelView.Floor.transform.position.y + NavMeshController.SHIFT_FROM_FLOOR;
-#if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)
-			Vector3 playerForward = Camera.main.transform.forward.normalized;
+			Vector3 playerForward = Camera.main.transform.forward.normalized;			
+#if !(UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL)			
 			if (!MainController.Instance.IsNormalAxis)
 			{											
 				positionInFront = MainController.Instance.PlayerView.transform.position + playerForward * 1;
@@ -91,7 +91,7 @@ namespace yourvrexperience.template6dof
 #if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
 			geoLocation = NianticController.Instance.CurrentGeoLocation;
 #endif
-			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataAddNewPOI, positionInFront, geoLocation);
+			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataAddNewPOI, positionInFront, playerForward, geoLocation);
 		}
 
 		private void OnRemovePOI()

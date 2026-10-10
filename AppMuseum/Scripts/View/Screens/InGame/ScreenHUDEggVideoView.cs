@@ -15,10 +15,7 @@ namespace yourvrexperience.template6dof
 
 		[SerializeField] private Button buttonResume;
 
-		[SerializeField] private VideoPlayer videoPlayer;
-		[SerializeField] private Button previous;
-		[SerializeField] private Button maximize;
-		[SerializeField] private Button next;
+		[SerializeField] private POIVideoController videoController;
 
 		private string _video = "";
 		private float _timeAcum = 0;
@@ -38,11 +35,7 @@ namespace yourvrexperience.template6dof
 			buttonResume.onClick.AddListener(OnButtonResume);
 			buttonResume.gameObject.SetActive(false);
 
-			previous.onClick.AddListener(OnPreviousClicked);
-			maximize.onClick.AddListener(OnMaximizeClicked);
-			next.onClick.AddListener(OnNextClicked);
-
-			videoPlayer.gameObject.SetActive(false);
+			videoController.gameObject.SetActive(false);
 		}
 
         public override void Destroy()
@@ -62,33 +55,6 @@ namespace yourvrexperience.template6dof
 			UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
 		}
 
-		private void OnMaximizeClicked()
-		{
-			SystemEventController.Instance.DispatchSystemEvent(POIVideoController.EventPOIVideoControllerMinimize, (float)videoPlayer.time);
-			videoPlayer.Pause();
-			videoPlayer.gameObject.SetActive(false);
-		}
-
-		private void OnNextClicked()
-		{
-			if (videoPlayer.time + POIVideoController.JumpTime < videoPlayer.clip.length)
-            {
-				videoPlayer.time += POIVideoController.JumpTime;
-			}			
-		}
-
-		private void OnPreviousClicked()
-		{
-			if (videoPlayer.time - POIVideoController.JumpTime < 0)
-			{
-				videoPlayer.time = 0;
-			}
-			else
-            {
-				videoPlayer.time -= POIVideoController.JumpTime;
-			}
-		}
-
 		private void OnSystemEvent(string nameEvent, object[] parameters)
 		{
 			if (nameEvent.Equals(POIVideoController.EventPOIVideoControllerMaximize))
@@ -97,25 +63,19 @@ namespace yourvrexperience.template6dof
 				if (isEasterEgg)
 				{
 					string video = (string)parameters[1];
-					if (!_video.Equals(video))
-					{
-						_video = video;
-						VideoClip videoClip = AssetBundleController.Instance.CreateVideoclip(video);
-						if (videoClip != null)
-						{
-							videoPlayer.clip = videoClip;
-						}
-					}
-					float time = (float)parameters[2];
-					videoPlayer.gameObject.SetActive(true);
-					videoPlayer.time = time;
-					videoPlayer.Play();
+					string videoURL = (string)parameters[2];
+					float time = (float)parameters[3];
+					float duration = (float)parameters[4];
+					videoController.gameObject.SetActive(true);
+					videoController.PlayScreenspace(video, videoURL, time, duration);
 				}
 			}
-			if (nameEvent.Equals(EventScreenHUDEggVideoViewForceMinimize))
+			if (nameEvent.Equals(POIVideoController.EventPOIVideoControllerMinimize))
 			{
-				OnMaximizeClicked();
+				videoController.Pause();
+				videoController.gameObject.SetActive(false);
 			}
+
 			if (nameEvent.Equals(ScreenHUDEasterEggView.EventScreenHUDEasterEggViewTriggerResume))
 			{
 				OnButtonResume();

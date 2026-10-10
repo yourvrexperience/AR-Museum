@@ -10,10 +10,10 @@ using NRKernal;
 #if ENABLE_ULTIMATEXR
 using UltimateXR.UI.UnityInputModule;
 #endif
-#if ENABLE_OPENXR || ENABLE_NIANTICXR
+#if ENABLE_OPENXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using UnityEngine.XR.Interaction.Toolkit.UI;
 #endif
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using yourvrexperience.VR;
 #endif
 
@@ -131,7 +131,7 @@ namespace yourvrexperience.Utils
 
 				languageData.Initialize();
 				
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				VRInputController.Instance.Event += OnVREvent;
 #endif			
 				SystemEventController.Instance.DispatchSystemEvent(EventScreenControllerStarted);
@@ -153,7 +153,7 @@ namespace yourvrexperience.Utils
 				if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;
 				if (UIEventController.Instance != null) UIEventController.Instance.Event -= OnUIEvent;
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				if (VRInputController.Instance != null) VRInputController.Instance.Event -= OnVREvent;
 #endif			
 
@@ -166,7 +166,7 @@ namespace yourvrexperience.Utils
 			return _screensCreated.Count;
 		}
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 		private void OnVREvent(string nameEvent, object[] parameters)
 		{
             if (nameEvent.Equals(EventScreenControllerResponseCameraData))
@@ -174,6 +174,7 @@ namespace yourvrexperience.Utils
                 GameObject targetScreen = (GameObject)parameters[0];
 				Vector3 positionCamera = (Vector3)parameters[1];
 				Vector3 forwardCamera = (Vector3)parameters[2];
+				forwardCamera.y = 0;
 				targetScreen.transform.position = positionCamera + ((_defaultDistance!=-1)?_defaultDistance:DistanceScreen) * forwardCamera;
 				targetScreen.transform.forward = forwardCamera;
 				targetScreen.transform.localScale = new Vector3(SizeVRScreen, SizeVRScreen, SizeVRScreen);
@@ -190,7 +191,7 @@ namespace yourvrexperience.Utils
 						targetScreen.transform.forward = _forward;
 					}
 					else
-					{
+					{						
 						targetScreen.transform.forward = forwardCamera;
 					}                        
 				}
@@ -447,7 +448,7 @@ namespace yourvrexperience.Utils
 				newScreen.transform.SetParent(this.transform);
 			}			
 			_anchor = null;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			newScreen.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
 			newScreen.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
 			newScreen.GetComponent<CanvasScaler>().scaleFactor = scaleFactor;			
@@ -455,11 +456,11 @@ namespace yourvrexperience.Utils
 #if !ENABLE_NREAL
 			yourvrexperience.Utils.Utilities.ApplyZTestTop(newScreen.transform);
 #endif			
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 			newScreen.AddComponent<OVRRaycaster>();
 #elif ENABLE_NIANTICXR
 			newScreen.AddComponent<TrackedDeviceGraphicRaycaster>();
-#elif ENABLE_OPENXR
+#elif ENABLE_OPENXR || ENABLE_QR_XR
 			newScreen.AddComponent<TrackedDeviceGraphicRaycaster>();
 #elif ENABLE_ULTIMATEXR
 			if (newScreen.GetComponent<UxrCanvas>() == null) newScreen.AddComponent<UxrCanvas>();
@@ -478,10 +479,10 @@ namespace yourvrexperience.Utils
 			Canvas targetCanvas = target.GetComponentInChildren<Canvas>();			
 			if (targetCanvas != null)
 			{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
-#if ENABLE_OCULUS
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
+#if ENABLE_OCULUS || ENABLE_QR_META
                 targetCanvas.gameObject.AddComponent<OVRRaycaster>();
-#elif ENABLE_OPENXR
+#elif ENABLE_OPENXR || ENABLE_QR_XR
                 targetCanvas.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();
 #elif ENABLE_NIANTICXR
 				targetCanvas.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();

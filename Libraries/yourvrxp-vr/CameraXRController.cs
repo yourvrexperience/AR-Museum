@@ -67,13 +67,13 @@ namespace yourvrexperience.VR
 		public float Sensitivity = 7F;
         private float _rotationY = 0F;
 
-#if ENABLE_OCULUS 
+#if ENABLE_OCULUS || ENABLE_QR_META
 		private OVRGazePointer _gazePointer;
 		private OVRInputModule _inputModule;
 		private OculusHandsManager _handsManager;
 #elif ENABLE_NIANTICXR			
 		private GameObject _eventSystemNianticXR;
-#elif ENABLE_OPENXR			
+#elif ENABLE_OPENXR	|| ENABLE_QR_XR
 		private GameObject _eventSystemOpenXR;
 #elif ENABLE_ULTIMATEXR					
 		private GameObject _avatarUltimateXR;
@@ -144,32 +144,60 @@ namespace yourvrexperience.VR
                 _eventSystemNianticXR = Instantiate(EventSystemOpenXR) as GameObject;
                 Instantiate(VRInputControllerPrefab);
             }
-#elif ENABLE_OCULUS
-			if ((GameObject.FindFirstObjectByType<OVRCameraRig>() == null) && (CameraOculus != null))
-			{
-				if (!_instantiated)
-				{
-					_instantiated = true;
-					Instantiate(CameraOculus);
-					_gazePointer = Instantiate(GazePointerOculus).GetComponent<OVRGazePointer>();
-					_inputModule = Instantiate(EventSystemOculus).GetComponent<OVRInputModule>();
-					_inputModule.rayTransform = new GameObject().transform;
-					_handsManager = Instantiate(HandManagerOculus).GetComponent<OculusHandsManager>();
-					_inputModule.m_Cursor = _gazePointer;
-					Instantiate(VRInputControllerPrefab);
-				}
-			}
-#elif ENABLE_OPENXR
-			if ((GameObject.FindFirstObjectByType<OpenXRController>() == null) && (CameraOpenXR != null))
-			{
-				if (!_instantiated)
-				{
-					_instantiated = true;
-					Instantiate(CameraOpenXR);
-					_eventSystemOpenXR = Instantiate(EventSystemOpenXR) as GameObject;
-					Instantiate(VRInputControllerPrefab);
-				}
-			}
+#elif ENABLE_OCULUS || ENABLE_QR_META
+            if (!_instantiated)
+            {
+                if ((GameObject.FindFirstObjectByType<OculusController>() == null) && (CameraOculus != null))
+                {
+                    Instantiate(CameraOculus);
+                }					
+                if ((GameObject.FindFirstObjectByType<OVRGazePointer>() == null) && (GazePointerOculus != null)) 
+                {
+                    _gazePointer = Instantiate(GazePointerOculus).GetComponent<OVRGazePointer>();
+                }
+                else
+                {
+                    _gazePointer = GameObject.FindFirstObjectByType<OVRGazePointer>();
+                }
+                if ((GameObject.FindFirstObjectByType<OVRInputModule>() == null) && (EventSystemOculus != null)) 
+                {
+                    _inputModule = Instantiate(EventSystemOculus).GetComponent<OVRInputModule>();
+                }
+                else
+                {
+                    _inputModule = GameObject.FindFirstObjectByType<OVRInputModule>();
+                }					
+                _inputModule.rayTransform = new GameObject().transform;
+                if ((GameObject.FindFirstObjectByType<OculusHandsManager>() == null) && (HandManagerOculus != null)) 
+                {
+                    _handsManager = Instantiate(HandManagerOculus).GetComponent<OculusHandsManager>();
+                }
+                else
+                {
+                    _handsManager = GameObject.FindFirstObjectByType<OculusHandsManager>();
+                }					
+                _inputModule.m_Cursor = _gazePointer;
+                Instantiate(VRInputControllerPrefab);
+                _instantiated = true;
+            }			
+#elif ENABLE_OPENXR || ENABLE_QR_XR
+            if (!_instantiated)
+            {
+                if ((GameObject.FindFirstObjectByType<OpenXRController>() == null) && (CameraOpenXR != null))
+                {
+                    Instantiate(CameraOpenXR);
+                }              
+                if ((GameObject.FindFirstObjectByType<EventSystem>() == null) && (EventSystemOpenXR != null))
+                {
+                    _eventSystemOpenXR = Instantiate(EventSystemOpenXR) as GameObject;                        
+                }   
+                else
+                {
+                    _eventSystemOpenXR = GameObject.FindFirstObjectByType<EventSystem>().transform.gameObject;     
+                }
+                Instantiate(VRInputControllerPrefab);
+                _instantiated = true;
+            }			
 #elif ENABLE_ULTIMATEXR
 			if ((GameObject.FindFirstObjectByType<UltimateXRController>() == null) && (CameraUltimateXR != null))
 			{
@@ -193,6 +221,15 @@ namespace yourvrexperience.VR
                     Instantiate(VRInputControllerPrefab);
 				}
 			}
+#elif ENABLE_QR_MODE && !UNITY_EDITOR
+            if (!_instantiated)
+            {
+                if (GameObject.FindFirstObjectByType<EventSystem>() != null)
+                {
+                    _instantiated = true;
+                    _eventSystemDesktop = GameObject.FindFirstObjectByType<EventSystem>().transform.gameObject;     
+                }            
+            }
 #else
             if ((GameObject.FindFirstObjectByType<Camera>() == null) && (CameraDesktop != null))
 			{
@@ -245,7 +282,7 @@ namespace yourvrexperience.VR
 
 		private void LinkAvatarWithVRCamera()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			if ((_player != null) && (_inputControls != null))
 			{
 				VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerLinkWithAvatar, _player.GetGameObject());
@@ -288,23 +325,23 @@ namespace yourvrexperience.VR
 				{
 					DontDestroyOnLoad(Instance.gameObject);
 #if ENABLE_NIANTICXR
-                    DontDestroyOnLoad(_eventSystemNianticXR);
-#elif ENABLE_OCULUS
-					DontDestroyOnLoad(_inputModule.gameObject);
-					DontDestroyOnLoad(_gazePointer.gameObject);
-					DontDestroyOnLoad(_handsManager.gameObject);
-#elif ENABLE_OPENXR			
-					DontDestroyOnLoad(_eventSystemOpenXR);
+                    if (_eventSystemNianticXR != null) DontDestroyOnLoad(_eventSystemNianticXR);
+#elif ENABLE_OCULUS || ENABLE_QR_META
+					if (_inputModule != null) DontDestroyOnLoad(_inputModule.gameObject);
+					if (_gazePointer != null) DontDestroyOnLoad(_gazePointer.gameObject);
+					if (_handsManager != null) DontDestroyOnLoad(_handsManager.gameObject);
+#elif ENABLE_OPENXR	|| ENABLE_QR_XR
+					if (_eventSystemOpenXR != null) DontDestroyOnLoad(_eventSystemOpenXR);
 #elif ENABLE_ULTIMATEXR	
-					DontDestroyOnLoad(_avatarUltimateXR);							
-					DontDestroyOnLoad(_eventSystemUltimateXR);	
+					if (_avatarUltimateXR != null) DontDestroyOnLoad(_avatarUltimateXR);							
+					if (_eventSystemUltimateXR != null) DontDestroyOnLoad(_eventSystemUltimateXR);	
 #elif ENABLE_NREAL
-                    DontDestroyOnLoad(_cameraNRealXR);	
-                    DontDestroyOnLoad(_inputNRealXR);	
-                    DontDestroyOnLoad(_eventSystemNRealXR);	
+                    if (_cameraNRealXR != null) DontDestroyOnLoad(_cameraNRealXR);	
+                    if (_inputNRealXR != null) DontDestroyOnLoad(_inputNRealXR);	
+                    if (_eventSystemNRealXR != null) DontDestroyOnLoad(_eventSystemNRealXR);	
 #else
-					DontDestroyOnLoad(_cameraDesktop);
-					DontDestroyOnLoad(_eventSystemDesktop);
+					if (_cameraDesktop != null) DontDestroyOnLoad(_cameraDesktop);
+					if (_eventSystemDesktop != null) DontDestroyOnLoad(_eventSystemDesktop);
 #endif
 				}
 			}
@@ -316,11 +353,11 @@ namespace yourvrexperience.VR
 					GameObject.Destroy(this.gameObject);
 #if ENABLE_NIANTICXR
                     if (_eventSystemNianticXR != null) GameObject.Destroy(_eventSystemNianticXR);
-#elif ENABLE_OCULUS
+#elif ENABLE_OCULUS || ENABLE_QR_META
 					if (_gazePointer != null) GameObject.Destroy(_gazePointer.gameObject);
 					if (_inputModule != null) GameObject.Destroy(_inputModule.gameObject);
 					if (_handsManager != null) GameObject.Destroy(_handsManager.gameObject);
-#elif ENABLE_OPENXR
+#elif ENABLE_OPENXR || ENABLE_QR_XR
 					if (_eventSystemOpenXR != null) GameObject.Destroy(_eventSystemOpenXR);
 #elif ENABLE_ULTIMATEXR						
 					if (_avatarUltimateXR != null) GameObject.Destroy(_avatarUltimateXR);

@@ -793,6 +793,17 @@ namespace yourvrexperience.Utils
 			return GeometryUtility.TestPlanesAABB(planes, targetObject.bounds);
 		}
 
+		public static bool CheckInFrontOfCamera(Vector3 position, Camera cam)
+		{
+			Vector3 normal = cam.transform.forward;
+			Vector3 origin = cam.transform.position;
+
+			// Signed distance from the camera plane to the center of the bounds
+			float centerDist = Vector3.Dot(normal, position - origin);
+
+			return centerDist > 0;
+		}
+
 		public static Vector3 ConvertToTargetSystem(Transform originalSystem, Transform targetSystem, Vector3 originalPoint)
 		{
 			Vector3 pointInWorldSpace = originalSystem.TransformPoint(originalPoint);

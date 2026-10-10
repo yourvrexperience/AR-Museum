@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using yourvrexperience.UserManagement;
 using yourvrexperience.Utils;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META
 using yourvrexperience.VR;
 using static TMPro.TMP_InputField;
 #endif
@@ -46,7 +46,7 @@ namespace yourvrexperience.template6dof
             _emailValue = _container.Find("EmailValue").GetComponent<CustomInput>();
             _passwordValue = _container.Find("PasswordValue").GetComponent<CustomInput>();
 
-#if UNITY_EDITOR || ENABLE_NIANTICXR
+#if UNITY_EDITOR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
             _emailValue.text = "esteban@yourvrexperience.com";
             _passwordValue.text = "12345";
 #endif
@@ -54,14 +54,14 @@ namespace yourvrexperience.template6dof
             UIEventController.Instance.Event += OnUIEvent;
             SystemEventController.Instance.Event += OnSystemEvent;
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META
             _passwordValue.contentType = ContentType.Standard;
             _emailValue.OnFocusEvent += OnFocusEmailInputValue;
             _passwordValue.OnFocusEvent += OnFocusPasswordInputValue;
 #endif
         }
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META
         private void OnFocusEmailInputValue()
         {
 			_content.gameObject.SetActive(false);
@@ -143,7 +143,7 @@ namespace yourvrexperience.template6dof
             {
                 BackPressed();
             }
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL        
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META    
             if (_nameEvent.Equals(ScreenVRKeyboardView.EventScreenVRKeyboardSetNewText))
 			{
 				if (_emailValue.gameObject == (GameObject)_list[0])

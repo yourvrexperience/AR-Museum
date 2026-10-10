@@ -1,6 +1,5 @@
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using yourvrexperience.Narration;
@@ -92,7 +91,17 @@ namespace yourvrexperience.template6dof
         {
 			if (nameEvent.Equals(EventScreenReplayPOIViewDestroy))
 			{
-				UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
+				if (parameters.Length > 0)
+				{
+					if (_poiIndex == (int)parameters[0])
+					{
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
+					}
+				}
+				else
+				{
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
+				}
 			}
         }
 

@@ -6,7 +6,6 @@ using System.Xml;
 using static yourvrexperience.Utils.SoundsController;
 #if ENABLE_SPEECH
 using yourvrexperience.speech;
-using Unity.VisualScripting;
 using UnityEngine.Rendering;
 #endif
 #if ENABLE_NETWORKING
@@ -310,6 +309,18 @@ namespace yourvrexperience.Narration
 				}
 			}
 
+			public string GetNarrationQR()
+			{
+				foreach (NarrationObject narrationObj in Assets)
+				{
+					if (narrationObj.Type == TypeObjectNarration.QR)
+					{
+						return narrationObj.AssetName;
+					}
+				}
+				return "";
+			}
+
 			public void PrepareSegments()
 			{
 				for (int i = 0; i < LanguageController.Instance.SupportedLanguages.Length; i++)
@@ -514,6 +525,20 @@ namespace yourvrexperience.Narration
 					{
 						return _titleNarration;
 					}
+				}
+			}
+			public string TitleQR
+			{
+				get 
+				{
+					if (Title != null)
+					{
+						return Title.GetNarrationQR();
+					}
+					else
+					{
+						return "";
+					}					
 				}
 			}
 
@@ -747,6 +772,8 @@ namespace yourvrexperience.Narration
 		public const string EventNarrationControllerReleaseAllResources = "EventNarrationControllerReleaseAllResources";
 		public const string EventNarrationControllerUpdateTexts = "EventNarrationControllerUpdateTexts";
 		public const string EventNarrationControllerUpdateTitleLabel = "EventNarrationControllerUpdateTitleLabel";
+		public const string EventNarrationControllerRequestQRCode = "EventNarrationControllerRequestQRCode";
+		public const string EventNarrationControllerReportQRCode = "EventNarrationControllerReportQRCode";
 		public const string EventNarrationControllerReplayPOIUpdateTitleLabel = "EventNarrationControllerReplayPOIUpdateTitleLabel";
 		public const string NarrationControllerEndCurrentNarration = "NarrationControllerEndCurrentNarration";
 		public const string NarrationControllerReportEndedCurrentNarration = "NarrationControllerReportEndedCurrentNarration";
@@ -904,7 +931,7 @@ namespace yourvrexperience.Narration
 				string startEvent = ((narrationEntry.Attributes["startEvent"] != null)?narrationEntry.Attributes["startEvent"].Value:"");
 				string endEvent = ((narrationEntry.Attributes["endEvent"] != null)?narrationEntry.Attributes["endEvent"].Value:"");
 				string titleNarration = ((narrationEntry.Attributes["title"] != null)?narrationEntry.Attributes["title"].Value:"");
- 				
+				
 				NarrationData newNarration = new NarrationData(this, idToken, startEvent, endEvent, titleNarration);
 
 				// TITLE
@@ -1246,6 +1273,15 @@ namespace yourvrexperience.Narration
 				if (narrationSelected != null)
 				{
 					UIEventController.Instance.DispatchUIEvent(NarrationController.EventNarrationControllerUpdateTitleLabel, narrationSelected.TitleNarration);
+				}
+			}
+			if (nameEvent.Equals(EventNarrationControllerRequestQRCode))
+			{
+				int poiSelected = (int)parameters[0];
+				NarrationData narrationSelected = GetNarrationDataByPOIIndex(poiSelected);
+				if (narrationSelected != null)
+				{
+					SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerReportQRCode, poiSelected, narrationSelected.TitleQR);
 				}
 			}
 			if (nameEvent.Equals(EventNarrationControllerDoRestart))

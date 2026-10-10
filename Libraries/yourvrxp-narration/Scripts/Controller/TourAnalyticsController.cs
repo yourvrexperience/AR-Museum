@@ -106,7 +106,7 @@ namespace yourvrexperience.Narration
             new ParameterAnalysis("restarted", "integer", restarted)
         };
 
-        string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+        string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
         CommsHTTPAnalysis.Instance.LogEvent(EventPOIVisited, _email, (int)age, _language, _floor, jsonData);
 #endif 
 #endif                                           
@@ -128,7 +128,7 @@ namespace yourvrexperience.Narration
             new ParameterAnalysis("answer", "string", answer)
         };
 
-        string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+        string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
         CommsHTTPAnalysis.Instance.LogEvent(EventAIQuestion, _email, (int)age, _language, _floor, jsonData);
 #endif 
 #endif                                           
@@ -148,7 +148,7 @@ namespace yourvrexperience.Narration
             new ParameterAnalysis("number", "integer", index)
         };
 
-        string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+        string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
         CommsHTTPAnalysis.Instance.LogEvent(EventPOIReplayed, _email, (int)age, _language, _floor, jsonData);
 #endif      
 #endif                                      
@@ -170,7 +170,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("number", "integer", index)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(EventEasterEggUnlocked, _email, (int)age, _language, _floor, jsonData);
 #endif
 #endif    
@@ -190,7 +190,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("poi", "integer", poiIndex)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(EventTrackingLost, _email, (int)age, _language, _floor, jsonData);
 #endif           
 #endif                                             
@@ -212,7 +212,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("name", "string", nameScene)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent("EventLevelStart", _email, (int)age, _language, _floor, jsonData);
 #endif    
 #endif                                           
@@ -236,7 +236,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("time", "float", timeDone)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent("EventLevelEnd", _email, (int)age, _language, _floor, jsonData);
 #endif
 #endif    
@@ -253,7 +253,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("type", "string", value)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(nameEvent, _email, (int)age, _language, _floor, jsonData);
 #endif                                           
 #endif    
@@ -270,7 +270,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("type", "integer", value)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(nameEvent, _email, (int)age, _language, _floor, jsonData);
 #endif                                           
 #endif    
@@ -287,7 +287,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("type", "float", value)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(nameEvent, _email, (int)age, _language, _floor, jsonData);
 #endif    
 #endif                                           
@@ -305,7 +305,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("language", "string", codeLanguage)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(EventLanguageOS, _email, -1, _language, -1, jsonData);
 #endif
 #endif    
@@ -323,7 +323,7 @@ namespace yourvrexperience.Narration
                 new ParameterAnalysis("language", "string", codeLanguage)
             };
 
-            string jsonData = JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
+            string jsonData = yourvrexperience.Utils.JsonHelper.ToJson<ParameterAnalysis>(parameters.ToArray(), true);
             CommsHTTPAnalysis.Instance.LogEvent(EventLanguageSelected, _email, -1, _language, -1, jsonData);
 #endif                                           
 #endif    

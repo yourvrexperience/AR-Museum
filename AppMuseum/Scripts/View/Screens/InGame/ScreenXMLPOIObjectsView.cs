@@ -207,7 +207,7 @@ namespace yourvrexperience.template6dof
 		{
 			ContentScale.SetActive(false);
 			SlotManagerInstances.ClearCurrentGameObject(true);
-            _itemsPOIsObjectsInstances = new List<ItemMultiObjectEntry>();			
+            _itemsPOIsObjectsInstances = new List<ItemMultiObjectEntry>();		
 			for (int i = 0; i < _selectedEntry.Assets.Count; i++)
 			{
 				NarrationObject narrationObject = _selectedEntry.Assets[i];
@@ -269,7 +269,7 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, true);
 
 			Content.gameObject.SetActive(false);
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			ContentScale.SetActive(true);
 
 			buttonUp.gameObject.SetActive(_typePOIObject != TypeObjectNarration.Waypoints);
@@ -295,6 +295,16 @@ namespace yourvrexperience.template6dof
 				_animationScreenSelected = false;
 				switch (_typePOIObject)
 				{
+					case TypeObjectNarration.QR:
+						if (_selectedEntry.Assets.Count == 0)
+						{
+							_nameAsset = _assetSelected[0].Value;
+							_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, Vector3.zero, Quaternion.identity, Vector3.one, _typePOIObject, ""));
+							buttonAdd.gameObject.SetActive(false);
+							FillObjectInstances();
+						}
+						break;
+
 					case TypeObjectNarration.Image:						
 						HideToPositionObject();
 						string[] photos = new string[_assetSelected.Count];
@@ -310,7 +320,8 @@ namespace yourvrexperience.template6dof
 					case TypeObjectNarration.Video:
 						HideToPositionObject();
 						_nameAsset = _assetSelected[0].Value;
-						_videoController = MainController.Instance.CreateVideoController(false, _nameAsset, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, Vector3.one, true, false);
+						_animationSelected = _assetSelected[0].Animations;
+						_videoController = MainController.Instance.CreateVideoController(false, _nameAsset, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, Vector3.one, true, false, _animationSelected);
 						break;
 
 					case TypeObjectNarration.Model3D:						
@@ -399,7 +410,8 @@ namespace yourvrexperience.template6dof
 
 							case TypeObjectNarration.Video:
 								HideToPositionObject();
-								_videoController = MainController.Instance.CreateVideoController(false, _objectSelected.AssetName, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, _objectSelected.Scale, true, false);
+								_animationSelected = _objectSelected.Animation;	
+								_videoController = MainController.Instance.CreateVideoController(false, _objectSelected.AssetName, NavMeshController.Instance.AreaMaxST.transform, Vector3.zero, Quaternion.identity, _objectSelected.Scale, true, false, _objectSelected.Animation);
 								break;
 
 							case TypeObjectNarration.Model3D:
@@ -500,6 +512,13 @@ namespace yourvrexperience.template6dof
 						}
 						_assetSelected.Add(sAsset);
 						buttonAdd.gameObject.SetActive(true);
+						if (_typePOIObject == TypeObjectNarration.QR)
+						{
+							if (_selectedEntry.Assets.Count > 0)
+							{
+								buttonAdd.gameObject.SetActive(false);
+							}
+						}
 					}
 					buttonEdit.gameObject.SetActive(false);
 					buttonDelete.gameObject.SetActive(false);
@@ -519,12 +538,37 @@ namespace yourvrexperience.template6dof
 					else
 					{
 						_objectSelected = (NarrationObject)parameters[3];
-						buttonEdit.gameObject.SetActive(_typePOIObject != TypeObjectNarration.Waypoints);
+						if ((_typePOIObject == TypeObjectNarration.Waypoints) || (_typePOIObject == TypeObjectNarration.QR))
+						{
+							buttonEdit.gameObject.SetActive(false);
+						}
+						else
+						{
+							buttonEdit.gameObject.SetActive(true);
+						}
 						buttonDelete.gameObject.SetActive(true);
 					}
 				}
 			}
         }
+
+		private void GetStoragePose(Transform obj, out Vector3 pos, out Quaternion rot)
+		{
+		#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+			QRSpaceConverter.WorldToAreaFromQR(obj, out pos, out rot);
+		#else
+			pos = obj.localPosition;
+			rot = obj.localRotation;
+		#endif
+		}
+
+		private void SaveNarrationObject(Transform obj, Vector3 scale, string animation)
+		{
+			GetStoragePose(obj, out Vector3 pos, out Quaternion rot);
+			SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
+			_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, pos, rot, scale, _typePOIObject, animation));
+			FillObjectInstances();
+		}
 
 		void Update()
 		{
@@ -533,7 +577,7 @@ namespace yourvrexperience.template6dof
 				MainController.Instance.PlayerView.Run();
 				
 				bool placedObject = false;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				Vector3	positionCurrentController = Vector3.zero;
 				Vector3	forwardCurrentController = Vector3.zero;
 #if ENABLE_NIANTICXR
@@ -613,9 +657,7 @@ namespace yourvrexperience.template6dof
 
 							if (placedObject)
 							{
-								SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
-								_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, _photoController.transform.localPosition, _photoController.transform.localRotation, _photoController.Scale, _typePOIObject, ""));
-								FillObjectInstances();
+								SaveNarrationObject(_photoController.transform, _photoController.Scale, "");
 
 								GameObject.Destroy(_photoController.gameObject);
 								_photoController = null;
@@ -665,9 +707,7 @@ namespace yourvrexperience.template6dof
 
 							if (placedObject)
 							{
-								SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
-								_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, _videoController.transform.localPosition, _videoController.transform.localRotation, _videoController.Scale, _typePOIObject, ""));
-								FillObjectInstances();
+								SaveNarrationObject(_videoController.transform, _videoController.Scale, _animationSelected);
 
 								GameObject.Destroy(_videoController.gameObject);
 								_videoController = null;
@@ -718,9 +758,7 @@ namespace yourvrexperience.template6dof
 
 							if (placedObject)
 							{
-								SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
-								_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, _model3DController.transform.localPosition, _model3DController.transform.localRotation, _model3DController.Scale, _typePOIObject, _animationSelected));
-								FillObjectInstances();
+								SaveNarrationObject(_model3DController.transform, _model3DController.Scale, _animationSelected);
 
 								GameObject.Destroy(_model3DController.gameObject);
 								_model3DController = null;
@@ -770,9 +808,7 @@ namespace yourvrexperience.template6dof
 
 							if (placedObject)
 							{
-								SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
-								_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, _interactableController.transform.localPosition, _interactableController.transform.localRotation, _interactableController.transform.localScale, _typePOIObject, ""));
-								FillObjectInstances();
+								SaveNarrationObject(_interactableController.transform, _interactableController.transform.localScale, "");
 
 								_interactableController.GetComponent<IGameInteractables>().Destroy();
 								_interactableController = null;
@@ -807,9 +843,7 @@ namespace yourvrexperience.template6dof
 
 							if (placedObject)
 							{
-								SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, false);
-								_selectedEntry.Assets.Add(new NarrationController.NarrationObject(_nameAsset, _waypoint.transform.localPosition, _waypoint.transform.localRotation, _waypoint.transform.localScale, _typePOIObject, ""));
-								FillObjectInstances();
+								SaveNarrationObject(_waypoint.transform, _waypoint.transform.localScale, "");
 
 								if (_waypoint != null)
 								{

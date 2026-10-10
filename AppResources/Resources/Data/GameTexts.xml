@@ -514,6 +514,20 @@
 		<fr>Pause</fr>
 	</text>
 
+	<text id="screen.hud.edition.pois">
+		<en>Edition POIs</en>
+		<es>Edición POIs</es>
+		<ca>Edició POIs</ca>
+		<fr>Edició POIs</fr>
+	</text>
+
+	<text id="screen.hud.edition.secrets">
+		<en>Edition Secrets</en>
+		<es>Edición Secretos</es>
+		<ca>Edició Secrets</ca>
+		<fr>Edició Secrets</fr>
+	</text>
+
 	<text id="screen.main.menu.highscores.title">
 		<en>Highscores</en>
 		<es>Puntuaciones</es>
@@ -1411,6 +1425,13 @@
 		<fr>Supprimer le secret</fr>
 	</text>
 
+	<text id="screen.edit.segment.title.add.qr">
+		<en>Add QR Code</en>
+		<es>Añadir Código QR</es>
+		<ca>Afegir Codi QR</ca>
+		<fr>Ajouter un code QR</fr>
+	</text>
+
 	<text id="screen.edit.segment.title.add.image">
 		<en>Add Image</en>
 		<es>Añadir Imagen</es>
@@ -1483,15 +1504,15 @@
 
 	<text id="screen.pause.edit.mode.pois">
 		<en>Edit POIs</en>
-		<es>Edit POIs</es>
-		<ca>Edit POIs</ca>
+		<es>Editar POIs</es>
+		<ca>Editar POIs</ca>
 		<fr>Modifier les POI</fr>
 	</text>
 
 	<text id="screen.pause.edit.mode.secrets">
 		<en>Edit Secrets</en>
-		<es>Edit Secrets</es>
-		<ca>Edit Secrets</ca>
+		<es>Editar Secretos</es>
+		<ca>Editar Secrets</ca>
 		<fr>Modifier les secrets</fr>
 	</text>
 

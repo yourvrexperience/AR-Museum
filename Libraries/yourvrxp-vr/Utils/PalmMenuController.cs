@@ -5,7 +5,7 @@ using yourvrexperience.Utils;
 #if ENABLE_ULTIMATEXR
 using UltimateXR.UI.UnityInputModule;
 #endif
-#if ENABLE_OPENXR || ENABLE_NIANTICXR
+#if ENABLE_OPENXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using UnityEngine.XR.Interaction.Toolkit.UI;
 #endif
 using UnityEngine;
@@ -35,9 +35,9 @@ namespace yourvrexperience.VR
 		{
 #if ENABLE_NIANTICXR			
 			if (_visualsContainer.GetComponent<TrackedDeviceGraphicRaycaster>() == null) _visualsContainer.AddComponent<TrackedDeviceGraphicRaycaster>();
-#elif ENABLE_OCULUS
+#elif ENABLE_OCULUS || ENABLE_QR_META
 			if (_visualsContainer.GetComponent<OVRRaycaster>() == null) _visualsContainer.AddComponent<OVRRaycaster>();
-#elif ENABLE_OPENXR
+#elif ENABLE_OPENXR || ENABLE_QR_XR
 			if (_visualsContainer.GetComponent<TrackedDeviceGraphicRaycaster>() == null) _visualsContainer.AddComponent<TrackedDeviceGraphicRaycaster>();
 #elif ENABLE_ULTIMATEXR
 			if (_visualsContainer.GetComponent<UxrCanvas>() == null) _visualsContainer.AddComponent<UxrCanvas>();
@@ -47,7 +47,7 @@ namespace yourvrexperience.VR
 #endif
 			_initialRotation = _visualsContainer.transform.localRotation;
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			if ((VRInputController.Instance != null) && (VRInputController.Instance.VRController.HeadController != null))
 			{
 				// Left hand detector
@@ -76,7 +76,7 @@ namespace yourvrexperience.VR
 
 		protected virtual void OnDestroy()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			if (VRInputController.Instance != null)
 			{
 				VRInputController.Instance.Event -= OnVREvent;
@@ -102,7 +102,7 @@ namespace yourvrexperience.VR
 		}
 #endif		
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 		protected virtual void OnVREvent(string nameEvent, object[] parameters)
 		{
 			if (nameEvent.Equals(VRInputController.EventVRInputControllerChangedHandTrackingState))
@@ -119,7 +119,7 @@ namespace yourvrexperience.VR
 		{
 			if (nameEvent.Equals(EventPalmMenuControllerShow))
 			{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL	|| 	ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL	|| 	ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				_visualsContainer.transform.forward = VRInputController.Instance.VRController.HeadController.transform.forward;
 				_visualsContainer.SetActive(true);
 #endif			
@@ -130,7 +130,7 @@ namespace yourvrexperience.VR
 		{
 			this.transform.parent = menuPosition.transform;
 			this.transform.position = menuPosition.transform.position;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL	|| ENABLE_NIANTICXR	
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL	|| ENABLE_NIANTICXR	|| ENABLE_QR_XR || ENABLE_QR_META
 			_visualsContainer.transform.forward = VRInputController.Instance.VRController.HeadController.transform.forward;
 			_visualsContainer.SetActive(true);
 #endif			
@@ -187,7 +187,7 @@ namespace yourvrexperience.VR
 		{
 			if (_isActiveRight || _isActiveLeft)
 			{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR	|| ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				_visualsContainer.transform.forward = -(VRInputController.Instance.VRController.HeadController.transform.position - this.transform.position).normalized;
 #endif				
 			}		

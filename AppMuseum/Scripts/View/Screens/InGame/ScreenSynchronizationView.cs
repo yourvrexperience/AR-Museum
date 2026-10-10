@@ -40,8 +40,10 @@ namespace yourvrexperience.template6dof
 				hasBeenDetected = VuforiaController.Instance.HasAreaBeenDetected;
 #elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 				hasBeenDetected = NianticController.Instance.HasAreaBeenDetected;
-#else
+#elif ENABLE_MAXST
 				hasBeenDetected = ARMaxSTController.Instance.HasAreaBeenDetected;
+#elif ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META
+				hasBeenDetected = QRImageController.Instance.HasAreaBeenDetected;				
 #endif				
 				if (hasBeenDetected)
 				{

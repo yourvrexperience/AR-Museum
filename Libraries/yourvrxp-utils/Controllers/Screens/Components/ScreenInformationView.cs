@@ -76,7 +76,7 @@ namespace yourvrexperience.Utils
 #if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
 			shouldHidePrevious = false;
 #endif			
-			return ScreenController.Instance.CreateScreen(screenName, false, shouldHidePrevious, origin, customEvent, title, description, okText, cancelText, infoImage, contentType, checkInput);
+			return ScreenController.Instance.CreateDistanceScreen(screenName, ScreenController.Instance.DistanceScreen / 1.5f, false, shouldHidePrevious, origin, customEvent, title, description, okText, cancelText, infoImage, contentType, checkInput);
 		}
 
         public override void Initialize(params object[] parameters)

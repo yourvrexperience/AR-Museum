@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -33,10 +32,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private Button previousImage;
 		[SerializeField] private Button nextImage;
 
-		[SerializeField] private VideoPlayer videoPlayer;
-		[SerializeField] private Button previousVideo;
-		[SerializeField] private Button maximizeVideo;
-		[SerializeField] private Button nextVideo;	
+		[SerializeField] private POIVideoController videoController;
 
 		[SerializeField] private Image iconPause;	
 		[SerializeField] private Image iconWait;	
@@ -96,6 +92,7 @@ namespace yourvrexperience.template6dof
 			titleScreen.text = LanguageController.Instance.GetText(_narrationReplaying.TitleNarration);
 			descriptionScreen.text = "";
 
+
 			SystemEventController.Instance.Event += OnSystemEvent;
 			UIEventController.Instance.Event += OnUIEvent;
 			NetworkController.Instance.NetworkEvent += OnNetworkEvent;
@@ -104,17 +101,18 @@ namespace yourvrexperience.template6dof
 			buttonSkip.onClick.AddListener(OnButtonResume);
 			buttonRestart.onClick.AddListener(OnRestart);
 
-			videoPlayer.gameObject.SetActive(false);
-			previousVideo.onClick.AddListener(OnPreviousVideoClicked);
-			maximizeVideo.onClick.AddListener(OnMaximizeVideoClicked);
-			nextVideo.onClick.AddListener(OnNextVideoClicked);
+			videoController.gameObject.SetActive(false);
 
 			containerImage.gameObject.SetActive(false);
 			maximizeImage.onClick.AddListener(OnMaximizeImageClicked);
 			previousImage.onClick.AddListener(OnPreviousImageClicked);
 			nextImage.onClick.AddListener(OnNextImageClicked);					
 
-			MainController.Instance.GuideTourView.SetPositionOutsideNarration(_replayPOI.GOPosition.transform.position);			
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+			MainController.Instance.GuideTourView.SetPositionOutsideNarration(QRImageController.Instance.GetPositionQR(_narrationReplaying.TitleQR));
+#else
+			MainController.Instance.GuideTourView.SetPositionOutsideNarration(_replayPOI.GOPosition.transform.position);
+#endif
 
 			_narrationController = MainController.Instance.CreateNarrationPreviousPOI(_narrationReplaying);			
 			
@@ -233,7 +231,7 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(NarrationToken.EventNarrationTokenDestroyNarrationObject, true);
 			UIEventController.Instance.DispatchUIEvent(ScreenPauseView.EventScreenPauseViewResumeGame);
 			UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)							
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)							
 			SystemEventController.Instance.DelaySystemEvent(ScreenInfoNextButtonView.EventScreenInfoNextButtonViewVisibilityContent, 0.1f, false);
 #endif			
         }
@@ -255,14 +253,6 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(GameStateRun.EventGameStateRunNavigateToCurrentPOI);
 		}
 
-		private void OnMaximizeVideoClicked()
-		{
-			SystemEventController.Instance.DispatchSystemEvent(POIVideoController.EventPOIVideoControllerMinimize, (float)videoPlayer.time);
-			videoPlayer.Pause();
-			videoPlayer.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);
-		}
-		
 		private void OnMaximizeImageClicked()
 		{
 			SystemEventController.Instance.DispatchSystemEvent(POIPhotoGalleryController.EventPOIPhotoGalleryControllerMinimize, CurrentImage);
@@ -271,9 +261,9 @@ namespace yourvrexperience.template6dof
 
 		private void DisableAllContent()
 		{
-			if (videoPlayer.isPlaying) videoPlayer.Pause();
+			if (videoController.IsPlaying()) videoController.Pause();
 			containerImage.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);	
+			videoController.gameObject.SetActive(false);	
 			_images = null;		
 		}
 		
@@ -286,26 +276,6 @@ namespace yourvrexperience.template6dof
         {
             CurrentImage--;
         }
-
-		private void OnNextVideoClicked()
-		{
-			if (videoPlayer.time + POIVideoController.JumpTime < videoPlayer.clip.length)
-            {
-				videoPlayer.time += POIVideoController.JumpTime;
-			}			
-		}
-
-		private void OnPreviousVideoClicked()
-		{
-			if (videoPlayer.time - POIVideoController.JumpTime < 0)
-			{
-				videoPlayer.time = 0;
-			}
-			else
-            {
-				videoPlayer.time -= POIVideoController.JumpTime;
-			}
-		}
 
 		private void OnUIEvent(string nameEvent, object[] parameters)
 		{
@@ -412,21 +382,18 @@ namespace yourvrexperience.template6dof
 				if (isEasterEgg)
 				{
 					string video = (string)parameters[1];
-					if (!_videoName.Equals(video))
-					{
-						_videoName = video;
-						VideoClip videoClip = AssetBundleController.Instance.CreateVideoclip(_videoName);
-						if (videoClip != null)
-						{
-							videoPlayer.clip = videoClip;
-						}
-					}
-					float time = (float)parameters[2];
-					videoPlayer.gameObject.SetActive(true);
-					videoPlayer.time = time;
-					videoPlayer.Play();
+					string videoURL = (string)parameters[2];
+					float time = (float)parameters[3];
+					float duration = (float)parameters[4];
+					videoController.gameObject.SetActive(true);
+					videoController.PlayScreenspace(video, videoURL, time, duration);
 				}
-			}			
+			}
+			if (nameEvent.Equals(POIVideoController.EventPOIVideoControllerMinimize))
+			{
+				videoController.Pause();
+				videoController.gameObject.SetActive(false);
+			}
         }
 
 		private void OnNetworkEvent(string nameEvent, int originNetworkID, int targetNetworkID, object[] parameters)
@@ -459,7 +426,7 @@ namespace yourvrexperience.template6dof
 
 		void Update()
         {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)				
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)				
 			Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 			GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
 			Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, GameStateRun.SHIFT_VR_SCREEN, 0);

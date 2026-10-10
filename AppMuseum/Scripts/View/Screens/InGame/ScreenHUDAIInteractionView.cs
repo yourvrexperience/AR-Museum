@@ -7,7 +7,7 @@ using UnityEngine.Video;
 using yourvrexperience.Narration;
 using yourvrexperience.speech;
 using yourvrexperience.Utils;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using yourvrexperience.VR;
 #endif
 using static yourvrexperience.Narration.NarrationController;
@@ -62,7 +62,7 @@ namespace yourvrexperience.template6dof
 
 		public void PositionNarrator()
 		{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 			GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
 			Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, GameStateRun.SHIFT_VR_SCREEN, 0);			 
@@ -89,7 +89,7 @@ namespace yourvrexperience.template6dof
 			buttonReturnQuestion.onClick.AddListener(OnReturnToQuestion);
 			buttonReplayAnswer.onClick.AddListener(OnReplayAnswer);
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			inputField.OnFocusDownEvent += OnFocusQuestionInput;
 
 			RefocusScreen refocusComponent = this.gameObject.GetComponent<RefocusScreen>();
@@ -115,14 +115,14 @@ namespace yourvrexperience.template6dof
 			
 			SystemEventController.Instance.DispatchSystemEvent(Template6DOFAIData.EventTemplate6DOFAIDataCancelAIRequest);
 			
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			UIEventController.Instance.DispatchUIEvent(PanelInputTextAction.EventPanelInputExternalClose);
 #endif			
 			SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, true);
 		}
 
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 		private void OnFocusQuestionInput()
 		{
 			PanelInputTextAction inputActionText = MainController.Instance.CreateInputActionEditText();

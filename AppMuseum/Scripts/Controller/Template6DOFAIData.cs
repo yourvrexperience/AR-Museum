@@ -160,7 +160,11 @@ namespace yourvrexperience.template6dof
                     {
                         targetPosition.y = MainController.Instance.GuideTourView.transform.position.y;
                     }
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR                   
+                    MainController.Instance.GuideTourView.SetPositionOutsideNarration(QRImageController.Instance.GetPositionQR(MainController.Instance.LevelView.CurrentQR));
+#else
                     MainController.Instance.GuideTourView.SetPositionOutsideNarration(targetPosition);
+#endif                    
                     SystemEventController.Instance.DispatchSystemEvent(TourGuideView.EventTourGuideViewSpeakActivation, true);
                     _narrationController.Play(0);
                     SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, true);                        

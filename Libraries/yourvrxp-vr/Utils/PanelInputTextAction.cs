@@ -5,7 +5,7 @@ using yourvrexperience.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using UnityEngine.XR.Interaction.Toolkit.UI;
 #endif
 
@@ -101,13 +101,13 @@ namespace yourvrexperience.VR
 
 			_layerUI = LayerMask.GetMask(PanelLayerCast);
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_NREAL
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META
 			this.gameObject.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
 #if ENABLE_NIANTICXR			
 			this.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();
-#elif ENABLE_OCULUS
+#elif ENABLE_OCULUS || ENABLE_QR_META
 			this.gameObject.AddComponent<OVRRaycaster>();
-#elif ENABLE_OPENXR
+#elif ENABLE_OPENXR || ENABLE_QR_XR
 			this.gameObject.AddComponent<TrackedDeviceGraphicRaycaster>();
 #elif ENABLE_ULTIMATEXR
 			if (this.gameObject.GetComponent<UxrCanvas>() == null) this.gameObject.AddComponent<UxrCanvas>();

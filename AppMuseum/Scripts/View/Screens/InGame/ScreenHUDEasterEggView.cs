@@ -29,10 +29,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private Button previousImage;
 		[SerializeField] private Button nextImage;
 
-		[SerializeField] private VideoPlayer videoPlayer;
-		[SerializeField] private Button previousVideo;
-		[SerializeField] private Button maximizeVideo;
-		[SerializeField] private Button nextVideo;
+		[SerializeField] private POIVideoController videoController;
 		
 		private float _timeAcum = 0;
 		private float _totalTime = 0;
@@ -86,10 +83,7 @@ namespace yourvrexperience.template6dof
 			LabelNoSubtitles.gameObject.SetActive(false);
 			description.text = "";
 
-			videoPlayer.gameObject.SetActive(false);
-			previousVideo.onClick.AddListener(OnPreviousVideoClicked);
-			maximizeVideo.onClick.AddListener(OnMaximizeVideoClicked);
-			nextVideo.onClick.AddListener(OnNextVideoClicked);
+			videoController.gameObject.SetActive(false);			
 
 			containerImage.gameObject.SetActive(false);
 			maximizeImage.onClick.AddListener(OnMaximizeImageClicked);			
@@ -122,10 +116,7 @@ namespace yourvrexperience.template6dof
 
 		private void OnMaximizeVideoClicked()
 		{
-			SystemEventController.Instance.DispatchSystemEvent(POIVideoController.EventPOIVideoControllerMinimize, (float)videoPlayer.time);
-			videoPlayer.Pause();
-			videoPlayer.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);
+			
 		}
 		
 		private void OnMaximizeImageClicked()
@@ -136,32 +127,12 @@ namespace yourvrexperience.template6dof
 
 		private void DisableAllContent()
 		{
-			if (videoPlayer.isPlaying) videoPlayer.Pause();
+			if (videoController.IsPlaying()) videoController.Pause();
 			containerImage.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);			
+			videoController.gameObject.SetActive(false);			
 			_images = null;
 		}
 		
-		private void OnNextVideoClicked()
-		{
-			if (videoPlayer.time + POIVideoController.JumpTime < videoPlayer.clip.length)
-            {
-				videoPlayer.time += POIVideoController.JumpTime;
-			}			
-		}
-
-		private void OnPreviousVideoClicked()
-		{
-			if (videoPlayer.time - POIVideoController.JumpTime < 0)
-			{
-				videoPlayer.time = 0;
-			}
-			else
-            {
-				videoPlayer.time -= POIVideoController.JumpTime;
-			}
-		}
-
 		private void OnButtonResume()
 		{
 			SystemEventController.Instance.DispatchSystemEvent(LevelView.EventLevelViewDestroyEasterEgg);
@@ -216,21 +187,18 @@ namespace yourvrexperience.template6dof
 				if (isEasterEgg)
 				{
 					string video = (string)parameters[1];
-					if (!_videoName.Equals(video))
-					{
-						_videoName = video;
-						VideoClip videoClip = AssetBundleController.Instance.CreateVideoclip(_videoName);
-						if (videoClip != null)
-						{
-							videoPlayer.clip = videoClip;
-						}
-					}
-					float time = (float)parameters[2];
-					videoPlayer.gameObject.SetActive(true);
-					videoPlayer.time = time;
-					videoPlayer.Play();
+					string videoURL = (string)parameters[2];
+					float time = (float)parameters[3];
+					float duration = (float)parameters[4];
+					videoController.gameObject.SetActive(true);
+					videoController.PlayScreenspace(video, videoURL, time, duration);
 				}
-			}			
+			}		
+			if (nameEvent.Equals(POIVideoController.EventPOIVideoControllerMinimize))
+			{
+				videoController.Pause();
+				videoController.gameObject.SetActive(false);
+			}
 		}
 
 		private void OnUIEvent(string nameEvent, object[] parameters)
@@ -280,12 +248,13 @@ namespace yourvrexperience.template6dof
 
 		void Update()
         {
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			this.transform.forward =  (this.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
 #endif
 
+#if (!ENABLE_QR_MODE && !ENABLE_QR_XR && !ENABLE_QR_META) || UNITY_EDITOR
 			ResumeInFarAway();
-			
+#endif			
 			if (_isVisible)
 			{			
 				if (_totalTime > 0)

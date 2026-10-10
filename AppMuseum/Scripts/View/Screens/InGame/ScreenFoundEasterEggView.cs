@@ -29,6 +29,8 @@ namespace yourvrexperience.template6dof
 		private bool _hasBeenFirstClicked = false;
 		private EasterEgg _easterEgg;
 		private EasterEgg _easterVREgg;
+		private string _qrCode = "";
+		private int _indexSecret = -1;
 
 		public override string NameScreen
 		{
@@ -42,6 +44,19 @@ namespace yourvrexperience.template6dof
 			titleScreen.text = (string)parameters[0];
 			descriptionScreen.text = (string)parameters[1];
 			_easterEgg = (EasterEgg)parameters[2];
+			bool displayButtonReady = false;
+			if (parameters.Length > 3)
+			{
+				displayButtonReady = (bool)parameters[3];
+			}
+			if (parameters.Length > 4)
+			{
+				_qrCode = (string)parameters[4];
+			}			
+			if (parameters.Length > 5)
+			{
+				_indexSecret = (int)parameters[5];
+			}						
 
 			SystemEventController.Instance.Event += OnSystemEvent;
 			UIEventController.Instance.Event += OnUIEvent;
@@ -54,14 +69,14 @@ namespace yourvrexperience.template6dof
 			iconOff.SetActive(true);
 			iconOn.SetActive(false);
 
-			if (_easterEgg.Played)
+			if (_easterEgg.Played || displayButtonReady)
 			{
 				DisplayPlayButtonReady();
 			}
 
 			buttonPlay.onClick.AddListener(OnButtonPlay);
 			
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META)
 			VRButtonInteraction.gameObject.SetActive(true);
 			VRButtonInteraction.onClick.AddListener(OnButtonVRPlay);
 #else
@@ -90,9 +105,10 @@ namespace yourvrexperience.template6dof
 				iconOn.SetActive(true);
 
 				_easterEgg.SetPlayed(true);
-				SystemEventController.Instance.DispatchSystemEvent(LevelView.EventLevelViewPlayEasterEgg, _easterEgg.Index, _easterEgg.ActivationEvent, _easterEgg.Reference);
+				SystemEventController.Instance.DispatchSystemEvent(LevelView.EventLevelViewPlayEasterEgg, _easterEgg.Index, _easterEgg.ActivationEvent, _easterEgg.Reference, _qrCode, _indexSecret);
 				_easterVREgg = _easterEgg;
 				_easterEgg = null;
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);	
 			}						
         }
 
@@ -115,9 +131,7 @@ namespace yourvrexperience.template6dof
 			_hasBeenFirstClicked = true;
 			popUpContainerScreen.SetActive(false);
 
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
 			buttonPlay.gameObject.SetActive(true);
-#endif
 			labelContainer.SetActive(true);
 
 			labelToPlayScreen.text = LanguageController.Instance.GetText("screen.easter.egg.found.press.play");
@@ -135,7 +149,18 @@ namespace yourvrexperience.template6dof
         {
 			if (nameEvent.Equals(EventScreenFoundEasterEggViewDestroy))
 			{
-				UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
+				if ((parameters != null) && (parameters.Length > 0))
+				{
+					if ((_qrCode != null) && (_qrCode.Equals((string)parameters[0])))
+					{
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);
+						return;
+					}
+				}
+				else
+				{
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);	
+				}				
 			}
         }
 
@@ -143,8 +168,8 @@ namespace yourvrexperience.template6dof
 		{
 			if (_easterEgg != null)
 			{
-#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
-			if (Input.GetMouseButtonDown(0))
+#if !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_QR_XR || ENABLE_QR_META)
+				if (Input.GetMouseButtonDown(0))
 				{
 					if (!_hasBeenFirstClicked)
 					{

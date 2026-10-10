@@ -365,7 +365,7 @@ namespace yourvrexperience.template6dof
 		{
 			if (_speechesToDownload.Remove(speechDownloaded))
 			{
-				Debug.Log("===================== REMOVED SUCCESSFULLY SPEECH DOWNLOADED["+speechDownloaded+"]");
+				// Debug.Log("===================== REMOVED SUCCESSFULLY SPEECH DOWNLOADED["+speechDownloaded+"]");
 			}
 
 			if (_speechesToDownload.Count > 0)
@@ -521,7 +521,7 @@ namespace yourvrexperience.template6dof
 				UIEventController.Instance.DispatchUIEvent(ScreenInformationView.EventScreenInformationRequestAllScreensDestroyed);
 				if (_speechesToProcess.Remove(idSpeech))
                 {
-					Debug.Log("--["+success+"] REMOVED SPEECH[" + idSpeech + "] OF TOTAL=" + _speechesToProcess.Count);
+					// Debug.Log("--["+success+"] REMOVED SPEECH[" + idSpeech + "] OF TOTAL=" + _speechesToProcess.Count);
 				}
 				if (success)
 				{

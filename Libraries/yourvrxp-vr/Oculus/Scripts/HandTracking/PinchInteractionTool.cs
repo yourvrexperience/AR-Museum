@@ -30,7 +30,7 @@ namespace yourvrexperience.VR
 		[Tooltip("Tick for the right hand; leave unticked for the left. Can also be set at runtime before Initialize().")]
 		[SerializeField] private bool _isRightHand = false;
 
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 		[Tooltip("OVRHand for this hand. Leave empty for runtime tools — it is resolved by handedness from OculusHandsManager.")]
 		[SerializeField] private OVRHand _ovrHand = null;
 

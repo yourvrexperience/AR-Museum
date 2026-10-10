@@ -1,4 +1,4 @@
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 using Oculus.Interaction;
 #endif
 using System;
@@ -12,7 +12,7 @@ using UnityEngine.Assertions;
 namespace yourvrexperience.VR
 {
     public class OculusController : MonoBehaviour
-#if ENABLE_OCULUS	
+#if ENABLE_OCULUS || ENABLE_QR_META
 	, IVRController
 #endif	
     {
@@ -20,7 +20,7 @@ namespace yourvrexperience.VR
         public GameObject OculusLeftController;
         public GameObject OculusRightController;
 
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
         private static OculusController _instance;
 
         public static OculusController Instance
@@ -685,6 +685,31 @@ namespace yourvrexperience.VR
 		public void ResetState()
 		{
 		}
+
+		public Vector3 GetOriginByLineRenderer()
+		{
+			if (_handSelected == XR_HAND.right)
+			{
+				return _raycastLineRight.GetPosition(0);
+			}
+			else
+			{
+				return _raycastLineLeft.GetPosition(0);
+			}
+		}
+
+		public Vector3 GetForwardByLineRenderer()
+		{
+			if (_handSelected == XR_HAND.right)
+			{
+				return (_raycastLineRight.GetPosition(1) - _raycastLineRight.GetPosition(0)).normalized;
+			}
+			else
+			{
+				return (_raycastLineLeft.GetPosition(1) - _raycastLineLeft.GetPosition(0)).normalized;
+			}
+		}
+		
 
 		void Update()
 		{

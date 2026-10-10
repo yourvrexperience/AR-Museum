@@ -1,4 +1,4 @@
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 using Oculus.Interaction;
 #endif
 using System;
@@ -19,14 +19,19 @@ namespace yourvrexperience.VR
 		public const string EventOculusHandsManagerStateChanged = "EventOculusHandsManagerStateChanged";
 		public const string EventOculusHandsManagerRotationCameraApplied = "EventOculusHandsManagerRotationCameraApplied";
 		public const string EventOculusHandsManagerSetUpLaserPointerInitialize = "EventOculusHandsManagerSetUpLaserPointerInitialize";
+		public const string EventOculusHandsManagerMenuGesture = "EventOculusHandsManagerMenuGesture";
 
 		public const string EventPinchInteractionToolRequestRay = "EventPinchInteractionToolRequestRay";
 		public const string EventPinchInteractionToolResponseRay = "EventPinchInteractionToolResponseRay";
 		public const string EventPinchInteractionToolPinchPressed = "EventPinchInteractionToolPinchPressed";
 		public const string EventPinchInteractionToolPinchReleased = "EventPinchInteractionToolPinchReleased";
 
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 		[SerializeField] private float InteractionFingerSize = 0.1f;
+
+		private const float MENU_HOLD_TIME = 0.35f;
+		private float _leftMiddlePinchTime, _rightMiddlePinchTime;
+		private bool _leftCancelFired, _rightCancelFired;
 
 		private bool _handsBeingTracked = false;
 		private bool _enableVisualRays = false;
@@ -423,11 +428,44 @@ namespace yourvrexperience.VR
 			}
 		}
 
+		private void CheckGestures()
+		{
+			if (!_handsBeingTracked) return;
+
+			CheckMiddlePinch(_leftHand, XR_HAND.left, ref _leftMiddlePinchTime, ref _leftCancelFired);
+			CheckMiddlePinch(_rightHand, XR_HAND.right, ref _rightMiddlePinchTime, ref _rightCancelFired);
+		}
+
+		private void CheckMiddlePinch(OVRHand hand, XR_HAND side, ref float timer, ref bool fired)
+		{
+			bool pinching = hand != null
+						&& hand.IsTracked
+						&& hand.IsDataHighConfidence
+						&& !hand.IsSystemGestureInProgress
+						&& hand.GetFingerIsPinching(OVRHand.HandFinger.Middle)
+						&& !hand.GetFingerIsPinching(OVRHand.HandFinger.Index);
+
+			if (!pinching)
+			{
+				timer = 0;
+				fired = false;   // re-arm only after releasing
+				return;
+			}
+
+			timer += Time.deltaTime;
+			if (!fired && timer >= MENU_HOLD_TIME)
+			{
+				fired = true;				
+				VRInputController.Instance.DispatchVREvent(EventOculusHandsManagerMenuGesture, side);
+			}
+		}
+
 		private void Update()
 		{
 			if ((_leftHandGO != null) && (_rightHandGO != null))
 			{
 				CheckHandsBeingTracked();
+				CheckGestures();
 			}
 		}
 #endif

@@ -3,6 +3,9 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using yourvrexperience.Narration;
+using UnityEngine.EventSystems;
+using static yourvrexperience.template6dof.LevelView;
 
 namespace yourvrexperience.template6dof
 {

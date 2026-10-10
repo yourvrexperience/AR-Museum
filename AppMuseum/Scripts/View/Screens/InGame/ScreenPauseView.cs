@@ -148,7 +148,7 @@ namespace yourvrexperience.template6dof
 			trackingLost = !VuforiaController.Instance.HasAreaBeenDetected;
 #elif ENABLE_NIANTIC
 			trackingLost = !NianticController.Instance.HasAreaBeenDetected;
-#else
+#elif ENABLE_MAXST
 			trackingLost = !ARMaxSTController.Instance.HasAreaBeenDetected;
 #endif			
 #endif
@@ -162,7 +162,7 @@ namespace yourvrexperience.template6dof
 			}
 
 			buttonResume.onClick.AddListener(OnButtonResume);
-			buttonWorldMap.onClick.AddListener(OnButtonWorldMap);			
+			buttonWorldMap.onClick.AddListener(OnButtonWorldMap);
 			resumeFromWorldMap.onClick.AddListener(OnButtonResume);
 			resumeFromManagement.onClick.AddListener(OnButtonResume);
 			textNotVisited.text = LanguageController.Instance.GetText("screen.pause.map.not.visited");
@@ -280,6 +280,8 @@ namespace yourvrexperience.template6dof
 				btnEditMode.gameObject.SetActive(false);
 			}
 
+			MainController.Instance.LevelView.BlockSetPlaying = false;
+
 #if ENABLE_ONE_FLOOR
            buttonWorldMap.gameObject.SetActive(false);
 #endif			
@@ -302,6 +304,7 @@ namespace yourvrexperience.template6dof
 				textButton = LanguageController.Instance.GetText("screen.pause.edit.mode.secrets");
 			}
 			btnEditMode.GetComponentInChildren<TextMeshProUGUI>().text = textButton;
+			SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnableSecrets, false);
 		}
 
         private void OnSaveEditionPOIs()
@@ -899,6 +902,12 @@ namespace yourvrexperience.template6dof
 			{
 				_trackingLostDuringPause = true;
 			}
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				OnButtonResume();
+			}
+#endif			
 		}
 
         private void OnUIEvent(string nameEvent, object[] parameters)
@@ -1005,7 +1014,7 @@ namespace yourvrexperience.template6dof
 		{
 			if (_player != null)
 			{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR				
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR	|| ENABLE_QR_XR || ENABLE_QR_META	
 				if (MainController.Instance.GameInputController.ActionMenuPressed())
                 {
                     OnButtonResume();
@@ -1025,7 +1034,7 @@ namespace yourvrexperience.template6dof
 					{
 						MoveAerealCamera();
 
-#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META
 						_cameraTexture.transform.forward = Vector3.down;
 #else						
 						_cameraTexture.transform.forward = Vector3.down;

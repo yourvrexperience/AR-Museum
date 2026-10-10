@@ -46,6 +46,7 @@ namespace yourvrexperience.template6dof
 
 		public enum ConfigurationEasterEggScreen { None = 0, Video, Photos, Discover, Narration }
 
+		private GameLevelStates _previousGameLevelState = GameLevelStates.Initialization;
 		private GameLevelStates _gameLevelState = GameLevelStates.Initialization;
 		private GameLevelStates _previousStateToPause = GameLevelStates.Initialization;
 		private GameLevelSubStates _gameLevelSubState = GameLevelSubStates.Null;
@@ -53,6 +54,7 @@ namespace yourvrexperience.template6dof
 		private int _presentationCounter = 3;
 		private int _currentPOIIndex = 0;
 		private POIData _currentPOI = null;
+		private string _currentQR = "";
 		private int _totalTimeEasterEgg = -1;		
 		private ConfigurationEasterEggScreen _configurationEasterEgg = ConfigurationEasterEggScreen.None;
 		private EasterEgg _currentEggFound = null;
@@ -63,15 +65,25 @@ namespace yourvrexperience.template6dof
 		private List<QuestionForm> _questions = new List<QuestionForm>();
 
 		private GameSubStateEditPOI _subStateEditPOI;
+		private bool _activatedEditionSecret = false;
+		private bool _activatedEditionPOI = false;
 
 		private POIData CurrentPOI
         {
 			set
             {
 				_currentPOI = value;
-				MainController.Instance.LevelView.CurrentPOI = _currentPOI;
+				MainController.Instance.LevelView.CurrentPOI = _currentPOI;				
 			}
         }
+		private string CurrentQR
+		{
+			set
+			{
+				_currentQR = value;
+				MainController.Instance.LevelView.CurrentQR = _currentQR;
+			}
+		}
 
 		public void Initialize()
 		{
@@ -119,7 +131,7 @@ namespace yourvrexperience.template6dof
 
         private void PlayerShoot()
 		{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			Vector3 positionCurrentController = Vector3.zero;
 			Vector3 forwardCurrentController = Vector3.zero;
 			if (VRInputController.Instance.VRController.CurrentController != null)
@@ -159,13 +171,76 @@ namespace yourvrexperience.template6dof
 			return true;
 		}
 
+		private void TriggerEasterEgg(EasterEgg eggFound, int indexEgg, string qrCodeFound = "")
+		{
+			if (_currentEggFound != null)
+			{
+				if (_currentEggFound != eggFound)
+				{
+					SystemEventController.Instance.DispatchSystemEvent(ScreenFoundEasterEggView.EventScreenFoundEasterEggViewDestroy);
+					_currentEggFound.SetActive(false);
+				}
+			}
+			_currentEggFound = eggFound;
+
+			// CHECK INTERACTION WITH EGG
+			if (_currentEggFound != null)
+			{
+				if (_currentEggFound.Enabled)
+				{
+					int easterEggIndex = _currentEggFound.Index;
+					if (!_currentEggFound.Active)
+					{
+						if (GameObject.FindAnyObjectByType<ScreenFoundEasterEggView>() == null)
+						{
+							string title = LanguageController.Instance.GetText(_currentEggFound.GetTitle());
+							string description = LanguageController.Instance.GetText(_currentEggFound.GetDescription());								
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+							Vector3 normalToTarget = (_currentEggFound.Star.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
+							Vector3 posScreen = _currentEggFound.Star.transform.position;
+							normalToTarget.y = 0;
+							ScreenController.Instance.CreateScreen3DAnchor(ScreenFoundEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggScreen, false, true, title, description, _currentEggFound);
+#else
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+#if ENABLE_QR_XR || ENABLE_QR_META
+							Vector3 posScreen = QRImageController.Instance.GetPositionQR(qrCodeFound);
+							Vector3 normalToTarget = (posScreen - MainController.Instance.PlayerView.transform.position).normalized;
+							normalToTarget.y = 0;
+							ScreenController.Instance.CreateScreen3DAnchor(ScreenFoundEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggScreen, false, true, title, description, _currentEggFound, true, qrCodeFound, indexEgg);
+#else
+							ScreenController.Instance.CreateScreen(ScreenFoundEasterEggView.ScreenName, false, true, title, description, _currentEggFound, true, qrCodeFound, indexEgg);
+#endif
+#else
+							ScreenController.Instance.CreateScreen(ScreenFoundEasterEggView.ScreenName, false, true, title, description, _currentEggFound);
+#endif							
+#endif
+						}
+					}
+					if (!_currentEggFound.Appeared && !GameLevelData.Instance.GetUnlockedEasterEgg(GameLevelData.Instance.NextAreaGame, easterEggIndex))
+					{
+						_currentEggFound.Appeared = true;						
+						GameLevelData.Instance.SetUnlockEasterEgg(GameLevelData.Instance.NextAreaGame, easterEggIndex);
+					}
+					else
+					{
+						_currentEggFound.SetActive(true);
+					}
+				}
+			}
+		}
+
 		private void CheckInteractionWithEasterEgg()
 		{
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+			return;
+#endif			
 			if (CheckAllowInteractionOutsideNarration())
 			{
 				// NEAR EGG
 				EasterEgg eggFound = null;
 				float minDistance = 1000000;
+				int indexEggFound = -1;
+				int counterEggs = 0;
 				if (MainController.Instance.LevelView.EasterEggs != null)
 				{
 					foreach (EasterEgg egg in MainController.Instance.LevelView.EasterEggs)
@@ -181,9 +256,11 @@ namespace yourvrexperience.template6dof
 									{
 										minDistance = distanceToEgg;
 										eggFound = egg;
+										indexEggFound = counterEggs;
 									}
 								}
-							}					
+							}		
+							counterEggs++;			
 						}
 					}
 				}
@@ -198,48 +275,7 @@ namespace yourvrexperience.template6dof
 					}
 				}
 
-				if (_currentEggFound != null)
-				{
-					if (_currentEggFound != eggFound)
-					{
-						SystemEventController.Instance.DispatchSystemEvent(ScreenFoundEasterEggView.EventScreenFoundEasterEggViewDestroy);
-						_currentEggFound.SetActive(false);
-					}
-				}
-				_currentEggFound = eggFound;
-
-				// CHECK INTERACTION WITH EGG
-				if (_currentEggFound != null)
-				{
-					if (_currentEggFound.Enabled)
-					{
-						int easterEggIndex = _currentEggFound.Index;
-						if (!_currentEggFound.Active)
-						{
-							if (GameObject.FindAnyObjectByType<ScreenFoundEasterEggView>() == null)
-							{
-								string title = LanguageController.Instance.GetText(_currentEggFound.GetTitle());
-								string description = LanguageController.Instance.GetText(_currentEggFound.GetDescription());								
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
-								Vector3 normalToTarget = (_currentEggFound.Star.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
-								Vector3 posScreen = _currentEggFound.Star.transform.position;
-								ScreenController.Instance.CreateScreen3DAnchor(ScreenFoundEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggScreen, false, true, title, description, _currentEggFound);
-#else
-								ScreenController.Instance.CreateScreen(ScreenFoundEasterEggView.ScreenName, false, true, title, description, _currentEggFound);
-#endif								
-							}
-						}
-						if (!_currentEggFound.Appeared && !GameLevelData.Instance.GetUnlockedEasterEgg(GameLevelData.Instance.NextAreaGame, easterEggIndex))
-						{
-							_currentEggFound.Appeared = true;						
-							GameLevelData.Instance.SetUnlockEasterEgg(GameLevelData.Instance.NextAreaGame, easterEggIndex);
-						}
-						else
-						{
-							_currentEggFound.SetActive(true);
-						}
-					}
-				}
+				TriggerEasterEgg(eggFound, indexEggFound);
 			}
 		}
 
@@ -261,7 +297,7 @@ namespace yourvrexperience.template6dof
 						if (NetworkController.Instance.IsServer)
 						{
 							NetworkController.Instance.DelayNetworkEvent(LevelView.EventLevelViewUnlockReplayPOI, 0.01f, -1, -1, _currentPOIIndex - 1);
-						}						
+						}				
 					}
 					else
 					{
@@ -275,7 +311,9 @@ namespace yourvrexperience.template6dof
 		private void PresentationScreenForNarration()
 		{
 			string descriptionStart = "screen.next.button.press.to.start.narration";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+			MainController.Instance.LevelView.PlayingQR = _currentQR;
+			MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedPOI(_currentPOIIndex);			
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 			GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
 			Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, SHIFT_VR_SCREEN, 0);
@@ -330,7 +368,7 @@ namespace yourvrexperience.template6dof
 				if (NetworkController.Instance.IsServer)
 				{
 					int clientNetID = (int)parameters[0];
-					NetworkController.Instance.DelayNetworkEvent(EventGameStateRunNetworkResponseSubState, 0.01f, -1, -1, clientNetID, _currentPOIIndex, _gameLevelState.ToString(), _gameLevelSubState.ToString(), MainController.Instance.GuideTourView.HasBeenInited);
+					NetworkController.Instance.DelayNetworkEvent(EventGameStateRunNetworkResponseSubState, 0.01f, -1, -1, clientNetID, _currentPOIIndex, _gameLevelState.ToString(), _gameLevelSubState.ToString(), MainController.Instance.GuideTourView.HasBeenInited, _currentQR);
 				}
 			}
 			if (nameEvent.Equals(EventGameStateRunNetworkResponseSubState))
@@ -339,6 +377,7 @@ namespace yourvrexperience.template6dof
 				if (NetworkController.Instance.UniqueNetworkID == clientNetID)
 				{
 					_currentPOIIndex = (int)parameters[1];
+					CurrentQR = (string)parameters[5];
 					CurrentPOI = GetPOI(_currentPOIIndex);
 					GameLevelStates stateNext = (GameLevelStates)Enum.Parse(typeof(GameLevelStates), (string)parameters[2]);
 					if (_gameLevelState != stateNext)
@@ -359,7 +398,7 @@ namespace yourvrexperience.template6dof
 			}
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerDoRestart))
 			{
-				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerDoRestart, _currentPOI);
+				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerDoRestart, _currentPOI, _currentQR);
 			}
 			if (nameEvent.Equals(EventGameStateRunEndCurrentNarration))
 			{
@@ -476,6 +515,7 @@ namespace yourvrexperience.template6dof
             {
                 _currentPOIIndex = 0;
                 CurrentPOI = GetPOI(_currentPOIIndex);
+				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerRequestQRCode, _currentPOIIndex);
                 SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerResumeIfPaused);
                 MainController.Instance.GuideTourView.RunUpdate = true;
                 MainController.Instance.GuideTourView.NavigateTo(_currentPOI);
@@ -503,6 +543,69 @@ namespace yourvrexperience.template6dof
 
         private void OnSystemEvent(string nameEvent, object[] parameters)
         {
+			if ((_gameLevelState != GameLevelStates.EasterEgg) || (_gameLevelState == GameLevelStates.EditPOIs))
+			{
+				if (nameEvent.Equals(QRImageController.EventQRImageControllerReportQRDetected))
+				{					
+					(EasterEgg, int) eggFound = MainController.Instance.LevelView.CheckQREasterEgg((string)parameters[0]);
+					if (eggFound.Item1 != null)
+					{
+						if (MainController.Instance.EnableEditionPOIs)
+						{
+							if (!GameLevelData.Instance.EditPOIsMode)
+							{
+								if (!_activatedEditionSecret && !_activatedEditionPOI)
+								{
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+									MainController.Instance.LevelView.PlayingQR = (string)parameters[0];				
+									MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedSecret(eggFound.Item2);
+#endif
+									SystemEventController.Instance.DispatchSystemEvent(GameSubStateEditPOI.EventGameStateRunForceEditionSelection, eggFound.Item1.Target);	
+								}
+							}
+						}
+						else
+						{
+							if (eggFound.Item1 != null)
+							{
+								TriggerEasterEgg(eggFound.Item1, eggFound.Item2, (string)parameters[0]);
+							}
+						}
+					}
+				}
+				if (nameEvent.Equals(QRImageController.EventQRImageControllerReportQRLost))
+				{
+					if (MainController.Instance.EnableEditionPOIs)
+					{
+						if (!GameLevelData.Instance.EditPOIsMode)
+						{
+							if (!_activatedEditionSecret && !_activatedEditionPOI)
+							{
+								SystemEventController.Instance.DispatchSystemEvent(ScreenSelectedEditionPOIView.EventScreenSelectedEditionPOIViewDestroy);
+							}							
+						}						
+					}
+					else
+					{
+						SystemEventController.Instance.DispatchSystemEvent(ScreenFoundEasterEggView.EventScreenFoundEasterEggViewDestroy, (string)parameters[0]);	
+					}					
+				}
+			}
+            if (nameEvent.Equals(POIReplayView.EventPOIReplayViewEnableSecrets))
+			{
+				_activatedEditionSecret = (bool)parameters[0];
+			}
+			if (nameEvent.Equals(POIReplayView.EventPOIReplayViewEnablePOIs))
+			{
+				_activatedEditionPOI = false;
+			}			
+			if (nameEvent.Equals(NarrationController.EventNarrationControllerReportQRCode))	
+			{
+				if (_currentPOIIndex == (int)parameters[0])
+				{
+					CurrentQR = (string)parameters[1];
+				}
+			}
 			if (nameEvent.Equals(ScreenReplayingPOIView.EventScreenReplayingPOIViewReplay))
 			{
 				int poiReplayIndex = (int)parameters[0];
@@ -647,9 +750,14 @@ namespace yourvrexperience.template6dof
 				int indexEasterEgg = (int)parameters[0];
 				string nameEasterEgg = (string)parameters[1];
 				MainController.Instance.ReferenceEasterEgg = (GameObject)parameters[2];
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+				MainController.Instance.LevelView.PlayingQR = (string)parameters[3];				
+				MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedSecret((int)parameters[4]);
+#endif
 				MainController.Instance.RangeDetectionEasterEggPlaying = GameLevelData.Instance.DistanceToTriggerGuide * 1.5f;
 				bool hasBeenPlayed = HasBeenPlayed(nameEasterEgg);
-				// CUSTOM EASTER EGGS
+				/*
+				// CODE EXAMPLE FOR HARDCODED SECRETS
 				if (nameEasterEgg.Equals(LevelView.EventEasterEggVideo1))
 				{
 #if UNITY_EDITOR
@@ -675,20 +783,18 @@ namespace yourvrexperience.template6dof
 					string[] photoNames = new string[] { "deer", "desert", "hummingbird", "sunflower", "sunset", "yosemite" }; 
 					MainController.Instance.CreatePhotoGalleryController(true, photoNames, NavMeshController.Instance.AreaMaxST.transform, MainController.Instance.ReferenceEasterEgg.transform.position, MainController.Instance.ReferenceEasterEgg.transform.rotation, new Vector3(2,2,2));
 				}
-				else
-				{
-					// GENERIC NARRATION FOR EASTER EGG
+				*/
+				// GENERIC NARRATION FOR EASTER EGG
 #if UNITY_EDITOR
-					_totalTimeEasterEgg = 3;
+				_totalTimeEasterEgg = 3;
 #else
-					_totalTimeEasterEgg = 10;
+				_totalTimeEasterEgg = 10;
 #endif
-					_configurationEasterEgg = ConfigurationEasterEggScreen.Narration;
-					ChangeToEasterEgg();				
-					NarrationController narrationEasterEggController = MainController.Instance.CreateNarrationGeneric(_currentEggFound.Narration, false, true);
-					narrationEasterEggController.Secret = indexEasterEgg;
-					narrationEasterEggController.Play();	
-				}
+				_configurationEasterEgg = ConfigurationEasterEggScreen.Narration;
+				ChangeToEasterEgg();	
+				NarrationController narrationEasterEggController = MainController.Instance.CreateNarrationGeneric(_currentEggFound.Narration, false, true);
+				narrationEasterEggController.Secret = indexEasterEgg;
+				narrationEasterEggController.Play();	
 				if (hasBeenPlayed)
                 {
 					SystemEventController.Instance.DispatchSystemEvent(EventGameStateRunShowResumeButtonInEasterEgg);
@@ -724,10 +830,10 @@ namespace yourvrexperience.template6dof
                 }
             }        	
             if (nameEvent.Equals(POIReplayView.EventPOIReplayViewDisplayScreen))
-            {				
+            {			
                 switch (_gameLevelState)
                 {
-                    case GameLevelStates.InGame:
+                    case GameLevelStates.InGame:		
 						if (CheckAllowInteractionOutsideNarration())
 						{
 							int poiReplay = (int)parameters[0];
@@ -746,10 +852,16 @@ namespace yourvrexperience.template6dof
 							}						
 							if (shouldShowScreen)
 							{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+								
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 								Transform prevPOI = (Transform)parameters[1];
 								Vector3 normalToTarget = (prevPOI.position - MainController.Instance.PlayerView.transform.position).normalized;
 								Vector3 posScreen = prevPOI.position;
+#if ENABLE_QR_META || ENABLE_QR_XR
+								posScreen = QRImageController.Instance.GetPositionQR(MainController.Instance.LevelView.PlayingQR);
+								normalToTarget = (posScreen - MainController.Instance.PlayerView.transform.position).normalized;								
+#endif								
+								normalToTarget.y = 0;
 								ScreenController.Instance.CreateScreen3DAnchor(ScreenReplayPOIView.ScreenName, null, posScreen, normalToTarget, SizeEasterEggNarration, false, true, description, poiReplay);
 #else
 								ScreenController.Instance.CreateScreen(ScreenReplayPOIView.ScreenName, false, true, description, poiReplay);
@@ -771,7 +883,11 @@ namespace yourvrexperience.template6dof
             {
 				if (_replayPOI != null)
 				{
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+					MainController.Instance.GuideTourView.SetPositionOutsideNarration(new Vector3(10000, 10000, 10000));
+#else
 					MainController.Instance.GuideTourView.SetPositionOutsideNarration(_replayPOI.GOPosition.transform.position);
+#endif					
 					_replayPOI = null;
 				}
                 MainController.Instance.GuideTourView.NavigateTo(_currentPOI);
@@ -823,14 +939,14 @@ namespace yourvrexperience.template6dof
 
 		private void ChangeGameLevelState(GameLevelStates newGameLevelState)
 		{
+			_previousGameLevelState = _gameLevelState;
 			_gameLevelState = newGameLevelState;
 			_timerLevel = 0;
 			ApplyActionState();
 		}
 
 		private void ApplyActionState()
-		{
-			// Debug.LogError("MAIN STATE=" + _gameLevelState.ToString());
+		{			
 			switch (_gameLevelState)
 			{
 				case GameLevelStates.Initialization:
@@ -839,6 +955,7 @@ namespace yourvrexperience.template6dof
 					FXsController.Instance.Initialize();
 					SpeechRecognitionController.Instance.Initialize();
 					_currentPOIIndex = 0;
+					SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerRequestQRCode, _currentPOIIndex);
 					break;
 
 				case GameLevelStates.Synchronization:
@@ -852,7 +969,7 @@ namespace yourvrexperience.template6dof
 #if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL)
 					VRInputController.Instance.SpeedJoystickMovement = GameLevelData.Instance.PlayerVRSpeed;
 					VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerEnableLocomotion, true);
-#endif						
+#endif				
 					break;
 
 				case GameLevelStates.InGame:
@@ -880,10 +997,17 @@ namespace yourvrexperience.template6dof
 					switch (_configurationEasterEgg)
                     {
 						case ConfigurationEasterEggScreen.Narration:
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 							Vector3 normalToTarget = (_currentEggFound.Star.transform.position - MainController.Instance.PlayerView.transform.position).normalized;
 							Vector3 posScreen = _currentEggFound.Star.transform.position;
-							GameObject screenNarration = ScreenController.Instance.CreateScreen3DAnchor(ScreenHUDEasterEggView.ScreenName, _currentEggFound.Star, posScreen, normalToTarget, SizeEasterEggNarration, false, true, _totalTimeEasterEgg, LanguageController.Instance.GetText(_currentEggFound.GetTitle()));
+							GameObject targetGO = _currentEggFound.Star;
+#if ENABLE_QR_META || ENABLE_QR_XR
+							posScreen = QRImageController.Instance.GetPositionQR(MainController.Instance.LevelView.PlayingQR);
+							normalToTarget = (posScreen - MainController.Instance.PlayerView.transform.position).normalized;
+							targetGO = null;
+#endif								
+							normalToTarget.y = 0;
+							GameObject screenNarration = ScreenController.Instance.CreateScreen3DAnchor(ScreenHUDEasterEggView.ScreenName, targetGO, posScreen, normalToTarget, SizeEasterEggNarration, false, true, _totalTimeEasterEgg, LanguageController.Instance.GetText(_currentEggFound.GetTitle()));
 							screenNarration.gameObject.transform.parent = ScreenController.Instance.transform;
 							screenNarration.gameObject.SetActive(true);
 #else
@@ -948,7 +1072,13 @@ namespace yourvrexperience.template6dof
 						_subStateEditPOI.Initialize();
 					}					
 					SystemEventController.Instance.DispatchSystemEvent(LevelView.EventLevelViewEnablePOIsForEdit);
-					MainController.Instance.GuideTourView.RunUpdate = false;
+					MainController.Instance.GuideTourView.RunUpdate = false;					
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+					if (_previousGameLevelState == GameLevelStates.Synchronization)
+					{
+						SystemEventController.Instance.DelaySystemEvent(QRImageController.EventQRImageControllerReportQRDetected, 0.1f, _currentQR);
+					}
+#endif
 					break;
 			}
 		}
@@ -1016,7 +1146,11 @@ namespace yourvrexperience.template6dof
 				{
 					MainController.Instance.GuideTourView.HasBeenInited = true;
 					MainController.Instance.GuideTourView.Activate(true);
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+					MainController.Instance.GuideTourView.SetPosition(QRImageController.Instance.GetPositionQR(_currentQR));
+#else					
 					MainController.Instance.GuideTourView.SetPosition(_currentPOI.GOPosition.transform.position);
+#endif					
 					MainController.Instance.GuideTourView.FacePosition(MainController.Instance.PlayerView.gameObject.transform.position);
 					MainController.Instance.GuideTourView.gameObject.transform.parent = MainController.Instance.LevelView.Content.transform;
 				}
@@ -1037,7 +1171,9 @@ namespace yourvrexperience.template6dof
 					InitializeGuideTour();
 					description = "screen.initial.presentation.everything.ready";
 					buttonText = "screen.initial.presentation.next.action";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+					MainController.Instance.LevelView.PlayingQR = _currentQR;
+					MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedPOI(_currentPOIIndex);
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 					Vector3 forwardGuide = -MainController.Instance.GuideTourView.GetModel().transform.forward;
 					GameObject contentVRScreen = MainController.Instance.GuideTourView.ScreenVR;
 					Vector3 posScreen = contentVRScreen.transform.position - new Vector3(0, SHIFT_VR_SCREEN, 0);
@@ -1088,10 +1224,17 @@ namespace yourvrexperience.template6dof
 						SystemEventController.Instance.DispatchSystemEvent(_currentPOI.EventEnd, _currentPOI.ExtraData);
 					}
 					ScreenController.Instance.CreateScreen(ScreenHUDView.ScreenName, true, false);
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR					
+					MainController.Instance.GuideTourView.SetPositionOutsideNarration(new Vector3(1000, 1000, 1000));
+#else
 					MainController.Instance.GuideTourView.SetPositionOutsideNarration(_currentPOI.GOPosition.transform.position);
+#endif					
 					_currentPOIIndex++;
 					CurrentPOI = GetPOI(_currentPOIIndex);
+					SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerRequestQRCode, _currentPOIIndex);
+#if (!ENABLE_QR_MODE && !ENABLE_QR_XR && !ENABLE_QR_META) || UNITY_EDITOR
 					MainController.Instance.GuideTourView.NavigateTo(_currentPOI);
+#endif					
 					if ((_currentPOIIndex >= MainController.Instance.LevelView.GetPOIS().Length) && (MainController.Instance.LevelView.GetPOIS().Length > 4))
 					{
 						ChangeGameLevelState(GameLevelStates.GameOver);
@@ -1099,7 +1242,9 @@ namespace yourvrexperience.template6dof
 					GameLevelData.Instance.EnablePauseAccess = true;
 					_enableDetectionEasterEggs = true;
 					SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, true);
+#if (!ENABLE_QR_MODE && !ENABLE_QR_XR && !ENABLE_QR_META) || UNITY_EDITOR
 					SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventShowArrowPath, _currentPOI.Root);
+#endif					
 					if (MainController.Instance.IsMultiplayer)
 					{
 						NetworkController.Instance.DelayNetworkEvent(NarrationToken.EventNarrationTokenDestroyNarrationObject, 0.01f, -1, -1);
@@ -1156,7 +1301,8 @@ namespace yourvrexperience.template6dof
 
 		private void CreateTourGuideInPOI(int currentPOIIndex)
 		{
-			CurrentPOI = GetPOI(currentPOIIndex);						
+			CurrentPOI = GetPOI(currentPOIIndex);	
+			SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerRequestQRCode, currentPOIIndex);					
 			Vector3 initialPosition = MainController.Instance.LevelView.InitialPosition.transform.position;
 			MainController.Instance.CreateTourGuide(initialPosition);
 		}
@@ -1208,8 +1354,10 @@ namespace yourvrexperience.template6dof
 						hasBeenARRecognized = VuforiaController.Instance.HasAreaBeenDetected;
 #elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 						hasBeenARRecognized = NianticController.Instance.HasAreaBeenDetected;
-#else			
+#elif ENABLE_MAXST			
 						hasBeenARRecognized = ARMaxSTController.Instance.HasAreaBeenDetected;
+#elif ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META
+						hasBeenARRecognized = QRImageController.Instance.HasAreaBeenDetected;
 #endif			 
 					}
 					if (_currentPOI == null)
@@ -1220,21 +1368,27 @@ namespace yourvrexperience.template6dof
 					else
 					{
 						bool isPOIVisible = yourvrexperience.Utils.Utilities.IsVisibleFrom(_currentPOI.GOPosition.transform.position, MainController.Instance.GameInputController.Camera);
+						bool distanceInRange = (distanceToInitialPOI < GameLevelData.Instance.DistanceToTriggerGuide);
 #if !UNITY_EDITOR						
 #if ENABLE_VUFORIA 
 						isPOIVisible = VuforiaController.Instance.CheckVisiblePoint(_currentPOI.GOPosition.transform.position);
 #elif ENABLE_MAXST
 						isPOIVisible = ARMaxSTController.Instance.CheckVisiblePoint(_currentPOI.GOPosition.transform.position);
+#elif ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META
+						isPOIVisible = QRImageController.Instance.CheckVisiblePoint(_currentQR);
+						distanceInRange = isPOIVisible;
 #elif ENABLE_NIANTIC
 						isPOIVisible = NianticController.Instance.CheckVisiblePoint(_currentPOI.GOPosition.transform.position);						
 #endif
 #endif
+
+#if (!ENABLE_QR_MODE && !ENABLE_QR_XR && !ENABLE_QR_META) || UNITY_EDITOR
 						if (hasBeenARRecognized && !MainController.Instance.EnableEditionPOIs)
 						{
 							InitializeGuideTour();
 						}
-
-						if (hasBeenARRecognized && (distanceToInitialPOI < GameLevelData.Instance.DistanceToTriggerGuide) && isPOIVisible)
+#endif
+						if (hasBeenARRecognized && distanceInRange && isPOIVisible)
 						{							
 							if (!MainController.Instance.IsMultiplayer)
 							{

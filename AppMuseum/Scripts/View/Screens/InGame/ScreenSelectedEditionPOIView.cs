@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using yourvrexperience.Narration;
@@ -20,6 +19,7 @@ namespace yourvrexperience.template6dof
 
 		public const string EventScreenSelectedEditionPOIViewSelected = "EventScreenSelectedEditionPOIViewSelected";
 		public const string EventScreenSelectedEditionPOIViewCancelled = "EventScreenSelectedEditionPOIViewCancelled";
+		public const string EventScreenSelectedEditionPOIViewDestroy = "EventScreenSelectedEditionPOIViewDestroy";
 
 		[SerializeField] private Button buttonResume;
 
@@ -56,6 +56,9 @@ namespace yourvrexperience.template6dof
 			buttonManageNarration.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = LanguageController.Instance.GetText("screen.poi.select.edition.narration");
 
 			MainController.Instance.CreateNarrationObjects(_isPOI, _narrationSecret);
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+			buttonMovePOI.gameObject.SetActive(false);
+#endif			
 		}
 
         public override void Destroy()
@@ -70,6 +73,9 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects);
 			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataRefreshLocalData);
 			SoundsController.Instance.StopAllSounds();
+			SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, true);
+			SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnableSecrets, false);		
+			MainController.Instance.LevelView.BlockSetPlaying = false;
 		}
 
         private void OnButtonResume()
@@ -80,7 +86,10 @@ namespace yourvrexperience.template6dof
 
         private void OnNarrationPOI()
         {
+			SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, false);
+			SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnableSecrets, true);
 			SystemEventController.Instance.DispatchSystemEvent(GameLevelData.EventGameLevelDataDestroyNarrationObjects);
+			MainController.Instance.LevelView.BlockSetPlaying = true;
 			if (_isPOI)
 			{
 				ScreenController.Instance.CreateScreen(ScreenXMLNarrationNodesView.ScreenName, false, true, true);
@@ -109,6 +118,16 @@ namespace yourvrexperience.template6dof
 
 		private void OnSystemEvent(string nameEvent, object[] parameters)
 		{
+			if (nameEvent.Equals(EventScreenSelectedEditionPOIViewDestroy))
+			{
+				OnButtonResume();
+			}
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				OnButtonResume();
+			}
+#endif				
 		}
 
         private void OnUIEvent(string nameEvent, object[] parameters)
@@ -117,7 +136,7 @@ namespace yourvrexperience.template6dof
 
 		void Update()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR			
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR	|| ENABLE_QR_XR	|| ENABLE_QR_META	
 			if (MainController.Instance.GameInputController.ActionMenuPressed())
 			{
 				OnButtonResume();

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using yourvrexperience.Narration;
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using yourvrexperience.VR;
 #endif
 
@@ -16,6 +16,7 @@ namespace yourvrexperience.template6dof
 		public const string EventPOIReplayViewDestroyScreen = "EventPOIReplayViewDestroyScreen";
 		public const string EventPOIReplayViewPlayPOI = "EventPOIReplayViewPlayPOI";
 		public const string EventPOIReplayViewEnablePOIs = "EventPOIReplayViewEnablePOIs";
+		public const string EventPOIReplayViewEnableSecrets = "EventPOIReplayViewEnableSecrets";
 
 		public const float DistanceToDisplayIcon = 3;
 		public const float DistanceGuideIsCloseToPOI = 0.75f;
@@ -29,6 +30,7 @@ namespace yourvrexperience.template6dof
 		private int _layerPOI;
 		private bool _displayingScreen = false;
 		private bool _isReplayPlaying = false;
+		private string _replayQR = "";
 
 		void Start()
 		{
@@ -45,6 +47,13 @@ namespace yourvrexperience.template6dof
 		public void SetPOIIndex(int poiIndex)
 		{
 			POIIndex = poiIndex;
+			SystemEventController.Instance.DelaySystemEvent(NarrationController.EventNarrationControllerRequestQRCode, 0.1f + POIIndex * 0.1f, POIIndex);			
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR			
+			if (MainController.Instance.EnableEditionPOIs)
+			{
+				this.gameObject.transform.root.gameObject.SetActive(false);
+			}
+#endif			
 		}
 
 		public void DeActivate()
@@ -94,11 +103,49 @@ namespace yourvrexperience.template6dof
 		}
 
         private void OnSystemEvent(string nameEvent, object[] parameters)
-        {						
-			if (nameEvent.Equals(MainController.EventMainControllerReleaseGameResources))
+        {				
+			if (nameEvent.Equals(NarrationController.EventNarrationControllerReportQRCode))	
 			{
-				DeActivate();
-				_enabled = false;
+				int poiIndex = (int)parameters[0];
+				if (POIIndex == poiIndex)
+				{
+					_replayQR = (string)parameters[1];
+				}
+			}
+			if (_enabled)
+			{
+				if (nameEvent.Equals(QRImageController.EventQRImageControllerReportQRDetected))
+				{
+					string qrDetected = (string)parameters[0];					
+					if (qrDetected.Equals(_replayQR))
+					{
+						MainController.Instance.LevelView.PlayingQR = _replayQR;
+						MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedPOI(POIIndex);
+						if (MainController.Instance.EnableEditionPOIs)						
+						{
+							SystemEventController.Instance.DispatchSystemEvent(GameSubStateEditPOI.EventGameStateRunForceEditionSelection, this.gameObject);
+						}
+						else
+						{
+							SystemEventController.Instance.DispatchSystemEvent(EventPOIReplayViewDisplayScreen, POIIndex, IconContainer.transform);
+						}						
+					}					
+				}
+				if (nameEvent.Equals(QRImageController.EventQRImageControllerReportQRLost))
+				{
+					string qrLost = (string)parameters[0];					
+					if (qrLost.Equals(_replayQR))
+					{
+						if (MainController.Instance.EnableEditionPOIs)
+						{
+							SystemEventController.Instance.DispatchSystemEvent(ScreenSelectedEditionPOIView.EventScreenSelectedEditionPOIViewDestroy);
+						}
+						else
+						{
+							SystemEventController.Instance.DispatchSystemEvent(ScreenReplayPOIView.EventScreenReplayPOIViewDestroy, POIIndex);
+						}						
+					}					
+				}
 			}
             if (nameEvent.Equals(EventPOIReplayViewEnablePOIs))
 			{
@@ -116,6 +163,11 @@ namespace yourvrexperience.template6dof
 					}				
 				}
 			}
+			if (nameEvent.Equals(MainController.EventMainControllerReleaseGameResources))
+			{
+				DeActivate();
+				_enabled = false;
+			}
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerFinished) 
 				|| nameEvent.Equals(NarrationController.EventNarrationControllerDoStop)
 				|| nameEvent.Equals(NarrationController.EventNarrationControllerDestroyNoMainNarrations))
@@ -128,6 +180,9 @@ namespace yourvrexperience.template6dof
 		{
 			if (_activated && _enabled && !MainController.Instance.EnableEditionPOIs)
 			{
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+				return;
+#endif				
 				if (Vector3.Distance(MainController.Instance.PlayerView.transform.position, this.transform.position) < DistanceToDisplayIcon)
 				{
 					bool isReplayVisible = yourvrexperience.Utils.Utilities.IsVisibleFrom(this.transform.position, Camera.main);
@@ -152,7 +207,7 @@ namespace yourvrexperience.template6dof
 
 							Vector3	positionCurrentController = Vector3.zero;
 							Vector3	forwardCurrentController = Vector3.zero;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR )
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META )
 #if ENABLE_NIANTICXR 
 							positionCurrentController = VRInputController.Instance.VRController.GetOriginByLineRenderer();
 							forwardCurrentController = VRInputController.Instance.VRController.GetForwardByLineRenderer();
@@ -199,7 +254,7 @@ namespace yourvrexperience.template6dof
 					_isReplayPlaying = false;
 					DeactivateIconContainer();
 				}
-			}
+			}							
 		}
-	}
+	}	
 }

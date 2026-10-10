@@ -23,10 +23,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private Button previousImage;
 		[SerializeField] private Button nextImage;
 
-		[SerializeField] private VideoPlayer videoPlayer;
-		[SerializeField] private Button previousVideo;
-		[SerializeField] private Button maximizeVideo;
-		[SerializeField] private Button nextVideo;
+		[SerializeField] private POIVideoController videoController;
 
 		private POIData _currentPOI;
 		private string _videoName = "";
@@ -64,10 +61,7 @@ namespace yourvrexperience.template6dof
 		{
 			base.Initialize(parameters);
 
-			videoPlayer.gameObject.SetActive(false);
-			previousVideo.onClick.AddListener(OnPreviousVideoClicked);
-			maximizeVideo.onClick.AddListener(OnMaximizeVideoClicked);
-			nextVideo.onClick.AddListener(OnNextVideoClicked);
+			videoController.gameObject.SetActive(false);
 
 			containerImage.gameObject.SetActive(false);
 			maximizeImage.onClick.AddListener(OnMaximizeImageClicked);
@@ -75,14 +69,6 @@ namespace yourvrexperience.template6dof
 			nextImage.onClick.AddListener(OnNextImageClicked);			
 		}
 
-		private void OnMaximizeVideoClicked()
-		{
-			SystemEventController.Instance.DispatchSystemEvent(POIVideoController.EventPOIVideoControllerMinimize, (float)videoPlayer.time);
-			videoPlayer.Pause();
-			videoPlayer.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);
-		}
-		
 		private void OnMaximizeImageClicked()
 		{
 			SystemEventController.Instance.DispatchSystemEvent(POIPhotoGalleryController.EventPOIPhotoGalleryControllerMinimize, CurrentImage);
@@ -91,9 +77,9 @@ namespace yourvrexperience.template6dof
 
 		private void DisableAllContent()
 		{
-			if (videoPlayer.isPlaying) videoPlayer.Pause();
+			if (videoController.IsPlaying()) videoController.Pause();
 			containerImage.gameObject.SetActive(false);
-			videoPlayer.gameObject.SetActive(false);	
+			videoController.gameObject.SetActive(false);	
 			_images = null;		
 		}
 		
@@ -107,26 +93,6 @@ namespace yourvrexperience.template6dof
             CurrentImage--;
         }
 
-		private void OnNextVideoClicked()
-		{
-			if (videoPlayer.time + POIVideoController.JumpTime < videoPlayer.clip.length)
-            {
-				videoPlayer.time += POIVideoController.JumpTime;
-			}			
-		}
-
-		private void OnPreviousVideoClicked()
-		{
-			if (videoPlayer.time - POIVideoController.JumpTime < 0)
-			{
-				videoPlayer.time = 0;
-			}
-			else
-            {
-				videoPlayer.time -= POIVideoController.JumpTime;
-			}
-		}
-
 		protected override void UpdateIconButton(TypeActionNext action)
         {
 			base.UpdateIconButton(action);
@@ -134,7 +100,7 @@ namespace yourvrexperience.template6dof
             {
 				case TypeActionNext.Play:
 					SystemEventController.Instance.DispatchSystemEvent(TourGuideView.EventTourGuideViewSpeakActivation, false);
-					SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, true);
+					SystemEventController.Instance.DispatchSystemEvent(POIReplayView.EventPOIReplayViewEnablePOIs, false);
 					break;
 					
 				case TypeActionNext.Pause:
@@ -227,6 +193,8 @@ namespace yourvrexperience.template6dof
                     int poiIndex = (int)parameters[1];
                     float totalTimeNarration = (float)parameters[2];
                     string startEventNarration = (string)parameters[3];
+					/*
+					// Example code in case to create a hardcoded solution
 					if (startEventNarration.Equals(TourGuideView.EventPOI0Animate01))
 					{					
 						HideAllIcons();
@@ -241,6 +209,7 @@ namespace yourvrexperience.template6dof
 					{
 						HideAllIcons();
 					}
+					*/
 				}
 			}
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerResponseAction))
@@ -305,21 +274,18 @@ namespace yourvrexperience.template6dof
 				if (!isEasterEgg)
 				{
 					string video = (string)parameters[1];
-					if (!_videoName.Equals(video))
-					{
-						_videoName = video;
-						VideoClip videoClip = AssetBundleController.Instance.CreateVideoclip(_videoName);
-						if (videoClip != null)
-						{
-							videoPlayer.clip = videoClip;
-						}
-					}
-					float time = (float)parameters[2];
-					videoPlayer.gameObject.SetActive(true);
-					videoPlayer.time = time;
-					videoPlayer.Play();
+					string videoURL = (string)parameters[2];
+					float time = (float)parameters[3];
+					float duration = (float)parameters[4];
+					videoController.gameObject.SetActive(true);
+					videoController.PlayScreenspace(video, videoURL, time, duration);
 				}
-			}			
+			}		
+			if (nameEvent.Equals(POIVideoController.EventPOIVideoControllerMinimize))
+			{
+				videoController.Pause();
+				videoController.gameObject.SetActive(false);
+			}		
 		}
 
         protected override void OnButtonNext()

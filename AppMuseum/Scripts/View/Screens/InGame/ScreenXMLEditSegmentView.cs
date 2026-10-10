@@ -51,6 +51,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private TextMeshProUGUI catalanTitle;
 		[SerializeField] private CustomInput catalanInput;
 
+		[SerializeField] private TextMeshProUGUI addQRTitle;
 		[SerializeField] private TextMeshProUGUI addImageTitle;
 		[SerializeField] private TextMeshProUGUI addVideoTitle;
 		[SerializeField] private TextMeshProUGUI add3DTitle;
@@ -58,6 +59,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private TextMeshProUGUI addInteractionTitle;
 		[SerializeField] private TextMeshProUGUI addWaypointsTitle;
 
+		[SerializeField] private Button addQRButton;
 		[SerializeField] private Button addImageButton;
 		[SerializeField] private Button addVideoButton;
 		[SerializeField] private Button add3DButton;
@@ -250,7 +252,7 @@ namespace yourvrexperience.template6dof
 			UIEventController.Instance.Event += OnUIEvent;
 			SystemEventController.Instance.Event += OnSystemEvent;
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			eventStartInput.OnFocusEvent += OnFocusEventStartInput;
 			eventEndInput.OnFocusEvent += OnFocusEventEndInput;
 			englishInput.OnFocusDownEvent += OnFocusEnglishInput;
@@ -287,9 +289,18 @@ namespace yourvrexperience.template6dof
 				spanishAIUpload.gameObject.SetActive(false);
 				catalanAIUpload.gameObject.SetActive(false);
 				frenchAIUpload.gameObject.SetActive(false);
+
+				addQRButton.onClick.AddListener(OnAddQR);
+				addQRTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.qr");
+
+				addQRButton.gameObject.SetActive(true);
+				addQRTitle.gameObject.SetActive(true);
 			}
 			else
 			{
+				addQRButton.gameObject.SetActive(false);
+				addQRTitle.gameObject.SetActive(false);
+
 				addImageTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.image");
 				addVideoTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.video");
 				add3DTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.3d.model");
@@ -335,7 +346,7 @@ namespace yourvrexperience.template6dof
 				GameLevelData.Instance.SaveGameProgressLocally();
 			}
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			UIEventController.Instance.DispatchUIEvent(PanelInputTextAction.EventPanelInputExternalClose);
 			if (eventStartInput != null) eventStartInput.OnFocusEvent -= OnFocusEventStartInput;
 			if (eventEndInput != null) eventEndInput.OnFocusEvent -= OnFocusEventEndInput;
@@ -517,11 +528,20 @@ namespace yourvrexperience.template6dof
 				string languageCode = (string)parameters[0];
 				ActivatePlayButton(languageCode, true);
 			}
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				if (contentProcessing.gameObject.activeSelf)
+				{
+					OnButtonExit();
+				}				
+			}
+#endif				
         }
 
         private void OnUIEvent(string nameEvent, object[] parameters)
         {
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR      
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META 
             if (nameEvent.Equals(ScreenVRKeyboardView.EventScreenVRKeyboardSetNewText))
 			{
 				if (eventStartInput.gameObject == (GameObject)parameters[0])
@@ -538,7 +558,7 @@ namespace yourvrexperience.template6dof
 #endif
         }
 
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
         private void OnFocusEventStartInput()
 		{
 			ScreenController.Instance.CreateScreen(ScreenVRKeyboardView.ScreenName, false, true,  eventStartInput.gameObject, eventStartInput, TOTAL_CHARACTERS_SECTION);
@@ -717,6 +737,13 @@ namespace yourvrexperience.template6dof
 			StopAllPlayButtons();
 			SoundsController.Instance.StopAllSounds();
 			ScreenController.Instance.CreateScreen(ScreenXMLPOIObjectsView.ScreenName, false, true, TypeObjectNarration.Video, _selectedEntry);
+        }
+
+        private void OnAddQR()
+        {
+			StopAllPlayButtons();
+			SoundsController.Instance.StopAllSounds();
+			ScreenController.Instance.CreateScreen(ScreenXMLPOIObjectsView.ScreenName, false, true, TypeObjectNarration.QR, _selectedEntry);
         }
 
         private void OnAddImage()
@@ -968,7 +995,7 @@ namespace yourvrexperience.template6dof
         {
 			if (contentProcessing.gameObject.activeSelf)
 			{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 				if (MainController.Instance.GameInputController.ActionMenuPressed())
 				{
 					OnButtonExit();

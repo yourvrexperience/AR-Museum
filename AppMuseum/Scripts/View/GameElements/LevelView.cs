@@ -24,6 +24,8 @@ namespace yourvrexperience.template6dof
 		public const string EventLevelViewEnablePOIsForEdit = "EventLevelViewEnablePOIsForEdit";
 		public const string EventLevelViewForcePOIsVisible = "EventLevelViewForcePOIsVisible";
 
+/*
+		// CODE EXAMPLES FOR HARDCODED EASTER EGGS
 		public const string EventEasterEggVideo1 = "EventEasterEggVideo1";
 		public const string EventEasterEggPhotos1 = "EventEasterEggPhotos1";
 		public const string EventEasterEggEnding = "EventEasterEggEnding";
@@ -31,7 +33,7 @@ namespace yourvrexperience.template6dof
 		public const string EventEnableEasterEggVideo1 = "EventEnableEasterEggVideo1";
 		public const string EventEnableEasterEggPhotos1 = "EventEnableEasterEggPhotos1";
 		public const string EventEnableEasterEggEnding = "EventEnableEasterEggEnding";
-
+*/
 		[Serializable]
 		public class POIData
 		{
@@ -44,14 +46,19 @@ namespace yourvrexperience.template6dof
 			public GameObject ExtraData;
 			public POIReplayView ReplayPOI;
 			public GeoLocation GeoPosition;
+			public Vector3 Forward;
 
-			public POIData(GameObject root, GameObject sphere, POIReplayView replayPOI, int index, GeoLocation geoPosition)
+			public POIData(GameObject root, GameObject sphere, POIReplayView replayPOI, int index, GeoLocation geoPosition, Vector3 forward)
 			{
 				Root = root;
 				GOPosition = sphere;
 				GeoPosition = geoPosition;
-				ReplayPOI = replayPOI;
-				ReplayPOI.SetPOIIndex(index);
+				Forward = forward;
+				if (replayPOI != null)
+				{
+					ReplayPOI = replayPOI;
+					ReplayPOI.SetPOIIndex(index);
+				}
 			}
 
 			public void Destroy()
@@ -86,14 +93,17 @@ namespace yourvrexperience.template6dof
 			public bool Played = false;
 			public string Narration = "";
 			public GeoLocation GeoPosition;
+			public Vector3 Forward;
+			public string QRCode;
 			private NarrationCreatorData _narrationForCurrentPOI;
 
-			public EasterEgg(GameObject target, GameObject reference, int index, GeoLocation geoPosition)
+			public EasterEgg(GameObject target, GameObject reference, int index, GeoLocation geoPosition, Vector3 forward)
 			{
 				Index = index;
 				Target = target;
 				Reference = reference;
 				GeoPosition = geoPosition;
+				Forward = forward;
 			}
 
 			public void Destroy()
@@ -113,7 +123,7 @@ namespace yourvrexperience.template6dof
 				NarrationCreator narrationCreator = new NarrationCreator();
 				if ((Narration != null) && (Narration.Length > 0))
 				{
-					narrationCreator.LoadNarrationTexts(new TextAsset(Narration));
+					narrationCreator.LoadNarrationTexts(new TextAsset(Narration));					
 					_narrationForCurrentPOI = narrationCreator.Narration[0];
 					ActivationEvent = _narrationForCurrentPOI.Title.StartEvent;
 					FinishedEvent = _narrationForCurrentPOI.Title.EndEvent;
@@ -231,6 +241,18 @@ namespace yourvrexperience.template6dof
 				else
 				{
 					return LanguageController.Instance.GetText("screen.easter.egg.title.discovered");
+				}
+			}
+
+			public string GetQRCode()
+			{
+				if (_narrationForCurrentPOI != null)
+				{
+					return _narrationForCurrentPOI.Title.GetQRCode();
+				}
+				else
+				{
+					return null;
 				}				
 			}
 
@@ -262,7 +284,7 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private string longitude;
 		[SerializeField] private string altitude;
 
-		private Vector3 _initialCenter;
+		private Vector3 _initialCenter;		
 		
 		public GameObject InitialPosition
 		{
@@ -272,6 +294,10 @@ namespace yourvrexperience.template6dof
 		private Rect _area;
 		private float _initialRotation;
 		private POIData _currentPOI = null;
+		private string _currentQR = null;
+		private POIData _playingPOI = null;
+		private string _playingQR = null;
+		private bool _blockSetPlaying = false;
 
 		public Rect Area 
 		{
@@ -300,10 +326,29 @@ namespace yourvrexperience.template6dof
 		public POIData CurrentPOI
         {
 			get { return _currentPOI; }
+			set { _currentPOI = value;  }
+        }
+		public string CurrentQR
+		{
+			get { return _currentQR;}
+			set {  _currentQR = value;  }
+		}
+		public POIData PlayingPOI
+        {
+			get { return _playingPOI; }
 			set { 
-				_currentPOI = value;  
+				if (_blockSetPlaying) return;
+				_playingPOI = value;  
 			}
         }
+		public string PlayingQR
+		{
+			get { return _playingQR;}
+			set { 
+				if (_blockSetPlaying) return;
+				_playingQR = value;  
+			}
+		}
 		public GameObject TourGuideWorld
 		{
 			get { return tourGuideWorld; }
@@ -328,6 +373,10 @@ namespace yourvrexperience.template6dof
 		{
 			get { return Center; }
 		}
+		public bool BlockSetPlaying
+		{
+			set { _blockSetPlaying = value; }
+		}
 
   		public string PackPOIsContent()
         {
@@ -350,10 +399,19 @@ namespace yourvrexperience.template6dof
 					updatedPosition = NavMeshController.Instance.ConvertARWorldToNavigation(updatedPosition);
 #endif
 #endif
-					serializedPOIs.Positions[i] = new POIPosition(i, updatedPosition, POIS[i].GeoPosition);
+					serializedPOIs.Positions[i] = new POIPosition(i, updatedPosition, POIS[i].Forward, POIS[i].GeoPosition);
 				}
 			}
 
+	        string jsonData = JsonUtility.ToJson(serializedPOIs, true);
+            return jsonData;
+        }
+
+  		public string PackPOIsOriginal()
+        {
+            SerializedPOIPosition serializedPOIs = new SerializedPOIPosition();
+			int currID = GameLevelData.Instance.GetLevel(MainController.Instance.CurrentGameLevel);
+			serializedPOIs.Positions = GameLevelData.Instance.GetLevelPOIsPositions(currID);
 	        string jsonData = JsonUtility.ToJson(serializedPOIs, true);
             return jsonData;
         }
@@ -377,10 +435,23 @@ namespace yourvrexperience.template6dof
 					Vector3 updatedPosition = easterEggs[i].Target.transform.localPosition;
 #endif
 					Vector3 finalPosition = updatedPosition;
-					serializedSecrets.Secrets[i] = new SecretPosition(i, finalPosition, easterEggs[i].GeoPosition, easterEggs[i].ActivationEvent, HexadecimalEncoding.ToHexString(easterEggs[i].Narration));
+					serializedSecrets.Secrets[i] = new SecretPosition(i, finalPosition, easterEggs[i].Forward, easterEggs[i].GeoPosition, easterEggs[i].ActivationEvent, HexadecimalEncoding.ToHexString(easterEggs[i].Narration));
 				}
 			}
 
+            string jsonData = JsonUtility.ToJson(serializedSecrets, true);
+            return jsonData;
+        }
+
+  		public string PackSecretsOriginal()
+        {
+            SerializedSecretPosition serializedSecrets = new SerializedSecretPosition();
+			int currID = GameLevelData.Instance.GetLevel(MainController.Instance.CurrentGameLevel);
+			serializedSecrets.Secrets = GameLevelData.Instance.GetLevelSecretsPositions(currID);
+			for (int i = 0; i < easterEggs.Length; i++)
+			{
+				serializedSecrets.Secrets[i].Narration = HexadecimalEncoding.ToHexString(easterEggs[i].Narration);
+			}
             string jsonData = JsonUtility.ToJson(serializedSecrets, true);
             return jsonData;
         }
@@ -509,6 +580,8 @@ namespace yourvrexperience.template6dof
 		void OnDestroy()
 		{
 			if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;
+			_currentPOI = null;
+			_playingPOI = null;
 		}
 
 		private void HideRenderWalls()
@@ -532,6 +605,8 @@ namespace yourvrexperience.template6dof
 				}
 				POIS = null;
 			}
+			_currentPOI = null;
+			_playingPOI = null;
 		}
 
 		private void DestroySecrets()
@@ -557,7 +632,7 @@ namespace yourvrexperience.template6dof
 				for (int i = 0; i < POIS.Length; i++)
 				{
 					POIBaseView poiBase = MainController.Instance.CreatePOIBase();
-					POIS[i] = new POIData(poiBase.gameObject, poiBase.Sphere, poiBase.ReplayView, i, poisStoredPosition[i].GeoPosition);
+					POIS[i] = new POIData(poiBase.gameObject, poiBase.Sphere, poiBase.ReplayView, i, poisStoredPosition[i].GeoPosition, poisStoredPosition[i].Forward);
 					poiBase.Index = i;
 					poiBase.gameObject.name = "POI_" + i;
 					poiBase.gameObject.transform.parent = content.transform;
@@ -611,7 +686,7 @@ namespace yourvrexperience.template6dof
 				for (int i = 0; i < easterEggs.Length; i++)
 				{
 					EasterEggBaseView easterEggBase = MainController.Instance.CreateSecretBase();
-					easterEggs[i] = new EasterEgg(easterEggBase.gameObject, easterEggBase.Reference, i, secretStoredPosition[i].GeoPosition);
+					easterEggs[i] = new EasterEgg(easterEggBase.gameObject, easterEggBase.Reference, i, secretStoredPosition[i].GeoPosition, secretStoredPosition[i].Forward);
 					easterEggBase.Index = i;
 					easterEggBase.gameObject.name = "Secret_" + i;
 					easterEggBase.gameObject.transform.parent = content.transform;
@@ -680,6 +755,16 @@ namespace yourvrexperience.template6dof
 			return poiSelected;
 		}
 
+		public POIData GetSelectedPOI(int indexPOI)
+		{
+			POIData poiSelected = null;
+			if ((indexPOI >= 0) && (indexPOI < POIS.Length))
+			{
+				poiSelected = POIS[indexPOI];
+			}
+			return poiSelected;
+		}
+
 		public int GetIndexSelectedPOI(Transform selectedPOI)
 		{
 			int indexPOISelected = -1;
@@ -724,6 +809,49 @@ namespace yourvrexperience.template6dof
 
 			return secretSelected;
 		}		
+
+		public POIData GetSelectedSecret(int indexSecret)
+		{
+			EasterEgg secretSelected = null;	
+			if ((indexSecret >= 0) && (indexSecret < easterEggs.Length))
+			{
+				secretSelected = easterEggs[indexSecret];
+			}
+			POIData secretPOI = new POIData(secretSelected.Target, null, null, -1, new GeoLocation(), secretSelected.Forward);
+			return secretPOI;
+		}
+
+		public string GetQRCodeSecret(int indexSecret)
+		{
+			EasterEgg secretSelected = null;
+			if ((indexSecret >= 0) && (indexSecret < easterEggs.Length))
+			{
+				secretSelected = easterEggs[indexSecret];
+				if (secretSelected != null)
+				{
+					return secretSelected.GetQRCode();
+				}
+			}
+			return null;
+		}
+
+		public (EasterEgg, int) CheckQREasterEgg(string qrCodeDetected)
+		{
+			int counterEggs = 0;
+			foreach (EasterEgg egg in easterEggs)
+			{
+				if (egg.Target != null)
+				{
+					if (egg.GetQRCode().Equals(qrCodeDetected))
+					{
+						return (egg, counterEggs);
+					}
+				}
+				counterEggs++;
+			}
+			return (null, -1);
+		}
+
 
 		public bool IsInsideNavigationArea(Transform selectedPOI)
 		{
@@ -800,6 +928,12 @@ namespace yourvrexperience.template6dof
 					foreach (Transform child in item.Root.transform)
 					{
 						child.gameObject.SetActive(enableVisibility);
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR			
+						if (MainController.Instance.EnableEditionPOIs)
+						{
+							child.gameObject.SetActive(false);
+						}
+#endif							
 					}
 				}
 			}
@@ -813,6 +947,13 @@ namespace yourvrexperience.template6dof
 					EasterEggBaseView eggBase = egg.Target.GetComponentInChildren<EasterEggBaseView>();
 					eggBase.Reference.SetActive(!enableVisibility);
 					eggBase.RenderComponent.enabled = !enableVisibility;
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR			
+					if (MainController.Instance.EnableEditionPOIs)
+					{
+						egg.Target.SetActive(false);
+						egg.Reference.SetActive(false);
+					}
+#endif							
 				}
 			}
 		}
@@ -874,7 +1015,7 @@ namespace yourvrexperience.template6dof
 			}
 			if (nameEvent.Equals(EventLevelViewUnlockEasterEggs))
 			{
-				if (GameLevelData.Instance.UnlockSecretsIndex < MainController.Instance.CurrentNarrationPOI)
+				if (GameLevelData.Instance.UnlockSecretsIndex <= MainController.Instance.CurrentNarrationPOI)
 				{
 					if (easterEggs != null)
 					{

@@ -14,7 +14,7 @@ using yourvrexperience.Networking;
 
 namespace yourvrexperience.Narration
 {
-	public enum TypeObjectNarration { Image = 0, Video, Model3D, Sound, Interaction, Waypoints }
+	public enum TypeObjectNarration { Image = 0, Video, Model3D, Sound, Interaction, Waypoints, QR }
 
     public class NarrationCreator
     {
@@ -124,7 +124,17 @@ namespace yourvrexperience.Narration
 			{
 				return Audio;
 			}
-
+			public string GetQRCode()
+			{
+				foreach (NarrationObject narrationObj in Assets)
+				{
+					if (narrationObj.Type == TypeObjectNarration.QR)
+					{
+						return narrationObj.AssetName;
+					}
+				}
+				return null;
+			}
 			public string ToXML(int id)
 			{
 				string output = "\n";
@@ -145,18 +155,18 @@ namespace yourvrexperience.Narration
 				}
 				output += "<languages>" + Message.GetXML() + "</languages>";
 				output += "<audios>" + Audio.GetXML() + "</audios>";
+				output += "\n";
+				foreach (NarrationObject asset in Assets)
+				{
+					output += "\n";
+					output += asset.ToXML();
+				}
 				if (_isTitle)
 				{
 					output += "</title>";
 				} 
 				else
 				{
-					output += "\n";
-					foreach (NarrationObject asset in Assets)
-					{
-						output += "\n";
-						output += asset.ToXML();
-					}
 					output += "</token>";
 				}
 				return output;
@@ -363,7 +373,19 @@ namespace yourvrexperience.Narration
 			}
 			return output;
 		}
-
+		public string GetQRCode()
+		{
+			string qrCode = "";
+			for(int i = 0; i < _narration.Count; i++)
+			{
+				qrCode = _narration[i].Title.GetQRCode();
+				if ((qrCode != null)&&(qrCode.Length>0))
+				{
+					return qrCode;
+				}
+			}
+			return null;
+		}
 		public string ToXML()
 		{
 			string output = "<narrations>";

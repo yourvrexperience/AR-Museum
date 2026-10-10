@@ -3,7 +3,7 @@ using UnityEngine.Assertions;
 using yourvrexperience.Narration;
 using yourvrexperience.Networking;
 using yourvrexperience.Utils;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR ||  ENABLE_QR_XR || ENABLE_QR_META)
 using yourvrexperience.VR;
 #endif
 
@@ -34,16 +34,10 @@ namespace yourvrexperience.template6dof
 
 			Assert.IsNull(MainController.Instance.PlayerView, "The player is not null");
 
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerEnableLocomotion, false);
-#if ENABLE_NREAL				
+#endif
 			ScreenController.Instance.CreateScreen(ScreenMainMenuView.ScreenName, true, false);
-#else 
-			ScreenController.Instance.CreateForwardScreen(ScreenMainMenuView.ScreenName, new Vector3(0, 0, 1), true, false);
-#endif				
-#else
-			ScreenController.Instance.CreateScreen(ScreenMainMenuView.ScreenName, true, false);			
-#endif			
 		}
 
 		public void Destroy()
@@ -121,11 +115,7 @@ namespace yourvrexperience.template6dof
 			}			
             if (nameEvent.Equals(PlayerView.EventPlayerViewPositionUpdated))
 			{
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)				
-				ScreenController.Instance.CreateForwardScreen(ScreenMainMenuView.ScreenName, new Vector3(0, 0, 1), true, false);
-#elif ENABLE_NREAL				
 				ScreenController.Instance.CreateScreen(ScreenMainMenuView.ScreenName, true, false);
-#endif				
 			}
         }
 		

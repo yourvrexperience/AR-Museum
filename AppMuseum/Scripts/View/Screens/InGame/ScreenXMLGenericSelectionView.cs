@@ -43,6 +43,7 @@ namespace yourvrexperience.template6dof
 			_event = (string)parameters[1];
 
 			UIEventController.Instance.Event += OnUIEvent;
+			SystemEventController.Instance.Event += OnSystemEvent;
 
 			buttonExit.onClick.AddListener(OnButtonExit);
 			buttonSelect.onClick.AddListener(OnButtonSelect);
@@ -61,6 +62,7 @@ namespace yourvrexperience.template6dof
 			base.Destroy();
 
 			if (UIEventController.Instance != null) UIEventController.Instance.Event -= OnUIEvent;
+			if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;
 
 			UIEventController.Instance.DelayUIEvent(_event, 0.1f, _valueSelected);
 		}
@@ -94,9 +96,19 @@ namespace yourvrexperience.template6dof
 			}
         }
 
+        private void OnSystemEvent(string nameEvent, object[] parameters)
+        {
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				OnButtonExit();
+			}
+#endif	
+        }
+
 		void Update()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
             if (MainController.Instance.GameInputController.ActionMenuPressed())
             {
                 OnButtonExit();

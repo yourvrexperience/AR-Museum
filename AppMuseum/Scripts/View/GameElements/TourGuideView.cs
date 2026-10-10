@@ -19,19 +19,6 @@ namespace yourvrexperience.template6dof
 		public const string EventTourGuideViewBezierComplete = "EventTourGuideViewBezierComplete";
 
 		public const string EventPOIGameOver = "EventPOIGameOver";
-		public const string EventHallPOI1Outtro = "EventHallPOI1Outtro";
-
-		public const string EventPOI0Animate01 = "EventPOI0Animate01";
-		public const string EventPOI0Animate02 = "EventPOI0Animate02";
-		public const string EventPOI0Animate03 = "EventPOI0Animate03";
-
-		public const string EventPOI2Animate00 = "EventPOI2Animate00";
-		public const string EventPOI2Animate01 = "EventPOI2Animate01";
-		public const string EventPOI3Animate01 = "EventPOI3Animate01";
-		public const string EventPOI3Animate02 = "EventPOI3Animate02";
-		public const string EventPOI3Animate03 = "EventPOI3Animate03";
-		public const string EventPOI3Animate04 = "EventPOI3Animate04";
-		public const string EventPOI3Animate05 = "EventPOI3Animate05";
 
 		public const string AnimationIdle = "Idle";
 		public const string AnimationRun = "Run";
@@ -104,7 +91,7 @@ namespace yourvrexperience.template6dof
 		public Vector3 PositionPlayer
 		{
 			get {  
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 					return MainController.Instance.PlayerView.transform.position;
 #else				
 					return MainController.Instance.PlayerView.PositionCamera;
@@ -144,7 +131,7 @@ namespace yourvrexperience.template6dof
 
 				case GameLevelData.GameAge.Adults:
 					modelAge = AssetBundleController.Instance.CreateGameObject("ModelGuide1");
-					break;					
+					break;
 
 				case GameLevelData.GameAge.Experts:
 					modelAge = AssetBundleController.Instance.CreateGameObject("ModelGuide2");
@@ -158,18 +145,15 @@ namespace yourvrexperience.template6dof
 			{
 				case GameLevelData.GameAge.Kids:
 					modelAge.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
-					// modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 					modelAge.transform.localPosition -= new Vector3(0, 0.1f, 0);
 					break;
 
 				case GameLevelData.GameAge.Adults:
-					// modelAge.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 					modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 					modelAge.transform.localPosition += new Vector3(0, 0.5f, 0);
 					break;
 
 				case GameLevelData.GameAge.Experts:
-					// modelAge.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
 					modelAge.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 					modelAge.transform.localPosition += new Vector3(0, 0.5f, 0);
 					break;
@@ -455,7 +439,12 @@ namespace yourvrexperience.template6dof
 			if (nameEvent.Equals(NarrationController.EventNarrationControllerDoRestart))
 			{
 				POIData currPOI = (POIData)parameters[0];
+				string currQR = (string)parameters[1];
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR			
+				SetPositionOutsideNarration(QRImageController.Instance.GetPositionQR(currQR));
+#else				
 				SetPositionOutsideNarration(currPOI.GOPosition.transform.position);
+#endif				
 				RotateFixedTowardsTarget(PositionPlayer);
 				Model.SetActive(true);
 				DestroyThingsBuildDuringNarration(currPOI);
@@ -493,7 +482,7 @@ namespace yourvrexperience.template6dof
 					break;
 				case TourGuideStates.WaitForPlayerNear:
 					ChangeGuideAnimation(AnimationIdle);
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 					SystemEventController.Instance.DelaySystemEvent(ScreenInfoNextButtonView.EventScreenInfoNextButtonViewVisibilityContent, 0.1f, true);
 #endif						
 					break;

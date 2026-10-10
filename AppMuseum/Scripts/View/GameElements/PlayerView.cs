@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using yourvrexperience.Networking;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using yourvrexperience.Narration;
 
 namespace yourvrexperience.template6dof
@@ -174,14 +173,14 @@ namespace yourvrexperience.template6dof
 			}
 
 			NameAssetBody = "BodyDesktopBlue";
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 			NameAssetBody = "BodyVRBlue";
 #endif
 
 			if (!MainController.Instance.IsMultiplayer)
 			{
 				bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 				isVRMode = true;
 #endif
 
@@ -200,7 +199,7 @@ namespace yourvrexperience.template6dof
 				if (NetworkGameIDView.AmOwner())
 				{
 					bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 					isVRMode = true;
 #endif
 
@@ -269,7 +268,7 @@ namespace yourvrexperience.template6dof
 #if UNITY_EDITOR
 			finalSpeed = 50;
 #endif
-#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)) && !UNITY_EDITOR
 			finalSpeed = 10;
 #endif
 			Vector3 forward = axisVertical * _camera.transform.forward * finalSpeed * Time.deltaTime;
@@ -277,7 +276,7 @@ namespace yourvrexperience.template6dof
 			Vector3 increment = forward + lateral;
 			increment.y = 0;
 			transform.GetComponent<Rigidbody>().MovePosition(transform.position + increment);
-#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)) && !UNITY_EDITOR
 			if (_cameraContainer != null) _cameraContainer.transform.position = this.transform.position;
 #else			
 			_camera.transform.position = this.transform.position + new Vector3(0,0.7f,0);
@@ -286,7 +285,7 @@ namespace yourvrexperience.template6dof
 
         public void RotateCamera()
         {
-#if (UNITY_ANDROID && !ENABLE_NIANTIC && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR)) && !UNITY_EDITOR
+#if (UNITY_ANDROID && !(ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META )) && !UNITY_EDITOR
 			if (_gyro == null)
 			{
 				_gyro = Input.gyro;
@@ -358,7 +357,7 @@ namespace yourvrexperience.template6dof
 					if (NetworkGameIDView.AmOwner())
 					{
 						bool isVRMode = false;
-#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
+#if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META)
 						isVRMode = true;
 #endif
 
@@ -546,7 +545,7 @@ namespace yourvrexperience.template6dof
                         {
 							_timeUpdatePath = 0;
 							Vector3 posPlayerNavigation = this.transform.localPosition;
-#if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL))
+#if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META))
 #if ENABLE_NIANTIC ||  ENABLE_NIANTICXR
 							posPlayerNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(this.transform.position, false);
 #else
@@ -554,7 +553,7 @@ namespace yourvrexperience.template6dof
 #endif														
 #endif							
 							Vector3 posTargetNavigation = Vector3.zero;
-#if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL))
+#if !(UNITY_EDITOR || (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META))
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR
 							posTargetNavigation = NavMeshController.Instance.ConvertARWorldToNavigation(TargetToGo, false);
 #else

@@ -182,6 +182,12 @@ namespace yourvrexperience.template6dof
 			{
 				FillItemsNarration();
 			}
+#if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
+			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
+			{
+				OnButtonExit();
+			}
+#endif				
 		}
 
 		private void UnSelectEntry()
@@ -226,7 +232,7 @@ namespace yourvrexperience.template6dof
 
 		void Update()
 		{
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
             if (MainController.Instance.GameInputController.ActionMenuPressed())
             {
                 OnButtonExit();

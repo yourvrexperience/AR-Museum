@@ -330,7 +330,7 @@ namespace yourvrexperience.Utils
 
             return null;
         }
-        
+
         public void ClearAssetBundleEvents(string _nameEvent = "")
         {
             if (_nameEvent.Length == 0)

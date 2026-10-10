@@ -12,26 +12,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bde072026d989144b290815c77f705a, type: 3}
   m_Name: NarrationLevelData
   m_EditorClassIdentifier: 
-  urlBase: https://yourowndomain.com/database_enpoints/
+  urlBase: http://localhost:8080/template6dof/
   areasMuseum:
   - ID: 0
-    POIs: 2100000040000000ad000000ec00000051010000240100009a010000
+    POIs: 00000000000000000000000000000000000000000000000000000000
     Secrets: 
     Positions:
     - ID: 0
       Position: {x: 3.2863305, y: -0.84999996, z: 0.16095573}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 1.255775, y: -0.84999996, z: 3.7165606}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -1.4285522, y: -0.84999996, z: 4.784247}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -6.5593176, y: -0.84999996, z: 4.120576}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -1.5480781, y: -0.84999996, z: 10.288276}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 0.85466534, y: -0.84999996, z: 12.722918}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 4.6668253, y: -0.84999996, z: 6.7981706}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -323,18 +365,60 @@ MonoBehaviour:
     Positions:
     - ID: 0
       Position: {x: 2.5041413, y: -0.84999996, z: -1.8827238}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 9.67126, y: -0.84999996, z: 0.51522845}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: 9.747285, y: -0.84999996, z: 3.876945}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: 8.451334, y: -0.84999996, z: 11.447227}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: 4.8482037, y: -0.84999996, z: 6.9098034}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 2.8643463, y: -0.84999996, z: 2.4841876}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 2.9011703, y: -0.84999996, z: 11.75579}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -655,20 +739,68 @@ MonoBehaviour:
     Positions:
     - ID: 0
       Position: {x: -1.7852702, y: -0.84999996, z: 0.8872547}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: -5.479149, y: -0.84999996, z: 0.23471004}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -4.9648952, y: -0.84999996, z: 3.4547446}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -4.389444, y: -0.84999996, z: 10.195764}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -5.0408983, y: -0.84999996, z: 14.047819}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 4.4085073, y: -0.84999996, z: 13.163156}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: -0.97002906, y: -0.84999996, z: 5.514527}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 7
       Position: {x: 1.2587446, y: -0.84999996, z: 2.4793885}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -1002,23 +1134,65 @@ MonoBehaviour:
       d\u2019un endroit \xE0 un autre !</fr></languages><audios><ca>Text for language
       (ca)</ca><en>4.632</en><es>4.2</es><fr>4.8</fr></audios></token></narration></narrations>"
   - ID: 3
-    POIs: 260000003700000000000000be000000000000004f01000000000000
+    POIs: 00000000000000000000000000000000000000000000000000000000
     Secrets: 
     Positions:
     - ID: 0
       Position: {x: 3.2863305, y: -0.84999996, z: 0.16095573}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 1.255775, y: -0.84999996, z: 3.7165606}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -1.4285522, y: -0.84999996, z: 4.784247}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -6.5593176, y: -0.84999996, z: 4.120576}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -1.5480781, y: -0.84999996, z: 10.288276}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 0.85466534, y: -0.84999996, z: 12.722918}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 4.6668253, y: -0.84999996, z: 6.7981706}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -1051,30 +1225,30 @@ MonoBehaviour:
       avec une base en pierre et des murs en briques de boue, surmont\xE9s d\u2019un
       toit presque plat fait de boue et de roseaux reposant sur des poutres en bois</fr></languages><audios><ca>Text
       for language (ca)</ca><en>7.776</en><es>9.192</es><fr>9.12</fr></audios><asset
-      name = \"Waypoint\" position = \"3.698979,-0.3769956,1.227157\" rotation =
-      \"0.3280341,0.5597816,-0.2562884,0.7164876\" scale = \"0.2,0.2,0.2\" type =
-      \"Waypoints\" animation = \"\"/><asset name = \"LifeBronzeAge\" position =
-      \"3.115237,0.2544196,2.031408\" rotation = \"0.03128134,0.09058923,-0.002846869,0.9953929\"
-      scale = \"3.46487,3.46487,3.46487\" type = \"Image\" animation = \"\"/></token><token
-      id = \"2\" audioclip = \"\" startEvent = \"\" endEvent = \"\" hide = \"False\"
-      destroy = \"False\" pause = \"False\"><languages><ca>A l\u2019interior, les
-      parets estaven arrebossades i pintades d\u2019ocre, i entre les restes s\u2019han
-      trobat nombrosos vasos de cer\xE0mica que formaven part de la vida quotidiana
-      dels seus habitants.</ca><en>Inside, the walls were plastered and painted ochre,
-      and among the remains, numerous ceramic vessels have been found that were part
-      of the daily life of their inhabitants</en><es>En el interior, las paredes
-      estaban enyesadas y pintadas de color ocre, y entre los restos se han encontrado
-      numerosas vasijas de cer\xE1mica que formaban parte de la vida cotidiana de
-      sus habitantes</es><fr>\xC0 l\u2019int\xE9rieur, les murs \xE9taient enduits
-      et peints en ocre, et parmi les vestiges, de nombreux vases en c\xE9ramique
-      ont \xE9t\xE9 retrouv\xE9s, faisant partie de la vie quotidienne de leurs habitants</fr></languages><audios><ca>Text
-      for language (ca)</ca><en>9.84</en><es>11.616</es><fr>10.632</fr></audios><asset
-      name = \"Waypoint\" position = \"3.337508,-0.3815382,0.2425447\" rotation =
-      \"0.3419064,0.5258603,-0.2429816,0.7399533\" scale = \"0.2,0.2,0.2\" type =
-      \"Waypoints\" animation = \"\"/></token></narration><narration id = \"1\" startEvent
-      = \"\" endEvent = \"\" title=\"nothing\"><title id = \"0\" audioclip = \"\"
-      startEvent = \"\" endEvent = \"\"><languages><ca>DE BRONZE A FERRO</ca><en>FROM
-      BRONZE TO IRON</en><es>DE BRONCE A HIERRO</es><fr>De Bronze \xE0 Fer</fr></languages><audios><ca></ca><en></en><es></es><fr></fr></audios></title><token
+      name = \"LifeBronzeAge\" position = \"2.966581,0.2998015,2.075098\" rotation
+      = \"0.04002391,0.07317726,-0.002939094,0.9965112\" scale = \"3.46487,3.46487,3.46487\"
+      type = \"Image\" animation = \"\"/><asset name = \"Waypoint\" position = \"3.698979,-0.3769956,1.227157\"
+      rotation = \"0.3280341,0.5597816,-0.2562884,0.7164876\" scale = \"0.2,0.2,0.2\"
+      type = \"Waypoints\" animation = \"\"/></token><token id = \"2\" audioclip
+      = \"\" startEvent = \"\" endEvent = \"\" hide = \"False\" destroy = \"False\"
+      pause = \"False\"><languages><ca>A l\u2019interior, les parets estaven arrebossades
+      i pintades d\u2019ocre, i entre les restes s\u2019han trobat nombrosos vasos
+      de cer\xE0mica que formaven part de la vida quotidiana dels seus habitants.</ca><en>Inside,
+      the walls were plastered and painted ochre, and among the remains, numerous
+      ceramic vessels have been found that were part of the daily life of their inhabitants</en><es>En
+      el interior, las paredes estaban enyesadas y pintadas de color ocre, y entre
+      los restos se han encontrado numerosas vasijas de cer\xE1mica que formaban
+      parte de la vida cotidiana de sus habitantes</es><fr>\xC0 l\u2019int\xE9rieur,
+      les murs \xE9taient enduits et peints en ocre, et parmi les vestiges, de nombreux
+      vases en c\xE9ramique ont \xE9t\xE9 retrouv\xE9s, faisant partie de la vie
+      quotidienne de leurs habitants</fr></languages><audios><ca>Text for language
+      (ca)</ca><en>9.84</en><es>11.616</es><fr>10.632</fr></audios><asset name =
+      \"Waypoint\" position = \"3.337508,-0.3815382,0.2425447\" rotation = \"0.3419064,0.5258603,-0.2429816,0.7399533\"
+      scale = \"0.2,0.2,0.2\" type = \"Waypoints\" animation = \"\"/></token></narration><narration
+      id = \"1\" startEvent = \"\" endEvent = \"\" title=\"nothing\"><title id =
+      \"0\" audioclip = \"\" startEvent = \"\" endEvent = \"\"><languages><ca>DE
+      BRONZE A FERRO</ca><en>FROM BRONZE TO IRON</en><es>DE BRONCE A HIERRO</es><fr>De
+      Bronze \xE0 Fer</fr></languages><audios><ca></ca><en></en><es></es><fr></fr></audios></title><token
       id = \"0\" audioclip = \"\" startEvent = \"\" endEvent = \"\" hide = \"False\"
       destroy = \"False\" pause = \"False\"><languages><ca>Cap al 1700 aC, comen\xE7a
       l\u2019Edat del Bronze en aquesta regi\xF3, tot i que l\u2019\xFAs del metall
@@ -1382,23 +1556,65 @@ MonoBehaviour:
       11 m de longueur, avec une largeur d\u2019environ 3 m.</fr></languages><audios><ca>Text
       for language (ca)</ca><en>9.048</en><es>9.192</es><fr>8.304</fr></audios></token></narration></narrations>"
   - ID: 4
-    POIs: 2b00000000000000c800000000000000000000000000000000000000
+    POIs: 00000000000000000000000000000000000000000000000000000000
     Secrets: 
     Positions:
     - ID: 0
       Position: {x: 2.5041413, y: -0.84999996, z: -1.8827238}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 9.67126, y: -0.84999996, z: 0.51522845}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: 9.747285, y: -0.84999996, z: 3.876945}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: 8.451334, y: -0.84999996, z: 11.447227}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: 4.8482037, y: -0.84999996, z: 6.9098034}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 2.8643463, y: -0.84999996, z: 2.4841876}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 2.9011703, y: -0.84999996, z: 11.75579}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -1761,25 +1977,73 @@ MonoBehaviour:
       en guise de paiement en retour.</fr></languages><audios><ca>Text for language
       (ca)</ca><en>8.88</en><es>10.632</es><fr>10.776</fr></audios></token></narration></narrations>"
   - ID: 5
-    POIs: 2b0000000000000000000000000000008d000000000000000000000000000000
+    POIs: 0000000000000000000000000000000000000000000000000000000000000000
     Secrets: 
     Positions:
     - ID: 0
       Position: {x: -1.7852702, y: -0.84999996, z: 0.8872547}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: -5.479149, y: -0.84999996, z: 0.23471004}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -4.9648952, y: -0.84999996, z: 3.4547446}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -4.389444, y: -0.84999996, z: 10.195764}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -5.0408983, y: -0.84999996, z: 14.047819}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 4.4085073, y: -0.84999996, z: 13.163156}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: -0.97002906, y: -0.84999996, z: 5.514527}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 7
       Position: {x: 1.2587446, y: -0.84999996, z: 2.4793885}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -2161,18 +2425,60 @@ MonoBehaviour:
     Positions:
     - ID: 0
       Position: {x: 3.2863305, y: -0.84999996, z: 0.16095573}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 1.255775, y: -0.84999996, z: 3.7165606}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -1.4285522, y: -0.84999996, z: 4.784247}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -6.5593176, y: -0.84999996, z: 4.120576}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -1.5480781, y: -0.84999996, z: 10.288276}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 0.85466534, y: -0.84999996, z: 12.722918}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 4.6668253, y: -0.84999996, z: 6.7981706}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -2628,18 +2934,60 @@ MonoBehaviour:
     Positions:
     - ID: 0
       Position: {x: 2.5041413, y: -0.84999996, z: -1.8827238}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: 9.67126, y: -0.84999996, z: 0.51522845}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: 9.747285, y: -0.84999996, z: 3.876945}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: 8.451334, y: -0.84999996, z: 11.447227}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: 4.8482037, y: -0.84999996, z: 6.9098034}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 2.8643463, y: -0.84999996, z: 2.4841876}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: 2.9011703, y: -0.84999996, z: 11.75579}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -3117,20 +3465,68 @@ MonoBehaviour:
     Positions:
     - ID: 0
       Position: {x: -1.7852702, y: -0.84999996, z: 0.8872547}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 1
       Position: {x: -5.479149, y: -0.84999996, z: 0.23471004}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 2
       Position: {x: -4.9648952, y: -0.84999996, z: 3.4547446}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 3
       Position: {x: -4.389444, y: -0.84999996, z: 10.195764}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 4
       Position: {x: -5.0408983, y: -0.84999996, z: 14.047819}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 5
       Position: {x: 4.4085073, y: -0.84999996, z: 13.163156}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 6
       Position: {x: -0.97002906, y: -0.84999996, z: 5.514527}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     - ID: 7
       Position: {x: 1.2587446, y: -0.84999996, z: 2.4793885}
+      Forward: {x: 0, y: 0, z: 0}
+      GeoPosition:
+        Latitude: 0
+        Longitude: 0
+        Altitude: 0
+        Heading: 0
     SecretsData: []
     Narration: "<narrations><narration id = \"0\" startEvent = \"\" endEvent = \"\"
       title=\"nothing\"><title id = \"0\" audioclip = \"\" startEvent = \"\" endEvent
@@ -3700,62 +4096,92 @@ MonoBehaviour:
   totalQuestions: 4
   totalAreas: 3
   totalAges: 3
-  age: 1
-  urlBaseManagement: https://yourowndomain.com/database_enpoints/
+  age: 0
+  urlBaseManagement: http://localhost:8080/template6dof/
   versionNumber: 13
   unlockSecretsIndex: 0
-  versionAssets: "<assets>\r\n\r\n\t<asset type=\"image\" name=\"Anfora\" value=\"Anfora\"/>\t\t\r\n\t\r\n\t<asset
-    type=\"image\" name=\"MolinoGris\" value=\"MolinoGris\"/>\t\r\n\t\r\n\t<asset
-    type=\"image\" name=\"MolinoOlson\" value=\"MolinoOlson\"/>\t\r\n\t\r\n\t<asset
-    type=\"image\" name=\"RuinasEmpuries\" value=\"RuinasEmpuries\"/>\t\r\n\t\r\n\t<asset
-    type=\"image\" name=\"RuinasEmpuries2\" value=\"RuinasEmpuries2\"/>\t\r\n\t\r\n\t<asset
-    type=\"image\" name=\"ToolsBronze\" value=\"ToolsBronze\"/>\t\t\t\t\t\t\t\r\n\r\n\t<asset
-    type=\"image\" name=\"LifeBronzeAge\" value=\"LifeBronzeAge\"/>\r\n\t\r\n\t<asset
-    type=\"image\" name=\"AbadiaMonestir\" value=\"abadiamonestir\"/>\t\t\t\t\t\t\t\r\n\r\n\t<asset
-    type=\"image\" name=\"CastleTower\" value=\"castletower\"/>\r\n\t\r\n\t<asset
-    type=\"image\" name=\"CatalanChurch\" value=\"catalanchurch\"/>\r\n\t\r\n\t<asset
-    type=\"image\" name=\"KinghtShield\" value=\"kinghtshield\"/>\r\n\t\t\t\r\n\t<asset
-    type=\"image\" name=\"MolinoAgua\" value=\"molinoagua\"/>\r\n\t\t\t\t\r\n\t<asset
-    type=\"image\" name=\"NewChurch\" value=\"newchurch\"/>\r\n\t\t\t\t\t\r\n\t<asset
-    type=\"image\" name=\"SantVicentCardona2\" value=\"santvicentcardona2\"/>\r\n\t\t\t\t\t\t\r\n\t<asset
-    type=\"image\" name=\"SantVicenteCardona\" value=\"SantVicenteCardona\"/>\r\n\t\r\n\t<asset
-    type=\"image\" name=\"FabricaTextil\" value=\"fabricatextilcatalana\"/>\r\n\r\n\t<asset
-    type=\"image\" name=\"Fragata-Diana\" value=\"fragata-diana\"/>\r\n\r\n\t<asset
-    type=\"image\" name=\"PrensaVino\" value=\"prensavino\"/>\r\n\r\n\t<asset type=\"image\"
-    name=\"Puerto_BCN\" value=\"Puerto_BCN\"/>\r\n\r\n\t<asset type=\"image\" name=\"Sardana\"
-    value=\"sardana_0\"/>\r\n\t\t\r\n\t<asset type=\"sound\" name=\"Volcano Eruption\"
-    value=\"VolcanoEruption\"/>\r\n\t\r\n\t<asset type=\"sound\" name=\"Jungle Life\"
-    value=\"JungleLife\"/>\r\n\t\r\n\t<asset type=\"sound\" name=\"Ocean Waves\"
-    value=\"OceanWaves\"/>\t\r\n\r\n\t<asset type=\"video\" name=\"Big Bunny\" value=\"BigBuckBunny640\"/>\r\n\t\r\n\t<asset
-    type=\"video\" name=\"Monks\" value=\"BigBuckBunny640\"/>\r\n\t\r\n\t<asset type=\"video\"
-    name=\"Rings\" value=\"BigBuckBunny640\"/>\r\n\t\r\n\t<asset type=\"video\" name=\"Sailors\"
-    value=\"BigBuckBunny640\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Alchemist\"
-    value=\"Alchemist\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Armorer\" value=\"Armorer\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Artist\" value=\"Artist\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Blacksmith_01\" value=\"Blacksmith_01\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Blacksmith_02\" value=\"Blacksmith_02\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Boy_Cook\" value=\"Boy_Cook\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Butcher\"
-    value=\"Butcher\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Carpenter\" value=\"Carpenter\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Doctor\" value=\"Doctor\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Executioner\" value=\"Executioner\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Female_01\" value=\"Female_01\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Female_02\"
-    value=\"Female_02\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Female_03\" value=\"Female_03\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Female_Cook\" value=\"Female_Cook\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Female_InnKeeper\" value=\"Female_InnKeeper\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Female_Old\" value=\"Female_Old\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Hunter\" value=\"Hunter\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Jester\" value=\"Jester\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Male_Cook\"
-    value=\"Male_Cook\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Male_InnKeeper\"
-    value=\"Male_InnKeeper\"/>\t\r\n\t\t\r\n\t<asset type=\"model3d\" name=\"Male_Old\"
-    value=\"Male_Old\"/>\t\r\n\t\r\n\t<asset type=\"model3d\" name=\"Merchant_01\"
-    value=\"Merchant_01\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Merchant_02\"
-    value=\"Merchant_02\"/>\t\r\n\r\n\t<asset type=\"model3d\" name=\"Minstre\" value=\"Minstre\"/>\t\r\n\r\n\t<asset
-    type=\"model3d\" name=\"Priest_01\" value=\"Priest_01\"/>\t\r\n\r\n\t<asset type=\"model3d\"
-    name=\"Priest_02\" value=\"Priest_02\"/>\t\r\n\t\r\n\t<asset type=\"model3d\"
-    name=\"Knight\" value=\"Knight\"/>\t\r\n\t\r\n\t<asset type=\"model3d\" name=\"Horse\"
-    value=\"Horse\"/>\t\r\n\t\t\r\n\t<asset type=\"interactable\" name=\"Discover
-    01\" value=\"POIPhotoDiscover01\"/>\r\n\t\r\n\t<asset type=\"interactable\" name=\"Discover
-    02\" value=\"POIPhotoDiscover02\"/>\r\n\t\r\n\t<asset type=\"waypoints\" name=\"Waypoint\"
-    value=\"Waypoint\"/>\r\n\t\r\n</assets>"
+  versionAssets: "<assets>\r\n\r\n\t<asset type=\"image\" name=\"Deer\" value=\"deer\"/>\r\n\r\n\t<asset
+    type=\"image\" name=\"Desert\" value=\"desert\"/>\r\n\t\r\n\t<asset type=\"image\"
+    name=\"Humming Bird\" value=\"hummingbird\"/>\r\n\t\r\n\t<asset type=\"image\"
+    name=\"Sunset\" value=\"sunset\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"Yosemite\"
+    value=\"yosemite\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"Pangea\" value=\"pangea\"/>\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Triassic Fauna\" value=\"TriassicFauna\"/>\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Triassic Flora\" value=\"TriassicFlora\"/>\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Cosesaurus\" value=\"Cosesaurus\"/>\t\t\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Rock Fossile\" value=\"RockFossile\"/>\t\t\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Timeline1\" value=\"Timeline1\"/>\t\t\r\n\t\r\n\t<asset
+    type=\"image\" name=\"Timeline2\" value=\"Timeline2\"/>\r\n\t\r\n\t<asset type=\"image\"
+    name=\"Anfora\" value=\"Anfora\"/>\t\t\r\n\t\r\n\t<asset type=\"image\" name=\"MolinoGris\"
+    value=\"MolinoGris\"/>\t\r\n\t\r\n\t<asset type=\"image\" name=\"MolinoOlson\"
+    value=\"MolinoOlson\"/>\t\r\n\t\r\n\t<asset type=\"image\" name=\"RuinasEmpuries\"
+    value=\"RuinasEmpuries\"/>\t\r\n\t\r\n\t<asset type=\"image\" name=\"RuinasEmpuries2\"
+    value=\"RuinasEmpuries2\"/>\t\r\n\t\r\n\t<asset type=\"image\" name=\"ToolsBronze\"
+    value=\"ToolsBronze\"/>\t\t\t\t\t\t\t\r\n\r\n\t<asset type=\"image\" name=\"LifeBronzeAge\"
+    value=\"LifeBronzeAge\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"AbadiaMonestir\"
+    value=\"abadiamonestir\"/>\t\t\t\t\t\t\t\r\n\r\n\t<asset type=\"image\" name=\"CastleTower\"
+    value=\"castletower\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"CatalanChurch\"
+    value=\"catalanchurch\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"KinghtShield\"
+    value=\"kinghtshield\"/>\r\n\t\t\t\r\n\t<asset type=\"image\" name=\"MolinoAgua\"
+    value=\"molinoagua\"/>\r\n\t\t\t\t\r\n\t<asset type=\"image\" name=\"NewChurch\"
+    value=\"newchurch\"/>\r\n\t\t\t\t\t\r\n\t<asset type=\"image\" name=\"SantVicentCardona2\"
+    value=\"santvicentcardona2\"/>\r\n\t\t\t\t\t\t\r\n\t<asset type=\"image\" name=\"SantVicenteCardona\"
+    value=\"SantVicenteCardona\"/>\r\n\t\r\n\t<asset type=\"image\" name=\"FabricaTextil\"
+    value=\"fabricatextilcatalana\"/>\r\n\r\n\t<asset type=\"image\" name=\"Fragata-Diana\"
+    value=\"fragata-diana\"/>\r\n\r\n\t<asset type=\"image\" name=\"PrensaVino\"
+    value=\"prensavino\"/>\r\n\r\n\t<asset type=\"image\" name=\"Puerto_BCN\" value=\"Puerto_BCN\"/>\r\n\r\n\t<asset
+    type=\"image\" name=\"Sardana\" value=\"sardana_0\"/>\r\n\t\t\r\n\t<asset type=\"sound\"
+    name=\"Surpise 1\" value=\"FX_SURPRISE_1\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Surpise 2\" value=\"FX_SURPRISE_2\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Congratulations\" value=\"FX_CONGRATULATIONS\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Water Splash\" value=\"FX_WATER_SPLASH\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Volcano Eruption\" value=\"VolcanoEruption\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Jungle Life\" value=\"JungleLife\"/>\r\n\t\r\n\t<asset type=\"sound\"
+    name=\"Ocean Waves\" value=\"OceanWaves\"/>\t\r\n\r\n\t<asset type=\"video\"
+    name=\"Big Bunny\" value=\"BigBuckBunny640\"/>\r\n\t\r\n\t<asset type=\"video\"
+    name=\"Test\" value=\"TestPOIVideo\"/>\r\n\t\r\n\t<asset type=\"video\" name=\"Monks\"
+    value=\"Monks\"/>\r\n\t\r\n\t<asset type=\"video\" name=\"Rings\" value=\"Rings\"/>\r\n\t\r\n\t<asset
+    type=\"video\" name=\"Sailors\" value=\"Sailors\"/>\r\n\t\r\n\t<asset type=\"model3d\"
+    name=\"Eiffel Tower\" value=\"EiffelTower\"/>\r\n\t\r\n\t<asset type=\"model3d\"
+    name=\"Pyramid\" value=\"Pyramid\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Statue
+    of Liberty\" value=\"StatueOfLiberty\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Sydney
+    Opera House\" value=\"SydneyOperaHouse\"/>\r\n\t\r\n\t<asset type=\"model3d\"
+    name=\"TajMahal\" value=\"TajMahal\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Tiananmen
+    Square\" value=\"TiananmenSquare\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Fish\"
+    value=\"Fish\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Volcanic Animation\"
+    value=\"VolcanicAnimation\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Jellyfish\"
+    value=\"Jellyfish\"/>\r\n\t\r\n\t<asset type=\"model3d\" name=\"Rhinoceros\"
+    value=\"Rhinoceros\"/>\t\r\n\t\r\n\t<asset type=\"model3d\" name=\"Pangea Earth\"
+    value=\"PangeaEarth\"/>\t\r\n\t\r\n\t<asset type=\"model3d\" name=\"Alchemist\"
+    value=\"Alchemist\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Armorer\" value=\"Armorer\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Artist\" value=\"Artist\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Blacksmith_01\" value=\"Blacksmith_01\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Blacksmith_02\" value=\"Blacksmith_02\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Boy_Cook\" value=\"Boy_Cook\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Butcher\" value=\"Butcher\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Carpenter\" value=\"Carpenter\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Doctor\" value=\"Doctor\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Executioner\" value=\"Executioner\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_01\" value=\"Female_01\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_02\" value=\"Female_02\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_03\" value=\"Female_03\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_Cook\" value=\"Female_Cook\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_InnKeeper\" value=\"Female_InnKeeper\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Female_Old\" value=\"Female_Old\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Hunter\" value=\"Hunter\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Jester\" value=\"Jester\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Male_Cook\" value=\"Male_Cook\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Male_InnKeeper\" value=\"Male_InnKeeper\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\t\t\r\n\t<asset
+    type=\"model3d\" name=\"Male_Old\" value=\"Male_Old\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\t\r\n\t<asset
+    type=\"model3d\" name=\"Merchant_01\" value=\"Merchant_01\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Merchant_02\" value=\"Merchant_02\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Minstre\" value=\"Minstre\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Priest_01\" value=\"Priest_01\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\r\n\t<asset
+    type=\"model3d\" name=\"Priest_02\" value=\"Priest_02\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\t\r\n\t<asset
+    type=\"model3d\" name=\"Knight\" value=\"Knight\" animations=\"Idle,Arguing,Cheering,Clapping,Dig,Pick,Talking,Thanks,Pointing\"/>\t\r\n\t\r\n\t<asset
+    type=\"model3d\" name=\"Horse\" value=\"Horse\"/>\t\r\n\t\t\r\n\t<asset type=\"interactable\"
+    name=\"Discover 01\" value=\"POIPhotoDiscover01\"/>\r\n\t\r\n\t<asset type=\"interactable\"
+    name=\"Discover 02\" value=\"POIPhotoDiscover02\"/>\r\n\t\r\n\t<asset type=\"waypoints\"
+    name=\"Waypoint\" value=\"Waypoint\"/>\r\n\t\r\n</assets>"
   languagesTextAsset: 
   InitialNarration: {fileID: 4900000, guid: f7774abd0ed51504faa9d376b03df38f, type: 3}

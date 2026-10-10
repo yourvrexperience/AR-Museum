@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: AI Data
   m_EditorClassIdentifier: 
   chatGPTID: 0
-  chatGPTUsername: user
+  chatGPTUsername: root
   chatGPTPassword: password
-  serverChatGPT: https://yourowndomain.com/ai_enpoints/
+  serverChatGPT: https://yourwonserver.com
   languages:
   - en
   - es
   - ca
-  urlBaseManagement: https://yourowndomain.com/database_enpoints/
+  urlBaseManagement: http://localhost:8080/template6dof/

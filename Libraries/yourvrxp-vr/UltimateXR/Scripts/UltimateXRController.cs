@@ -741,6 +741,30 @@ namespace yourvrexperience.VR
 			_rThumbstickButtonUp = false; _lThumbstickButtonUp = false;
 		}
 
+		public Vector3 GetOriginByLineRenderer()
+		{
+			if (_handSelected == XR_HAND.right)
+			{
+				return _raycastLineRight.GetPosition(0);
+			}
+			else
+			{
+				return _raycastLineLeft.GetPosition(0);
+			}
+		}
+
+		public Vector3 GetForwardByLineRenderer()
+		{
+			if (_handSelected == XR_HAND.right)
+			{
+				return (_raycastLineRight.GetPosition(1) - _raycastLineRight.GetPosition(0)).normalized;
+			}
+			else
+			{
+				return (_raycastLineLeft.GetPosition(1) - _raycastLineLeft.GetPosition(0)).normalized;
+			}
+		}
+
 		void Update()
         {
 			SetListeners();

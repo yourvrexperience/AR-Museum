@@ -12,7 +12,7 @@ namespace yourvrexperience.VR
 		[SerializeField] private Transform[] LeftHandTools = null;
 		[SerializeField] private Transform[] RightHandTools = null;
 
-#if ENABLE_OCULUS
+#if ENABLE_OCULUS || ENABLE_QR_META
 		private bool _initedLeft = false;
 		private bool _initedRight = false;
 		private bool _initedGeneral = false;

@@ -6,6 +6,7 @@ using yourvrexperience.Networking;
 using yourvrexperience.Narration;
 using static yourvrexperience.Narration.GameLevelData;
 using static yourvrexperience.Narration.NarrationCreator;
+using static yourvrexperience.template6dof.NianticController;
 #if !UNITY_WEBGL && ENABLE_MAXST
 using maxstAR;
 #endif
@@ -23,17 +24,10 @@ namespace yourvrexperience.template6dof
 		public const string EventLevelViewDelayToTimeoutDatabase = "EventLevelViewDelayToTimeoutDatabase";
 		public const string EventLevelViewEnablePOIsForEdit = "EventLevelViewEnablePOIsForEdit";
 		public const string EventLevelViewForcePOIsVisible = "EventLevelViewForcePOIsVisible";
+		public const string EventLevelViewRunGeoCalibration = "EventLevelViewRunGeoCalibration";
 
-/*
-		// CODE EXAMPLES FOR HARDCODED EASTER EGGS
-		public const string EventEasterEggVideo1 = "EventEasterEggVideo1";
-		public const string EventEasterEggPhotos1 = "EventEasterEggPhotos1";
-		public const string EventEasterEggEnding = "EventEasterEggEnding";
+		public const float TimeToRecalculateGeoPositions = 10;
 
-		public const string EventEnableEasterEggVideo1 = "EventEnableEasterEggVideo1";
-		public const string EventEnableEasterEggPhotos1 = "EventEnableEasterEggPhotos1";
-		public const string EventEnableEasterEggEnding = "EventEnableEasterEggEnding";
-*/
 		[Serializable]
 		public class POIData
 		{
@@ -298,7 +292,7 @@ namespace yourvrexperience.template6dof
 		private POIData _playingPOI = null;
 		private string _playingQR = null;
 		private bool _blockSetPlaying = false;
-
+		
 		public Rect Area 
 		{
 			get { return _area; }
@@ -338,7 +332,14 @@ namespace yourvrexperience.template6dof
 			get { return _playingPOI; }
 			set { 
 				if (_blockSetPlaying) return;
-				_playingPOI = value;  
+				bool changed = _playingPOI != value;
+				_playingPOI = value;
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR						
+				if (IsGeoLocationBased && changed && _playingPOI != null)
+				{
+					GeolocationSpaceConverter.CaptureAnchor(_playingPOI.Root.transform, Camera.main.transform);
+				}
+#endif				
 			}
         }
 		public string PlayingQR
@@ -376,6 +377,16 @@ namespace yourvrexperience.template6dof
 		public bool BlockSetPlaying
 		{
 			set { _blockSetPlaying = value; }
+		}
+		public bool IsGeoLocationBased
+		{
+			get { 
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR				
+				return payLoad == null || payLoad.Length == 0; 
+#else
+				return false;
+#endif				
+			}
 		}
 
   		public string PackPOIsContent()
@@ -503,6 +514,10 @@ namespace yourvrexperience.template6dof
 			}
 #endif			
 			if (navigationFloor != null) navigationFloor.GetComponent<MeshRenderer>().enabled = false;
+
+#if FORCE_GEOLOCATION
+			payLoad = "";
+#endif
 
 			// REPOSITION POIs
 			if (content != null)
@@ -722,17 +737,16 @@ namespace yourvrexperience.template6dof
 							easterEggs[i].Target.transform.position = finalPosition;
 #else
 							easterEggs[i].Target.transform.localPosition = finalPosition;
-#endif							
-							
+#endif														
 						}
 #endif
 						if (shouldUpdatePosition)
-						{
+						{							
 #if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
-							finalPosition = NianticController.Instance.DesignToWorldPoint(finalPosition);
+							finalPosition = NianticController.Instance.DesignToWorldPoint(finalPosition);	
 #endif							
 							easterEggs[i].Target.transform.position = finalPosition;
-						}						
+						}												
 						easterEggs[i].ActivationEvent = secretStoredPosition[i].CustomEvent;
 						easterEggs[i].SetNarration(HexadecimalEncoding.FromHexString(secretStoredPosition[i].Narration));
 					}
@@ -857,6 +871,11 @@ namespace yourvrexperience.template6dof
 		{
 			int indexPOISelected = GetIndexSelectedPOI(selectedPOI);
 
+			if (IsGeoLocationBased)
+			{
+				return true;
+			}
+
 			if (indexPOISelected != -1)
 			{
 				Transform poiA = POIS[indexPOISelected].Root.transform;
@@ -959,16 +978,49 @@ namespace yourvrexperience.template6dof
 		}
 		
 		private void OnSystemEvent(string nameEvent, object[] parameters)
-        {
+        {			
 			if (nameEvent.Equals(ARMaxSTController.EventARMaxSTControllerAreaRecognized))
-			{
+			{				
 #if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
-				this.transform.SetParent(NianticController.Instance.Anchor, false);
-				this.transform.localPosition = Vector3.zero;
-				this.transform.localRotation = Quaternion.identity;
-				this.transform.localScale    = Vector3.one;
+				if (MainController.Instance.PlayerView != null)
+				{
+					if (!IsGeoLocationBased)
+					{
+						this.transform.SetParent(NianticController.Instance.Anchor, false);
+						this.transform.localPosition = Vector3.zero;
+						this.transform.localRotation = Quaternion.identity;
+						this.transform.localScale    = Vector3.one;
+					}
+				}
 #endif
+			}				
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+			if (nameEvent.Equals(EventLevelViewRunGeoCalibration))
+			{
+				if (MainController.Instance.PlayerView != null)
+				{
+					if (IsGeoLocationBased)
+					{
+						if (!NianticController.Instance.IsCalibrated)
+						{
+							StartCoroutine(NianticController.Instance.CalibrationGeoOrigin());
+						}						
+						for (int i = 0; i < POIS.Length; i++)
+						{
+							Vector3 posPOI = NianticController.Instance.GeoToWorld(POIS[i].GeoPosition);
+							posPOI.y = NavMeshController.SHIFT_FROM_FLOOR;
+							POIS[i].Root.transform.position = posPOI;
+						}
+						for (int i = 0; i < easterEggs.Length; i++)
+						{
+							Vector3 posSecret = NianticController.Instance.GeoToWorld(easterEggs[i].GeoPosition);
+							posSecret.y = NavMeshController.SHIFT_FROM_FLOOR;
+							easterEggs[i].Target.transform.position = posSecret;
+						}
+					}
+				}
 			}
+#endif			
 			if (nameEvent.Equals(GameLevelData.EventGameLevelDataEditModeChanged))
 			{
 				RefreshVisibilityElements(GameLevelData.Instance.EditPOIsMode);
@@ -1044,6 +1096,11 @@ namespace yourvrexperience.template6dof
 			{
 				InitializePOIs(false);
 				InitializeSecrets(false);
+				SystemEventController.Instance.DispatchSystemEvent(EventLevelViewRunGeoCalibration);
+			}
+			if (nameEvent.Equals(GameSubStateEditPOI.EventGameStateRunRepositioningElement))
+			{
+
 			}
 		}
     }

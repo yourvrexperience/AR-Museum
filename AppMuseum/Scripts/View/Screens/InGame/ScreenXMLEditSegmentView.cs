@@ -94,6 +94,8 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private GameObject contentProcessing;
 		[SerializeField] private TextMeshProUGUI infoTextProcessing;
 		[SerializeField] private Button stopRecording;
+		[SerializeField] private TextMeshProUGUI geoLocationTitle;
+		[SerializeField] private TextMeshProUGUI geoLocationValue;
 
 		private NarrationCreatorToken _selectedEntry;
 		private NarrationCreatorData _narrationPOI;
@@ -295,11 +297,38 @@ namespace yourvrexperience.template6dof
 
 				addQRButton.gameObject.SetActive(true);
 				addQRTitle.gameObject.SetActive(true);
+
+				geoLocationTitle.gameObject.SetActive(true);
+				geoLocationValue.gameObject.SetActive(true);
+
+				GeoLocation geoLocation;
+				if (_secretId == -1)
+				{
+					geoLocation = MainController.Instance.POISelected.GeoPosition;
+				}
+				else
+				{
+					geoLocation = MainController.Instance.SecretSelected.GeoPosition;
+				}
+
+				if (geoLocation.IsNull())
+				{
+					geoLocationTitle.gameObject.SetActive(false);
+					geoLocationValue.gameObject.SetActive(false);
+				}
+				else
+				{
+					geoLocationTitle.text = LanguageController.Instance.GetText("screen.synchronization.geolocation.only");
+					geoLocationValue.text = geoLocation.ToString();
+				}
 			}
 			else
 			{
 				addQRButton.gameObject.SetActive(false);
 				addQRTitle.gameObject.SetActive(false);
+
+				geoLocationTitle.gameObject.SetActive(false);
+				geoLocationValue.gameObject.SetActive(false);
 
 				addImageTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.image");
 				addVideoTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.video");

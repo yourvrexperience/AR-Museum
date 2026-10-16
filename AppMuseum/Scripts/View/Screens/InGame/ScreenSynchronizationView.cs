@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,17 +58,17 @@ namespace yourvrexperience.template6dof
 #endif
 		}
 
-		private void OnButtonPause()
-        {
-			UIEventController.Instance.DispatchUIEvent(GameStateRun.EventGameStateRunTriggerPause);            
-        }
-
         public override void Destroy()
 		{
 			base.Destroy();
 
 			if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;
 		}
+
+        private void OnButtonPause()
+        {
+			UIEventController.Instance.DispatchUIEvent(GameStateRun.EventGameStateRunTriggerPause);
+        }
 
 		private void HideElements()
 		{

@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e968d162d10e144aa741aece0ef69fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::yourvrexperience.Social.GoogleAuth
-  backendBaseUrl: https://www.yourowndomain.com
-  AppScheme: com.yourowndomain.museumtechdemo
+  backendBaseUrl: https://www.yourvrexperience.online
+  AppScheme: com.yourvrexperience.museumtechdemo
 --- !u!4 &104242436
 Transform:
   m_ObjectHideFlags: 0
@@ -550,6 +550,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.ARFoundation::UnityEngine.XR.ARFoundation.ARTrackedImageManager
+  <trackablesChanged>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SerializedLibrary: {fileID: 0}
+  m_MaxNumberOfMovingImages: 0
+  m_TrackedImagePrefab: {fileID: 0}
 --- !u!114 &667397694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +568,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.CoreUtils::Unity.XR.CoreUtils.XROrigin
+  m_Camera: {fileID: 0}
+  m_OriginBaseGameObject: {fileID: 667397685}
+  m_CameraFloorOffsetObject: {fileID: 0}
+  m_RequestedTrackingOriginMode: 0
+  m_CameraYOffset: 1.1176
 --- !u!114 &674696992 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3208446821634300861, guid: ddd0c0ced6abc4a7c8167a2614cb377a, type: 3}
@@ -886,10 +897,6 @@ PrefabInstance:
       value: GCSpeechRecognition
       objectReference: {fileID: 0}
     - target: {fileID: 4000011510471448, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000011510471448, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -928,10 +935,6 @@ PrefabInstance:
     - target: {fileID: 4000011510471448, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000013716498916, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
-      propertyPath: apiKey
-      value: "f\xF1adlskfj\xF1asdfkaj\xF1dskfdas\xF1flkjas\xF1dlfj\xF1asdf"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1255,7 +1258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c41dd7964f9df41bd4173390834ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssetBundleURL: https://localhost:8080/template6dof
+  AssetBundleURL: https://www.yourvrexperience.com/mygames/template6dof/00_base/template6dof
   AssetBundleVersion: 1
 --- !u!4 &1108738897
 Transform:
@@ -1820,10 +1823,6 @@ PrefabInstance:
       value: GCTextToSpeech
       objectReference: {fileID: 0}
     - target: {fileID: 4000011510471448, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000011510471448, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1862,10 +1861,6 @@ PrefabInstance:
     - target: {fileID: 4000011510471448, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114599950165526744, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
-      propertyPath: apiKey
-      value: "asdfjahsd\xF1faj\xF1dlskvfasdf\xF1lkjas\xF1fk\xF1jadklsjfa\xF1fkjsd"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

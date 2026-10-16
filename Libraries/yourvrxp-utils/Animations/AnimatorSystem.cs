@@ -52,7 +52,8 @@ namespace yourvrexperience.Utils
 		{
 			if (forceChange || _currentTriggerAnimation != triggerAnimation)
 			{
-				_currentTriggerAnimation = triggerAnimation;
+				AnimatorComponent.ResetTrigger(_currentTriggerAnimation);
+				_currentTriggerAnimation = triggerAnimation;				
 				AnimatorComponent.SetTrigger(triggerAnimation);
 				DispatchAnimationChangedEvent(triggerAnimation);
 			}

@@ -593,6 +593,13 @@
 		<fr>Regardez autour de vous pour reconnaître l'environnement.</fr>
 	</text>
 
+	<text id="screen.synchronization.geolocation.only">
+		<en>Geolocation</en>
+		<es>Geolocalización</es>
+		<ca>Geolocalizació</ca>
+		<fr>Géolocalisation</fr>
+	</text>
+
 	<text id="screen.synchronization.move.to.door">
 		<en>Walk to the first presentation</en>
 		<es>Camina a la primera presentación</es>

@@ -192,8 +192,11 @@ namespace yourvrexperience.template6dof
         private void UpdateNavigationAgentPosition()
         {
 #if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR	            
-            Vector3 agentPosition = NianticController.Instance.WorldToDesignPoint(ArCameraTransform.position);
-            _navAgentPlayerView.SetLocalPosition(agentPosition);
+            if (!MainController.Instance.LevelView.IsGeoLocationBased)
+            {
+                Vector3 agentPosition = NianticController.Instance.WorldToDesignPoint(ArCameraTransform.position);
+                _navAgentPlayerView.SetLocalPosition(agentPosition);
+            }
 #else
             var arCamPositionInAreaTarget = AreaTargetTransform.InverseTransformPoint(ArCameraTransform.position);
             Vector3 agentPosition = arCamPositionInAreaTarget + _areaTargetOriginalPosition;
@@ -205,9 +208,12 @@ namespace yourvrexperience.template6dof
         {
             if (_navAgentPlayerView != null)
             {
-#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR	            
-                _currentDestination = NianticController.Instance.WorldToDesignPoint(destinationTransform.position);
-                _navAgentPlayerView.SetLocalPosition(_currentDestination);
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+                if (!MainController.Instance.LevelView.IsGeoLocationBased)
+                {
+                    _currentDestination = NianticController.Instance.WorldToDesignPoint(destinationTransform.position);
+                    _navAgentPlayerView.SetLocalPosition(_currentDestination);
+                }
 #else
                 var localPositionInAreaTarget = AreaTargetTransform.InverseTransformPoint(destinationTransform.position);
                 _currentDestination = localPositionInAreaTarget + _areaTargetOriginalPosition;
@@ -400,6 +406,10 @@ namespace yourvrexperience.template6dof
 
         public void UpdateArrowPath(Vector3 origin, Vector3 target)
         {
+            if (MainController.Instance.LevelView.IsGeoLocationBased)
+            {
+                return;
+            }
             if (_arrowPathLine == null)
             {
                 _arrowPathLine = Instantiate(ArrowPathToTarget).GetComponent<LineRenderer>();

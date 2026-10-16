@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using yourvrexperience.Narration;
+using static yourvrexperience.template6dof.NianticController;
 #if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 using yourvrexperience.VR;
 #endif
@@ -234,6 +235,8 @@ namespace yourvrexperience.template6dof
 								{
 									_isReplayPlaying = true;
 									MainController.Instance.HighlightedPOI.SetActive(false);
+									MainController.Instance.LevelView.PlayingQR = _replayQR;
+									MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedPOI(POIIndex);		
 									SystemEventController.Instance.DispatchSystemEvent(EventPOIReplayViewDisplayScreen, POIIndex, IconContainer.transform);
 								}
 							}

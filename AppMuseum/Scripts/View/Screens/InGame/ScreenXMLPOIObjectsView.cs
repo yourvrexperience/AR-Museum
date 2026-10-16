@@ -11,6 +11,7 @@ using yourvrexperience.VR;
 using static yourvrexperience.Narration.GameLevelData;
 using static yourvrexperience.Narration.NarrationController;
 using static yourvrexperience.Narration.NarrationCreator;
+using static yourvrexperience.template6dof.NianticController;
 
 namespace yourvrexperience.template6dof
 {
@@ -554,12 +555,22 @@ namespace yourvrexperience.template6dof
 
 		private void GetStoragePose(Transform obj, out Vector3 pos, out Quaternion rot)
 		{
-		#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
+#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
 			QRSpaceConverter.WorldToAreaFromQR(obj, out pos, out rot);
-		#else
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+			if (MainController.Instance.LevelView.IsGeoLocationBased)
+			{
+				GeolocationSpaceConverter.WorldToStored(obj, out pos, out rot);
+			}
+			else
+			{
+				pos = obj.localPosition;
+				rot = obj.localRotation;
+			}
+#else
 			pos = obj.localPosition;
 			rot = obj.localRotation;
-		#endif
+#endif
 		}
 
 		private void SaveNarrationObject(Transform obj, Vector3 scale, string animation)
@@ -644,7 +655,7 @@ namespace yourvrexperience.template6dof
 							{
 								if (_photoController.Scale.magnitude < MAX_SCALE)
 								{
-									_photoController.Scale += (Vector3.one * Time.deltaTime);									
+									_photoController.Scale += (Vector3.one * Time.deltaTime);
 								}
 							}
 							if (_scaleDown)
@@ -652,7 +663,7 @@ namespace yourvrexperience.template6dof
 								if (_photoController.Scale.magnitude > MIN_SCALE)
 								{
 									_photoController.Scale -= (Vector3.one * Time.deltaTime);
-								}								
+								}
 							}			
 
 							if (placedObject)

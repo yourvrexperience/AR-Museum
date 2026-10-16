@@ -21,6 +21,59 @@ namespace yourvrexperience.template6dof
 {
     public class NianticController : MonoBehaviour
 	{
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR
+		public static class GeolocationSpaceConverter
+		{
+			private static Transform Area => NavMeshController.Instance.AreaMaxST.transform;
+
+			private static Transform _anchor;
+			private static Vector3 _poiLocal;
+
+			public static Transform Anchor => _anchor;
+
+			// Call ONCE when the interaction with a POI starts
+			public static Transform CaptureAnchor(Transform poiRoot, Transform userCamera)
+			{
+				if (_anchor == null) _anchor = new GameObject("GeoPOIAnchor").transform;
+				_anchor.SetParent(Area, false);   // lives in area space, so area scale/rotation are handled for free
+
+				_poiLocal = Area.InverseTransformPoint(poiRoot.position);
+
+				// Direction the user is facing toward the POI, flattened in area space
+				Vector3 dirLocal = Area.InverseTransformDirection(poiRoot.position - userCamera.position);
+				dirLocal.y = 0;
+				if (dirLocal.sqrMagnitude < 1e-4f)   // user standing on the POI: fall back to the view direction
+				{
+					dirLocal = Area.InverseTransformDirection(userCamera.forward);
+					dirLocal.y = 0;
+				}
+				if (dirLocal.sqrMagnitude < 1e-6f) dirLocal = Vector3.forward;
+
+				_anchor.localPosition = _poiLocal;
+				_anchor.localRotation = Quaternion.LookRotation(dirLocal.normalized, Vector3.up);
+				_anchor.localScale = Vector3.one;
+				return _anchor;
+			}
+
+			// Stored data (area coords, canonical POI frame) -> local pose under the anchor
+			public static void StoredToAnchor(Vector3 posArea, Quaternion rotArea, out Vector3 posLocal, out Quaternion rotLocal)
+			{
+				posLocal = posArea - _poiLocal;
+				rotLocal = rotArea;
+			}
+
+			// Object placed in the world while editing -> stored data
+			public static void WorldToStored(Transform obj, out Vector3 posArea, out Quaternion rotArea)
+			{
+				Vector3 posLocal = _anchor.InverseTransformPoint(obj.position);
+				Quaternion rotLocal = Quaternion.Inverse(_anchor.rotation) * obj.rotation;
+				posArea = posLocal + _poiLocal;
+				rotArea = rotLocal;
+			}
+		}
+#endif
+		private const double EarthRadiusMeters = 6378137.0; // WGS84 equatorial radius
+
 		private static NianticController _instance;
 
         public static NianticController Instance
@@ -73,18 +126,18 @@ namespace yourvrexperience.template6dof
 
 		private bool _usePayload = true;
 		private string _levelAnchorPayload;
-		private double _levelAnchorLatitude;
-		private double _levelAnchorLongitude;
-		private double _levelAnchorAltitude;
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR
 		private ARVps2Anchor _anchor;		
 		private XRVps2Localization _currentLocalization;
 #endif		
-		private GameObject _anchorGeolocation;
 		private GameObject _coarseMarker;
 		private bool _isAnchorSet;
 		private GeoLocation _currentGeoLocation;
 		private Coroutine _autoLoadCoroutine;		
+		private Vector3 _originUnityPos;
+		private GeoLocation _originGeo;
+		private Quaternion _geoToWorld;
+		private bool _isCalibrated = false;
 
 		public bool HasAreaBeenDetected
         {
@@ -95,6 +148,7 @@ namespace yourvrexperience.template6dof
 				{
 					MainController.Instance.ApplyOclusionNavigation();
 					SystemEventController.Instance.DispatchSystemEvent(ARMaxSTController.EventARMaxSTControllerAreaRecognized);
+					SystemEventController.Instance.DelaySystemEvent(LevelView.EventLevelViewRunGeoCalibration, 4);
 				}
 				else
 				{
@@ -122,6 +176,10 @@ namespace yourvrexperience.template6dof
 			get { return _currentGeoLocation;  }
 			set { _currentGeoLocation = value; }
 		}
+		public bool IsCalibrated
+		{
+			get { return _isCalibrated; }
+		}
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR		
 		public Transform Anchor
 		{
@@ -132,14 +190,7 @@ namespace yourvrexperience.template6dof
 				}
 				else
 				{
-					if (_anchorGeolocation == null)
-					{
-						return null;
-					}
-					else
-					{
-						return _anchorGeolocation.transform;
-					}					
+					return null;
 				}				
 			}
 		}
@@ -165,11 +216,6 @@ namespace yourvrexperience.template6dof
 				StopCoroutine(_autoLoadCoroutine);
 				_autoLoadCoroutine = null;
 			}
-			if (_anchorGeolocation != null)
-			{
-				GameObject.Destroy(_anchorGeolocation);
-				_anchorGeolocation = null;
-			}
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR					
 			if (_anchor != null)
 			{
@@ -186,6 +232,68 @@ namespace yourvrexperience.template6dof
 		public bool CheckVisiblePoint(Vector3 position)
 		{
 			return cameraVision.bounds.Contains(position);
+		}
+
+		private bool UpdateGeolocation()
+		{
+#if ENABLE_NIANTIC || ENABLE_NIANTICXR			
+			// UPDATE THE CURRENT GEOLOCATION
+			if (arVps2Manager.TryGetDeviceGeolocation(out XRVps2Geolocation deviceGeo, HeadingMode.CameraDirection))
+			{
+				_currentGeoLocation.Latitude  = deviceGeo.Geolocation.Latitude;
+				_currentGeoLocation.Longitude = deviceGeo.Geolocation.Longitude;
+				_currentGeoLocation.Altitude  = deviceGeo.Geolocation.Altitude;
+				_currentGeoLocation.Heading  = deviceGeo.Geolocation.Heading;
+				return true;
+			}				
+			else
+			{
+				return false;
+			}	
+#else
+			return false;
+#endif			
+		}
+
+		public System.Collections.IEnumerator CalibrationGeoOrigin()
+		{
+			while (!UpdateGeolocation())
+				yield return new WaitForSeconds(0.5f);
+
+			CalibrateGeoOrigin(); // only with a valid, fresh sample
+		}
+
+		// Call once, after GPS and compass have stabilized
+		private void CalibrateGeoOrigin()
+		{
+			_isCalibrated = true;
+			_originGeo = CurrentGeoLocation;
+			_originUnityPos = Camera.main.transform.position;
+
+			float cameraYaw = Camera.main.transform.eulerAngles.y;
+			float heading   = (float)_originGeo.Heading;   // must be sampled at the same moment
+			_geoToWorld = Quaternion.Euler(0f, cameraYaw - heading, 0f);
+		}
+
+		public Vector3 GeoToWorld(GeoLocation poi)
+		{
+			Vector3 enu = GetPOIPositionFromGeolocation(poi, _originGeo);
+			Vector3 pos = _originUnityPos + _geoToWorld * enu;
+			pos.y = _originUnityPos.y; // or your ground height, since altitude is ignored
+			return pos;
+		}
+
+		public Vector3 GetPOIPositionFromGeolocation(GeoLocation poi, GeoLocation origin)
+		{
+			double latRad = origin.Latitude * Math.PI / 180.0;
+
+			double dLat = (poi.Latitude - origin.Latitude) * Math.PI / 180.0;
+			double dLon = (poi.Longitude - origin.Longitude) * Math.PI / 180.0;
+
+			double north = dLat * EarthRadiusMeters;
+			double east  = dLon * EarthRadiusMeters * Math.Cos(latRad);
+
+			return new Vector3((float)east, 0f, (float)north); // pure offset, no rotation, no camera
 		}
 
 #if ENABLE_NIANTIC || ENABLE_NIANTICXR
@@ -221,13 +329,17 @@ namespace yourvrexperience.template6dof
 				return;
 			}			
 
-			// Instantiate the debug anchor visualization
-			if (anchorMarkerPrefab != null)
+			// _anchor = null;  // FOR TESTING: PLEASE REMOVE
+			if (_anchor != null)
 			{
-				_coarseMarker = Instantiate(anchorMarkerPrefab, _anchor.transform, true);
-				_coarseMarker.transform.localPosition = Vector3.zero;
-				_coarseMarker.transform.localRotation = Quaternion.identity;
-				_coarseMarker.transform.localScale = Vector3.one;
+				// Instantiate the debug anchor visualization
+				if (anchorMarkerPrefab != null)
+				{
+					_coarseMarker = Instantiate(anchorMarkerPrefab, _anchor.transform, true);
+					_coarseMarker.transform.localPosition = Vector3.zero;
+					_coarseMarker.transform.localRotation = Quaternion.identity;
+					_coarseMarker.transform.localScale = Vector3.one;
+				}
 			}
 
 			HasAreaBeenDetected = true;
@@ -246,7 +358,6 @@ namespace yourvrexperience.template6dof
 		{
 			while (!_isAnchorSet)
 			{
-				if (_geolocationText != null) _geolocationText.text =  _levelAnchorLatitude + ", " + _levelAnchorLongitude + ", " + _levelAnchorAltitude;
 				TrackAnchorFromGeolocation();
 				if (_isAnchorSet) yield break;
 				yield return new WaitForSeconds(0.5f);
@@ -256,20 +367,11 @@ namespace yourvrexperience.template6dof
 		private void TrackAnchorFromGeolocation()
 		{
 			if (arVps2Manager.TryGetLatestLocalization(out var localization) &&
-            	localization.TrackingState != Vps2TrackingState.Unavailable &&
-            	arVps2Manager.TryGetPose(localization,
-                                     _levelAnchorLatitude,
-                                     _levelAnchorLongitude,
-                                     _levelAnchorAltitude,
-                                     Quaternion.identity,
-                                     out var pose))
+            	localization.TrackingState != Vps2TrackingState.Unavailable)
         	{
-				_isAnchorSet = true;
-				HasAreaBeenDetected = true;
+				_isAnchorSet = true;				
 				_enableDetection = true;
-				_anchorGeolocation = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				_anchorGeolocation.transform.SetPositionAndRotation(pose.Pose.position, pose.Pose.rotation);
-				_anchorGeolocation.GetComponent<Collider>().enabled = false;
+				HasAreaBeenDetected = true;
 				Debug.Log("GeoPositionedObjectHelper: applied latest pose to GameObject.");
 			}
 		}
@@ -360,19 +462,14 @@ namespace yourvrexperience.template6dof
 				_hasAreaBeenDetected = true;
 #elif ENABLE_NIANTIC || ENABLE_NIANTICXR
 				_levelAnchorPayload = (string)parameters[1];
+				// FOR TESTING: PLEASE REMOVE
+				// _usePayload = false;
+				// _autoLoadCoroutine = StartCoroutine(AutoLoadWhenReady("ChUIsuHshKG9qKfgARCT38WHrYuJ+iYYrLvy4PwzKicKFQiR37nq9sPGp30QvJ+rpfjAhfSXARIJCgASBSUAAIA/HQAAgD8yEhFbiqa2vb5EQBkVEveTbi4BQA=="));					
 				if (_levelAnchorPayload == null || _levelAnchorPayload.Length == 0)
 				{
 					_usePayload = false;
-					var ci = CultureInfo.InvariantCulture;
-					if (!double.TryParse((string)parameters[2], NumberStyles.Float, ci, out _levelAnchorLatitude) ||
-						!double.TryParse((string)parameters[3], NumberStyles.Float, ci, out _levelAnchorLongitude) ||
-						!double.TryParse((string)parameters[4], NumberStyles.Float, ci, out _levelAnchorAltitude))
-					{
-						Debug.LogError("Niantic: geolocation anchor not parseable");
-						return;
-					}
-					Debug.LogError($"Niantic: Auto-loading anchor with geolocation: {_levelAnchorLatitude}, {_levelAnchorLongitude}, {_levelAnchorAltitude}");
-					_autoLoadCoroutine = StartCoroutine(AutoLoadGeolocationWhenReady());										
+					Debug.LogError($"Niantic: Auto-loading anchor with geolocation");
+					_autoLoadCoroutine = StartCoroutine(AutoLoadGeolocationWhenReady());						
 				}
 				else
 				{
@@ -411,28 +508,30 @@ namespace yourvrexperience.template6dof
             {
 				if (_usePayload)
 				{
-					_anchorStatusText.text = _anchor.trackingState switch
+					if (_anchor != null)
 					{
-						TrackingState.None => $"Anchor Tracking State: NONE\n(Reason: {_anchor.trackingStateReason})",
-						TrackingState.Limited => $"Anchor Tracking State: LIMITED\n(Reason: {_anchor.trackingStateReason})",
-						TrackingState.Tracking => "Anchor Tracking State: TRACKING",
-						_ => throw new ArgumentOutOfRangeException()
-					};
-					var geo = _anchor.geolocation;
-					if (geo.HasValue && _anchor.trackingState == TrackingState.Tracking)
-					{
-						// _geolocationText.text = $"Anchor geolocation: {geo.Value.Latitude:F5}, {geo.Value.Longitude:F5}, {geo.Value.Altitude:F5}";
-						_geolocationText.text = $"Anchor GEOLOCATION: {_currentGeoLocation.Latitude}, {_currentGeoLocation.Longitude}, {_currentGeoLocation.Altitude}";
-					}
-					else
-					{
-						_geolocationText.text = "Anchor geolocation: N/A";
+						_anchorStatusText.text = _anchor.trackingState switch
+						{
+							TrackingState.None => $"Anchor Tracking State: NONE\n(Reason: {_anchor.trackingStateReason})",
+							TrackingState.Limited => $"Anchor Tracking State: LIMITED\n(Reason: {_anchor.trackingStateReason})",
+							TrackingState.Tracking => "Anchor Tracking State: TRACKING",
+							_ => throw new ArgumentOutOfRangeException()
+						};
+						var geo = _anchor.geolocation;
+						if (geo.HasValue && _anchor.trackingState == TrackingState.Tracking)
+						{
+							_geolocationText.text = $"Anchor geolocation: {geo.Value.Latitude:F5}, {geo.Value.Longitude:F5}, {geo.Value.Altitude:F5}, {geo.Value.Heading:F5}";
+						}
+						else
+						{
+							_geolocationText.text = "Anchor geolocation: N/A";
+						}
 					}
 				}
 				else
 				{
 					_anchorStatusText.text = "Anchor Tracking State: GEOLOCATION";
-					_geolocationText.text = $"Anchor geolocation: {_currentGeoLocation.Latitude:F5}, {_currentGeoLocation.Longitude :F5}, {_currentGeoLocation.Altitude:F5}";
+					_geolocationText.text = $"Anchor geolocation: {_currentGeoLocation.Latitude:F5}, {_currentGeoLocation.Longitude :F5}, {_currentGeoLocation.Heading:F5}";
 				}
             }			
 		}
@@ -448,25 +547,6 @@ namespace yourvrexperience.template6dof
 			}
 #endif			
 		}
-
-#if ENABLE_NIANTIC || ENABLE_NIANTICXR
-		public void RefreshGeolocationGO(GameObject go, GeoLocation geoLocation)
-		{
-			if (_currentLocalization.TrackingState == Vps2TrackingState.Unavailable)
-			{
-				return;
-			}
-			if (arVps2Manager.TryGetPose(_currentLocalization, 
-				geoLocation.Latitude,
-				geoLocation.Longitude,
-				geoLocation.Altitude, 
-				Quaternion.identity, 
-				out var pose))
-			{
-				go.transform.SetPositionAndRotation(pose.Pose.position, pose.Pose.rotation);
-			}
-		}				
-#endif			
 
 		private void Update()
     	{
@@ -484,34 +564,7 @@ namespace yourvrexperience.template6dof
 					HasAreaBeenDetected = true;
 				}
 								
-				if (!_usePayload)
-				{
-					// REFRESH THE ANCHOR
-					if (_anchorGeolocation == null)
-					{
-						_anchorGeolocation = GameObject.CreatePrimitive(PrimitiveType.Cube);
-						_anchorGeolocation.GetComponent<Collider>().enabled = false;
-					}
-					else
-					{
-						GeoLocation geoLocationAnchor = new GeoLocation();
-						geoLocationAnchor.Latitude = _levelAnchorLatitude;
-						geoLocationAnchor.Longitude = _levelAnchorLongitude;
-						geoLocationAnchor.Altitude = _levelAnchorAltitude;
-						geoLocationAnchor.Heading = 0;
-						RefreshGeolocationGO(_anchorGeolocation, geoLocationAnchor);
-					}
-				}
-
-				// UPDATE THE CURRENT GEOLOCATION
-				if (arVps2Manager.TryGetDeviceGeolocation(out XRVps2Geolocation deviceGeo, HeadingMode.CameraDirection))
-				{
-					_currentGeoLocation.Latitude  = deviceGeo.Geolocation.Latitude;
-					_currentGeoLocation.Longitude = deviceGeo.Geolocation.Longitude;
-					_currentGeoLocation.Altitude  = deviceGeo.Geolocation.Altitude;
-					_currentGeoLocation.Heading  = deviceGeo.Geolocation.Heading;
-				}					
-
+				UpdateGeolocation();
 				DisplayDebugInformation(_currentLocalization);
 #endif				
 			}

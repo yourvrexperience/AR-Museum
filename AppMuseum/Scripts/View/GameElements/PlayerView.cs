@@ -221,12 +221,15 @@ namespace yourvrexperience.template6dof
 
 		void OnDestroy()
 		{
-			if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;			
-			if (NetworkController.Instance != null)	NetworkController.Instance.NetworkEvent -= OnNetworkEvent;
-			if (NetworkGameIDView != null) NetworkGameIDView.InitedEvent -= OnInitDataEvent;
-			if (_refNavigationHelper != null) GameObject.Destroy(_refNavigationHelper);
-			if (_refAreaMaxSTHelper != null) GameObject.Destroy(_refAreaMaxSTHelper);
-			if (_bodyAsset != null) GameObject.Destroy(_bodyAsset);
+			try
+			{
+				if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;			
+				if (NetworkController.Instance != null)	NetworkController.Instance.NetworkEvent -= OnNetworkEvent;
+				if (NetworkGameIDView != null) NetworkGameIDView.InitedEvent -= OnInitDataEvent;
+				if (_refNavigationHelper != null) GameObject.Destroy(_refNavigationHelper);
+				if (_refAreaMaxSTHelper != null) GameObject.Destroy(_refAreaMaxSTHelper);
+				if (_bodyAsset != null) GameObject.Destroy(_bodyAsset);
+			} catch (Exception err) {};
 			SystemEventController.Instance.DispatchSystemEvent(PlayerHandView.EventPlayerViewHandDestroyedAvatar, this);
 		}
 

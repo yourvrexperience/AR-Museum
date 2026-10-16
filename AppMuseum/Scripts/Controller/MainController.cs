@@ -13,6 +13,10 @@ using yourvrexperience.UserManagement;
 using yourvrexperience.Social;
 using static yourvrexperience.template6dof.LevelView;
 using UnityEngine.UI;
+using static yourvrexperience.template6dof.NianticController;
+using Unity.VisualScripting;
+
+
 
 #if (ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR)
 using UnityEngine.XR;
@@ -132,6 +136,9 @@ namespace yourvrexperience.template6dof
 
 		private GameObject _highlightedPOI;
 		private GameObject _selectedPOI;
+
+		private EasterEgg _secretSelected;
+		private POIData _poiSelected;
 
 		public IInputController GameInputController
 		{
@@ -290,6 +297,16 @@ namespace yourvrexperience.template6dof
 		{
 			get { return _blockCameraMovement; }
 			set { _blockCameraMovement = value; }
+		}
+		public POIData POISelected
+		{
+			get { return _poiSelected; }
+			set { _poiSelected = value; }
+		}
+		public EasterEgg SecretSelected
+		{
+			get { return _secretSelected; }
+			set { _secretSelected = value; }
 		}
 
 		void Awake()
@@ -623,11 +640,22 @@ namespace yourvrexperience.template6dof
 				Quaternion rotObj = (Quaternion)parameters[4];
 				Vector3 scaleObj = (Vector3)parameters[5];
 				string animationObj = (string)parameters[6];
+				Transform parentObject = null;
 #if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
-				Transform parentObject = QRImageController.Instance.GetContentRootQR(MainController.Instance.LevelView.PlayingQR);
+				parentObject = QRImageController.Instance.GetContentRootQR(MainController.Instance.LevelView.PlayingQR);
 				QRSpaceConverter.AreaToQR(posObj, rotObj, out posObj, out rotObj);
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+				if (MainController.Instance.LevelView.IsGeoLocationBased)
+				{
+					parentObject = GeolocationSpaceConverter.Anchor;
+					GeolocationSpaceConverter.StoredToAnchor(posObj, rotObj, out posObj, out rotObj);
+				}
+				else
+				{
+					parentObject = NavMeshController.Instance.AreaMaxST.transform;
+				}
 #else
-				Transform parentObject = NavMeshController.Instance.AreaMaxST.transform;
+				parentObject = NavMeshController.Instance.AreaMaxST.transform;
 #endif				
 				switch (typeNarrationObj)
 				{
@@ -740,6 +768,8 @@ namespace yourvrexperience.template6dof
 				_tourGuideView = null;		
 				_mainNarrationPlaying = false;	
 				_currentAreaGame = -1;
+				_secretSelected = null;
+				_poiSelected = null;
 				DestroyPreviousHighlightedPOI();				
 #if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
 				QRImageController.Instance.ClearAllDetections();
@@ -1238,8 +1268,26 @@ namespace yourvrexperience.template6dof
 			return ARMaps[GameLevelData.Instance.GetLevel(_currentGameLevel)];
 		}
 
+		private void ApplyLevelMaterial(GameObject wall, Material material, int renderqueue = -1)
+		{
+			Renderer[] cullingRenderer = wall.GetComponentsInChildren<Renderer>();
+			foreach (Renderer eachRenderer in cullingRenderer)
+			{
+				Material[] materials = eachRenderer.materials;
+				for (int i = 0; i < eachRenderer.materials.Length; i++)
+				{
+					materials[i] = material;
+					if (renderqueue != -1)
+					{
+						materials[i].renderQueue = renderqueue;
+					}
+				}
+				eachRenderer.materials = materials;
+			}
+		}
+
 		public void ApplyOclusionNavigation()
-        {
+        {			
 			if (MainController.Instance.EnableEditionPOIs)
 			{
 #if !UNITY_EDITOR				
@@ -1257,31 +1305,20 @@ namespace yourvrexperience.template6dof
 				foreach (WallOclussion eachGameObject in wallsDetected)
 				{
 #if ENABLE_VUFORIA						
-					Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
-					foreach (Renderer eachRenderer in cullingRenderer)
-					{
-						Material[] materials = eachRenderer.materials;
-						for (int i = 0; i < eachRenderer.materials.Length; i++)
-						{
-							materials[i] = occlusionVuforia;						
-						}
-						eachRenderer.materials = materials;
-					}
+					ApplyLevelMaterial(eachGameObject, occlusionVuforia, 1900);
 #elif ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META
 					GameObject.Destroy(eachGameObject.gameObject);
-#else
-					Renderer[] cullingRenderer = eachGameObject.GetComponentsInChildren<Renderer>();
-					foreach (Renderer eachRenderer in cullingRenderer)
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+					if (MainController.Instance.LevelView.IsGeoLocationBased)
 					{
-						Material[] materials = eachRenderer.materials;
-						for (int i = 0; i < eachRenderer.materials.Length; i++)
-						{
-							materials[i] = occlusionMaterial;
-							materials[i].renderQueue = 1900;
-						}
-
-						eachRenderer.materials = materials;
+						GameObject.Destroy(eachGameObject.gameObject);
 					}
+					else
+					{
+						ApplyLevelMaterial(eachGameObject.gameObject, occlusionMaterial);
+					}					
+#else
+					ApplyLevelMaterial(eachGameObject.gameObject, occlusionMaterial);
 #endif				
 				}
 #endif
@@ -1331,14 +1368,23 @@ namespace yourvrexperience.template6dof
 					{
 						Vector3 posObj = narrationObj.Position;
 						Quaternion rotObj = narrationObj.Rotation;
-
+						Transform parentObject = null;						
 #if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
-						Transform parentObject = QRImageController.Instance.GetContentRootQR(MainController.Instance.LevelView.PlayingQR);
+						parentObject = QRImageController.Instance.GetContentRootQR(MainController.Instance.LevelView.PlayingQR);
 						QRSpaceConverter.AreaToQR(posObj, rotObj, out posObj, out rotObj);
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+						if (MainController.Instance.LevelView.IsGeoLocationBased)
+						{
+							parentObject = GeolocationSpaceConverter.Anchor;
+							GeolocationSpaceConverter.StoredToAnchor(posObj, rotObj, out posObj, out rotObj);
+						}
+						else
+						{
+							parentObject = NavMeshController.Instance.AreaMaxST.transform;
+						}
 #else
-						Transform parentObject = NavMeshController.Instance.AreaMaxST.transform;						
+						parentObject = NavMeshController.Instance.AreaMaxST.transform;
 #endif				
-
 						switch (narrationObj.Type)
 						{
 							case TypeObjectNarration.Image:

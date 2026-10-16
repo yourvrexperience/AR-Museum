@@ -10,6 +10,7 @@ using yourvrexperience.VR;
 #endif
 using static yourvrexperience.Narration.GameLevelData;
 using static yourvrexperience.template6dof.LevelView;
+using static yourvrexperience.template6dof.NianticController;
 
 namespace yourvrexperience.template6dof
 {
@@ -18,6 +19,7 @@ namespace yourvrexperience.template6dof
 		public const string EventGameStateRunSaveEditionPOIs = "EventGameStateRunSaveEditionPOIs";
 		public const string EventGameStateRunPublishEditionPOIs = "EventGameStateRunPublishEditionPOIs";
 		public const string EventGameStateRunForceEditionSelection = "EventGameStateRunForceEditionSelection";
+		public const string EventGameStateRunRepositioningElement = "EventGameStateRunRepositioningElement";
 
 		public const string SubEventGameStateRunConfirmDiscardAndPublish = "SubEventGameStateRunConfirmDiscardAndPublish";	
 		public const string SubEventGameStateRunFinalConfirmationPublication = "SubEventGameStateRunFinalConfirmationPublication";	
@@ -29,8 +31,6 @@ namespace yourvrexperience.template6dof
 		private Vector3 _originalBackupEditedPOI;
 		private GameObject _highlightedPOI;
 		private float _timeAcum = 0;
-		private EasterEgg _secretSelected;
-		private POIData _poiSelected;
 
 		public void Initialize()
 		{
@@ -42,8 +42,8 @@ namespace yourvrexperience.template6dof
 		{
 			_highlightedPOI = null;
 			_currentEditedPOI = null;
-			_secretSelected = null;
-			_poiSelected = null;
+			MainController.Instance.SecretSelected = null;
+			MainController.Instance.POISelected = null;
 			if (SystemEventController.Instance != null) SystemEventController.Instance.Event -= OnSystemEvent;
 			if (UIEventController.Instance != null) UIEventController.Instance.Event -= OnUIEvent;
 		}
@@ -155,7 +155,7 @@ namespace yourvrexperience.template6dof
 				GameLevelData.Instance.HasBeenEditionModified = false;
 			}
 			if (nameEvent.Equals(EventGameStateRunForceEditionSelection))
-			{				
+			{
 				_highlightedPOI = (GameObject)parameters[0];
 				ChangeSubState(StatesEditionPOIs.Selected);
 			}
@@ -188,7 +188,7 @@ namespace yourvrexperience.template6dof
 				}
 				else
 				{
-					ScreenController.Instance.CreateScreen3DAnchor(ScreenSelectedEditionPOIView.ScreenName, null, posScreen, normalToTarget, GameStateRun.SizeEasterEggNarration, false, true, false, _secretSelected);
+					ScreenController.Instance.CreateScreen3DAnchor(ScreenSelectedEditionPOIView.ScreenName, null, posScreen, normalToTarget, GameStateRun.SizeEasterEggNarration, false, true, false, MainController.Instance.SecretSelected);
 				}
 			}
 			else
@@ -199,7 +199,7 @@ namespace yourvrexperience.template6dof
 				}
 				else
 				{
-					ScreenController.Instance.CreateScreen(ScreenSelectedEditionPOIView.ScreenName, false, true, false, _secretSelected);	
+					ScreenController.Instance.CreateScreen(ScreenSelectedEditionPOIView.ScreenName, false, true, false, MainController.Instance.SecretSelected);	
 				}
 			}
 		}
@@ -226,8 +226,9 @@ namespace yourvrexperience.template6dof
 					{
 						_currentEditedPOI = _highlightedPOI.transform.parent;
 						_originalBackupEditedPOI = _currentEditedPOI.transform.position;
-						_poiSelected = MainController.Instance.LevelView.GetSelectedPOI(_currentEditedPOI);
+						MainController.Instance.POISelected = MainController.Instance.LevelView.GetSelectedPOI(_currentEditedPOI);
 						GameLevelData.Instance.IndexPOILevelEdited = MainController.Instance.LevelView.GetIndexSelectedPOI(_currentEditedPOI);
+						MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedPOI(GameLevelData.Instance.IndexPOILevelEdited);
 						if (GameLevelData.Instance.IndexPOILevelEdited != -1)
 						{
 							CreateSelectedEditionPOIView(true);
@@ -237,8 +238,8 @@ namespace yourvrexperience.template6dof
 					{
 						_currentEditedPOI = _highlightedPOI.transform;
 						_originalBackupEditedPOI = _currentEditedPOI.transform.position;
-						_secretSelected = MainController.Instance.LevelView.GetSelectedSecret(_currentEditedPOI);
-						if (_secretSelected != null)
+						MainController.Instance.SecretSelected = MainController.Instance.LevelView.GetSelectedSecret(_currentEditedPOI);
+						if (MainController.Instance.SecretSelected != null)
 						{
 							CreateSelectedEditionPOIView(false);
 						}						
@@ -247,6 +248,7 @@ namespace yourvrexperience.template6dof
 
 				case StatesEditionPOIs.RePosition:
 					SystemEventController.Instance.DispatchSystemEvent(PlayerView.EventPlayerAppEnableMovement, true);
+					SystemEventController.Instance.DispatchSystemEvent(EventGameStateRunRepositioningElement);					
 					break;
 
 				case StatesEditionPOIs.WaitToIdle:
@@ -317,16 +319,20 @@ namespace yourvrexperience.template6dof
 #else
 						positionCurrentController += Camera.main.transform.forward;
 #endif
-						if (GameLevelData.Instance.EditPOIsMode)
+
+						if (!MainController.Instance.LevelView.IsGeoLocationBased)
 						{
-							if (MainController.Instance.IsNormalAxis)
+							if (GameLevelData.Instance.EditPOIsMode)
 							{
-								positionCurrentController.y = MainController.Instance.LevelView.Floor.transform.position.y + NavMeshController.SHIFT_FROM_FLOOR;
+								if (MainController.Instance.IsNormalAxis)
+								{
+									positionCurrentController.y = MainController.Instance.LevelView.Floor.transform.position.y + NavMeshController.SHIFT_FROM_FLOOR;
+								}
+								else
+								{
+									positionCurrentController.z = MainController.Instance.LevelView.Floor.transform.position.z + NavMeshController.SHIFT_FROM_FLOOR;
+								}
 							}
-							else
-							{
-								positionCurrentController.z = MainController.Instance.LevelView.Floor.transform.position.z + NavMeshController.SHIFT_FROM_FLOOR;
-							}						
 						}
 
 						GeoLocation updatedGeoPosition = new GeoLocation();						
@@ -342,7 +348,7 @@ namespace yourvrexperience.template6dof
 							{
 								int totalPOIs = GameLevelData.Instance.GetLevelPOIsNumber(MainController.Instance.CurrentGameLevel);
 #if !UNITY_EDITOR
-								if (!MainController.Instance.LevelView.IsInsideNavigationArea(_currentEditedPOI) && (totalPOIs > 1))
+								if (!MainController.Instance.LevelView.IsInsideNavigationArea(_currentEditedPOI) && (totalPOIs > 1) && !MainController.Instance.LevelView.IsGeoLocationBased)
 								{
 									_currentEditedPOI.transform.position = _originalBackupEditedPOI;
 									string titleInfo = LanguageController.Instance.GetText("screen.game.run.edit.poi.invalid.position.title");
@@ -351,14 +357,18 @@ namespace yourvrexperience.template6dof
 									return;
 								}
 #endif
-								_poiSelected.Forward = headForward;			
-								_poiSelected.GeoPosition = updatedGeoPosition;
+								MainController.Instance.POISelected.Forward = headForward;			
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+								MainController.Instance.POISelected.GeoPosition = updatedGeoPosition;
+#endif
 								GameLevelData.Instance.UpdatePOIsPosition(MainController.Instance.CurrentGameLevel, MainController.Instance.LevelView.PackPOIsContent());
 							}
 							else
 							{
-								_secretSelected.Forward = headForward;
-								_secretSelected.GeoPosition = updatedGeoPosition;
+								MainController.Instance.SecretSelected.Forward = headForward;
+#if (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+								MainController.Instance.SecretSelected.GeoPosition = updatedGeoPosition;
+#endif								
 								GameLevelData.Instance.UpdateSecretsPosition(MainController.Instance.CurrentGameLevel, MainController.Instance.LevelView.PackSecretsContent());
 							}
 							ChangeSubState(StatesEditionPOIs.Idle);

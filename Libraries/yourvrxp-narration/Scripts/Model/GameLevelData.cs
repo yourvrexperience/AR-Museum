@@ -17,6 +17,16 @@ namespace yourvrexperience.Narration
         public double Longitude;
         public double Altitude;
         public double Heading;
+
+        public bool IsNull()
+        {
+            return Latitude + Longitude + Altitude + Heading == 0;
+        }
+
+        public override string ToString()
+        {
+            return Latitude + ",\n" + Longitude + ",\n" + Altitude + ",\n" + Heading;
+        }
     }
 
     [CreateAssetMenu(menuName = "Game/NarrationLevelData")]

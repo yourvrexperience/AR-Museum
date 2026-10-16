@@ -91,7 +91,7 @@ namespace yourvrexperience.template6dof
 		public Vector3 PositionPlayer
 		{
 			get {  
-#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
+#if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_QR_XR || ENABLE_QR_META
 					return MainController.Instance.PlayerView.transform.position;
 #else				
 					return MainController.Instance.PlayerView.PositionCamera;
@@ -499,6 +499,7 @@ namespace yourvrexperience.template6dof
 					break;
 
 				case TourGuideStates.Moving:
+					ChangeGuideAnimation(AnimationRun);			
 					break;
 
 				case TourGuideStates.Bezier:
@@ -516,7 +517,11 @@ namespace yourvrexperience.template6dof
 		{
 			Vector3 toCamera = target - this.transform.position;
 
+#if (!ENABLE_NIANTIC && !ENABLE_NIANTICXR) || UNITY_EDITOR
 			this.transform.rotation = MainController.Instance.LevelView.TourGuideWorld.transform.rotation;
+#else
+			this.transform.rotation = Quaternion.identity;
+#endif			
 
 			Quaternion localTargetRotation = Quaternion.identity;
 			if (IsNormalAxis)
@@ -541,8 +546,12 @@ namespace yourvrexperience.template6dof
 			
 			Vector3 toCamera = target - this.transform.position;
 
+#if (!ENABLE_NIANTIC && !ENABLE_NIANTICXR) || UNITY_EDITOR
 			this.transform.rotation = MainController.Instance.LevelView.TourGuideWorld.transform.rotation;
-			
+#else
+			this.transform.rotation = Quaternion.identity;			
+#endif			
+
 			if (IsNormalAxis)
 			{
 				Model.transform.localRotation = Quaternion.Euler(new Vector3(0,yourvrexperience.Utils.Utilities.GetAngleFromNormal(new Vector2(toCamera.x, toCamera.z)),0));

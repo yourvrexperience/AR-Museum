@@ -14,6 +14,7 @@ using static yourvrexperience.Narration.NarrationController;
 using yourvrexperience.VR;
 using yourvrexperience.UserManagement;
 using yourvrexperience.speech;
+using Unity.VisualScripting;
 
 namespace yourvrexperience.template6dof
 {
@@ -750,40 +751,10 @@ namespace yourvrexperience.template6dof
 				int indexEasterEgg = (int)parameters[0];
 				string nameEasterEgg = (string)parameters[1];
 				MainController.Instance.ReferenceEasterEgg = (GameObject)parameters[2];
-#if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
-				MainController.Instance.LevelView.PlayingQR = (string)parameters[3];				
+				MainController.Instance.LevelView.PlayingQR = (string)parameters[3];
 				MainController.Instance.LevelView.PlayingPOI = MainController.Instance.LevelView.GetSelectedSecret((int)parameters[4]);
-#endif
 				MainController.Instance.RangeDetectionEasterEggPlaying = GameLevelData.Instance.DistanceToTriggerGuide * 1.5f;
 				bool hasBeenPlayed = HasBeenPlayed(nameEasterEgg);
-				/*
-				// CODE EXAMPLE FOR HARDCODED SECRETS
-				if (nameEasterEgg.Equals(LevelView.EventEasterEggVideo1))
-				{
-#if UNITY_EDITOR
-					_totalTimeEasterEgg = 3;
-#else
-					_totalTimeEasterEgg = 10;
-#endif					
-					MainController.Instance.RangeDetectionEasterEggPlaying = GameLevelData.Instance.DistanceToTriggerGuide * 1.5f;
-					_configurationEasterEgg = ConfigurationEasterEggScreen.Video;
-					ChangeToEasterEgg();
-					MainController.Instance.CreateVideoController(true, "BigBuckBunny640", NavMeshController.Instance.AreaMaxST.transform, MainController.Instance.ReferenceEasterEgg.transform.position, MainController.Instance.ReferenceEasterEgg.transform.rotation, new Vector3(2,2,2), true, true);
-				} 
-				else
-				if (nameEasterEgg.Equals(LevelView.EventEasterEggPhotos1))
-				{
-#if UNITY_EDITOR					
-					_totalTimeEasterEgg = 3;
-#else
-					_totalTimeEasterEgg = 10;
-#endif					
-					_configurationEasterEgg = ConfigurationEasterEggScreen.Photos;
-					ChangeToEasterEgg();
-					string[] photoNames = new string[] { "deer", "desert", "hummingbird", "sunflower", "sunset", "yosemite" }; 
-					MainController.Instance.CreatePhotoGalleryController(true, photoNames, NavMeshController.Instance.AreaMaxST.transform, MainController.Instance.ReferenceEasterEgg.transform.position, MainController.Instance.ReferenceEasterEgg.transform.rotation, new Vector3(2,2,2));
-				}
-				*/
 				// GENERIC NARRATION FOR EASTER EGG
 #if UNITY_EDITOR
 				_totalTimeEasterEgg = 3;
@@ -885,6 +856,15 @@ namespace yourvrexperience.template6dof
 				{
 #if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
 					MainController.Instance.GuideTourView.SetPositionOutsideNarration(new Vector3(10000, 10000, 10000));
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+					if (MainController.Instance.LevelView.IsGeoLocationBased)
+					{
+						MainController.Instance.GuideTourView.SetPositionOutsideNarration(new Vector3(10000, 10000, 10000));
+					}
+					else
+					{
+						MainController.Instance.GuideTourView.SetPositionOutsideNarration(_replayPOI.GOPosition.transform.position);	
+					}
 #else
 					MainController.Instance.GuideTourView.SetPositionOutsideNarration(_replayPOI.GOPosition.transform.position);
 #endif					
@@ -1005,7 +985,7 @@ namespace yourvrexperience.template6dof
 							posScreen = QRImageController.Instance.GetPositionQR(MainController.Instance.LevelView.PlayingQR);
 							normalToTarget = (posScreen - MainController.Instance.PlayerView.transform.position).normalized;
 							targetGO = null;
-#endif								
+#endif
 							normalToTarget.y = 0;
 							GameObject screenNarration = ScreenController.Instance.CreateScreen3DAnchor(ScreenHUDEasterEggView.ScreenName, targetGO, posScreen, normalToTarget, SizeEasterEggNarration, false, true, _totalTimeEasterEgg, LanguageController.Instance.GetText(_currentEggFound.GetTitle()));
 							screenNarration.gameObject.transform.parent = ScreenController.Instance.transform;
@@ -1148,7 +1128,16 @@ namespace yourvrexperience.template6dof
 					MainController.Instance.GuideTourView.Activate(true);
 #if (ENABLE_QR_MODE || ENABLE_QR_XR || ENABLE_QR_META) && !UNITY_EDITOR
 					MainController.Instance.GuideTourView.SetPosition(QRImageController.Instance.GetPositionQR(_currentQR));
-#else					
+#elif (ENABLE_NIANTIC || ENABLE_NIANTICXR) && !UNITY_EDITOR
+					if (MainController.Instance.LevelView.IsGeoLocationBased)
+					{
+						MainController.Instance.GuideTourView.SetPosition(NianticController.Instance.GetPOIPositionFromGeolocation(_currentPOI.GeoPosition, NianticController.Instance.CurrentGeoLocation));
+					}
+					else
+					{
+						MainController.Instance.GuideTourView.SetPosition(_currentPOI.GOPosition.transform.position);
+					}
+#else
 					MainController.Instance.GuideTourView.SetPosition(_currentPOI.GOPosition.transform.position);
 #endif					
 					MainController.Instance.GuideTourView.FacePosition(MainController.Instance.PlayerView.gameObject.transform.position);

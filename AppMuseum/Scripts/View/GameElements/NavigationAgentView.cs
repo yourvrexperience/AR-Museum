@@ -141,7 +141,7 @@ namespace yourvrexperience.template6dof
 				Vector2 origin = new Vector2(this.transform.position.x, this.transform.position.z);
 				Vector2 target = new Vector2(_target.x, _target.z);
 				float distanceToTarget = yourvrexperience.Utils.Utilities.DistanceXZ(origin, target);
-				if (distanceToTarget < 0.25f)
+				if (distanceToTarget <= 0.5f)
 				{
 					_navigationRunning = false;					
 					DispatchNavigationEndedEvent(this.gameObject);

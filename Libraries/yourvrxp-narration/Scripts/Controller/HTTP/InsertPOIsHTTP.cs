@@ -26,6 +26,11 @@ namespace yourvrexperience.Narration
             }
         }
 
+		private static string EscapeBase64(string b64)
+		{
+			return b64.Replace("+", "%2B").Replace("/", "%2F").Replace("=", "%3D");
+		}
+
         public string Build(params object[] _list)
 		{
 			_method = METHOD_POST;
@@ -54,9 +59,9 @@ namespace yourvrexperience.Narration
 			meta.Append("&age=").Append(age);
 			meta.Append("&level=").Append(level);
 			meta.Append("&dev=").Append(dev);
-			meta.Append("&positions_b64=").Append(Uri.EscapeDataString(posB64));
-			meta.Append("&secrets_b64=").Append(Uri.EscapeDataString(secB64));
-			meta.Append("&narration_b64=").Append(Uri.EscapeDataString(narB64));
+			meta.Append("&positions_b64=").Append(EscapeBase64(posB64));
+			meta.Append("&secrets_b64=").Append(EscapeBase64(secB64));
+			meta.Append("&narration_b64=").Append(EscapeBase64(narB64));
 
 			// The entire body is the url-encoded metadata, sent as octet-stream.
 			// Goes through CommController's UploadHandlerRaw branch, same as the

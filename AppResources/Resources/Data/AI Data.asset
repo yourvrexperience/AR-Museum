@@ -15,7 +15,7 @@ MonoBehaviour:
   chatGPTID: 0
   chatGPTUsername: root
   chatGPTPassword: password
-  serverChatGPT: https://yourwonserver.com
+  serverChatGPT: http://192.168.0.23:5001/ai/
   languages:
   - en
   - es

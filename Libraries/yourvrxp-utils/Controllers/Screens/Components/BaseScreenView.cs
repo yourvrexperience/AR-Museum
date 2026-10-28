@@ -52,6 +52,7 @@ namespace yourvrexperience.Utils
 
 			UIEventController.Instance.Event += OnUILocalEvent;
 			SystemEventController.Instance.DispatchSystemEvent(EventBaseScreenViewCreated, this.gameObject, NameScreen);
+			LanguageController.Instance.SetFontAsset(this.transform);
 #if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			if (VRInputController.Instance != null) VRInputController.Instance.DispatchVREvent(VRInputController.EventVRInputControllerResetAllInputs);
 #endif			

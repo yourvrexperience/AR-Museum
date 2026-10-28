@@ -274,7 +274,7 @@ namespace yourvrexperience.Narration
 
 		private XmlNode GetPlaceholderTitle()
 		{
-			string xmlString = "<title><languages><en>Title</en><es>Titulo</es><ca>Titol</ca><fr>Titre</fr></languages><audios><en></en><es></es><ca></ca><fr></fr></audios></title>";
+			string xmlString = "<title><languages><en>Title</en><es>Titulo</es><ca>Titol</ca><fr>Titre</fr><de>Titel</de><zh>标题</zh><it>Titolo</it><ru>Заголовок</ru><pt>Título</pt><ja>タイトル</ja><ar>عنوان</ar><el>Τίτλος</el><ur>عنوان</ur><ko>제목</ko></languages><audios><en></en><es></es><ca></ca><fr></fr><de></de><zh></zh><it></it><pt></pt><ru></ru><ja></ja><ar></ar><el></el><ur></ur><ko></ko></audios></title>";
 			XmlDocument xmlDoc = new XmlDocument();
         	xmlDoc.LoadXml(xmlString);		
 			return xmlDoc.FirstChild;
@@ -282,7 +282,7 @@ namespace yourvrexperience.Narration
 
 		private XmlNode GetPlaceholderSegment()
 		{
-			string xmlString = "<token><languages><en>This is the first segment of the narration</en><es>Este es el primer segmento de la narración</es><ca>Aquest es el primer segment de la narració</ca><fr>C'est le premier segment de la narration</fr></languages><audios><en></en><es></es><ca></ca><fr></fr></audios></token>";
+			string xmlString = "<token><languages><en>This is the first segment of the narration</en><es>Este es el primer segmento de la narración</es><ca>Aquest es el primer segment de la narració</ca><fr>C'est le premier segment de la narration</fr><de>Dies ist der erste Abschnitt der Erzählung.</de><zh>这是叙述的第一部分。</zh><it>Questo è il primo segmento della narrazione</it><pt>Este é o primeiro segmento da narração.</pt><ru>Это первый фрагмент повествования</ru><ja>これがナレーションの最初の部分です。</ja><ar>هذا هو الجزء الأول من السرد</ar><el>Αυτό είναι το πρώτο τμήμα της αφήγησης</el><ur>یہ بیانیے کا پہلا حصہ ہے۔</ur><ko>이것은 내레이션의 첫 번째 부분입니다.</ko></languages><audios><en></en><es></es><ca></ca><fr></fr><de></de><zh></zh><it></it><pt></pt><ru></ru><ja></ja><ar></ar><el></el><ur></ur><ko></ko></audios></token>";
 			XmlDocument xmlDoc = new XmlDocument();
         	xmlDoc.LoadXml(xmlString);		
 			return xmlDoc.FirstChild;

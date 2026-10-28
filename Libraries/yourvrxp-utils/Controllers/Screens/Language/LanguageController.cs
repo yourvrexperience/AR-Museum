@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using TMPro;
 using UnityEngine;
 
 namespace yourvrexperience.Utils
@@ -11,6 +12,13 @@ namespace yourvrexperience.Utils
     {
         public const string EventLanguageControllerChangedCodeLanguage = "EventLanguageControllerChangedCodeLanguage";
 
+        [SerializeField] private TMP_FontAsset defaultFont;
+        [SerializeField] private TMP_FontAsset chineseFont;
+        [SerializeField] private TMP_FontAsset japaneseFont;
+        [SerializeField] private TMP_FontAsset arabicFont;
+        [SerializeField] private TMP_FontAsset koreanFont;
+        [SerializeField] private TMP_FontAsset urduFont;        
+
         public const string CodeLanguageEnglish = "en";
         public const string CodeLanguageSpanish = "es";
         public const string CodeLanguageCatalan = "ca";
@@ -18,8 +26,16 @@ namespace yourvrexperience.Utils
         public const string CodeLanguageFrench = "fr";
         public const string CodeLanguageItalian = "it";
         public const string CodeLanguageRussian = "ru";
+        public const string CodeLanguageChinese = "zh";
+        public const string CodeLanguageJapanese = "ja";
+        public const string CodeLanguagePortuguese = "pt";
+        public const string CodeLanguageArabic = "ar";
+        public const string CodeLanguageGreek = "el";
+        public const string CodeLanguageUrdu = "ur";
+        public const string CodeLanguageKorean = "ko";
 
-        public enum TranslationTypes { English = 0, Spanish, German, French, Italian, Russian, Catalan }
+
+        public enum TranslationTypes { English = 0, Spanish, German, French, Italian, Russian, Catalan, Chinese, Japanese, Portuguese, Arabic, Greek, Urdu, Korean }
 
         private static LanguageController _instance;
         public static LanguageController Instance
@@ -75,6 +91,62 @@ namespace yourvrexperience.Utils
 			}
 		}
 
+        public void SetFontAsset(Transform screen, string customCodeLanguage = "")
+        {
+            CustomInput[] customInputs = screen.GetComponentsInChildren<CustomInput>();
+            if (customInputs != null)
+            {
+                foreach (CustomInput input in customInputs)
+                {
+                    if (customCodeLanguage.Length > 0)
+                    {
+                        if (customCodeLanguage.Equals(CodeLanguageKorean))
+                        {
+                            input.fontAsset = koreanFont; 
+                        }                        
+                    }                    
+                }
+            }
+            TextMeshProUGUI[] textMeshesUGUI = screen.GetComponentsInChildren<TextMeshProUGUI>();
+            if (textMeshesUGUI != null)
+            {
+                foreach (TextMeshProUGUI textfield in textMeshesUGUI)
+                {
+                    string finalCodeLanguage = CodeLanguage;
+                    if (customCodeLanguage.Length > 0)
+                    {
+                        finalCodeLanguage = customCodeLanguage;
+                    } 
+                    switch (finalCodeLanguage)
+                    {
+                        case CodeLanguageChinese:
+                            if (chineseFont != null) textfield.font = chineseFont;
+                            break;
+
+                        case CodeLanguageJapanese:
+                            if (japaneseFont != null) textfield.font = japaneseFont;
+                            break;                            
+
+                        case CodeLanguageArabic:
+                            if (arabicFont != null) textfield.font = arabicFont;  
+                            break;                            
+
+                        case CodeLanguageKorean:
+                            if (koreanFont != null) textfield.font = koreanFont;  
+                            break;                            
+
+                        case CodeLanguageUrdu:
+                            if (urduFont != null) textfield.font = urduFont;  
+                            break;                            
+
+                        default:
+                            if (defaultFont != null) textfield.font = defaultFont;  
+                            break;
+                    }
+                }
+            }
+        }
+
         public string GetCodeLanguageByType(TranslationTypes translation)
         {
             switch (translation)
@@ -93,6 +165,20 @@ namespace yourvrexperience.Utils
                     return CodeLanguageRussian;
                 case TranslationTypes.Catalan:
                     return CodeLanguageCatalan;
+                case TranslationTypes.Chinese:
+                    return CodeLanguageChinese;
+                case TranslationTypes.Japanese:
+                    return CodeLanguageJapanese;
+                case TranslationTypes.Portuguese:
+                    return CodeLanguagePortuguese;
+                case TranslationTypes.Arabic:
+                    return CodeLanguageArabic;
+                case TranslationTypes.Greek:
+                    return CodeLanguageGreek;
+                case TranslationTypes.Urdu:
+                    return CodeLanguageUrdu;
+                case TranslationTypes.Korean:
+                    return CodeLanguageKorean;                                        
             }
             return CodeLanguageEnglish;
         }
@@ -115,6 +201,20 @@ namespace yourvrexperience.Utils
                     return TranslationTypes.Russian;
                 case CodeLanguageCatalan:
                     return TranslationTypes.Catalan;
+                case CodeLanguageChinese:
+                    return TranslationTypes.Chinese;
+                case CodeLanguageJapanese:
+                    return TranslationTypes.Japanese;
+                case CodeLanguagePortuguese:
+                    return TranslationTypes.Portuguese;
+                case CodeLanguageArabic:
+                    return TranslationTypes.Arabic;
+                case CodeLanguageGreek:
+                    return TranslationTypes.Greek;
+                case CodeLanguageUrdu:
+                    return TranslationTypes.Urdu;
+                case CodeLanguageKorean:
+                    return TranslationTypes.Korean;
             }
             return TranslationTypes.English;
         }
@@ -137,6 +237,20 @@ namespace yourvrexperience.Utils
                     return LanguageController.Instance.GetText("language.name.russian");
                 case CodeLanguageCatalan:
                     return LanguageController.Instance.GetText("language.name.catalan");
+                case CodeLanguageChinese:
+                    return LanguageController.Instance.GetText("language.name.chinese");
+                case CodeLanguageJapanese:
+                    return LanguageController.Instance.GetText("language.name.japanese");
+                case CodeLanguagePortuguese:
+                    return LanguageController.Instance.GetText("language.name.portuguese");
+                case CodeLanguageArabic:
+                    return LanguageController.Instance.GetText("language.name.arabic");
+                case CodeLanguageGreek:
+                    return LanguageController.Instance.GetText("language.name.greek");
+                case CodeLanguageUrdu:
+                    return LanguageController.Instance.GetText("language.name.urdu");
+                case CodeLanguageKorean:
+                    return LanguageController.Instance.GetText("language.name.korean");
             }
             return LanguageController.Instance.GetText("language.name.english");
         }

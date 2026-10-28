@@ -55,6 +55,8 @@ namespace yourvrexperience.template6dof
 				_items.Add(new ItemMultiObjectEntry(this.gameObject, i, _itemsValues[i]));
 			}
             SlotManager.Initialize(_items.Count, _items, ObjectItemPrefab);
+
+			LanguageController.Instance.SetFontAsset(this.transform);
 		}
 
         public override void Destroy()

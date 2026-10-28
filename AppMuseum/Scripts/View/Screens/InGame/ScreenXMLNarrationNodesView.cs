@@ -110,6 +110,8 @@ namespace yourvrexperience.template6dof
 				_itemsNarrationPOI.Add(new ItemMultiObjectEntry(this.gameObject, 1 + i, _narrationForCurrentPOI.Segments[i]));
 			}
             SlotManager.Initialize(_narrationCreator.Narration.Count, _itemsNarrationPOI, ObjectItemPrefab);
+
+			LanguageController.Instance.SetFontAsset(this.transform, "");
 		}
 
         private void OnButtonExit()

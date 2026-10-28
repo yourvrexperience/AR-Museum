@@ -38,18 +38,8 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private CustomInput eventStartInput;
 		[SerializeField] private TextMeshProUGUI eventEndTitle;
 		[SerializeField] private CustomInput eventEndInput;
-
-		[SerializeField] private TextMeshProUGUI englishTitle;
-		[SerializeField] private CustomInput englishInput;
-		
-		[SerializeField] private TextMeshProUGUI spanishTitle;
-		[SerializeField] private CustomInput spanishInput;
-
-		[SerializeField] private TextMeshProUGUI frenchTitle;
-		[SerializeField] private CustomInput frenchInput;
-		
-		[SerializeField] private TextMeshProUGUI catalanTitle;
-		[SerializeField] private CustomInput catalanInput;
+		[SerializeField] private SlotManagerView SlotManagerSegments;
+		[SerializeField] private GameObject NarrationSegmentPrefab;		
 
 		[SerializeField] private TextMeshProUGUI addQRTitle;
 		[SerializeField] private TextMeshProUGUI addImageTitle;
@@ -71,26 +61,6 @@ namespace yourvrexperience.template6dof
 		[SerializeField] private Toggle toggleDestroyPrevious;
 		[SerializeField] private Toggle togglePauseNarration;
 
-		[SerializeField] private Button englishVoiceRecognition;
-		[SerializeField] private Button englishAITranslation;
-		[SerializeField] private Button englishAISpeech;
-		[SerializeField] private Button englishAIUpload;
-
-		[SerializeField] private Button spanishVoiceRecognition;
-		[SerializeField] private Button spanishAITranslation;
-		[SerializeField] private Button spanishAISpeech;
-		[SerializeField] private Button spanishAIUpload;
-
-		[SerializeField] private Button catalanVoiceRecognition;
-		[SerializeField] private Button catalanAITranslation;
-		[SerializeField] private Button catalanAISpeech;
-		[SerializeField] private Button catalanAIUpload;
-
-		[SerializeField] private Button frenchVoiceRecognition;
-		[SerializeField] private Button frenchAITranslation;
-		[SerializeField] private Button frenchAISpeech;
-		[SerializeField] private Button frenchAIUpload;
-
 		[SerializeField] private GameObject contentProcessing;
 		[SerializeField] private TextMeshProUGUI infoTextProcessing;
 		[SerializeField] private Button stopRecording;
@@ -101,18 +71,12 @@ namespace yourvrexperience.template6dof
 		private NarrationCreatorData _narrationPOI;
 
 		private float _timeToRecord = -1;
-		private float _timeToProcess = -1;
-		private bool _askedForTranslation = false;
-		private string _codeLanguageTranlation = "";
-		private bool _speechProcessingRequested = false;
-		private int _speechIdRequested = -1;
-		private string _textRequested = "";
-		private string _languageRequested = "";
-		private string _voiceRequested = "";
+		private float _timeToProcess = -1;				
 		private EasterEgg _narrationSecret = null;
 		private int _secretId = -1;
-		private Dictionary<string, List<GameObject>> _audioPlayers = new Dictionary<string, List<GameObject>>();
 		private bool _aiOperationPerformed = false;
+		private string _baseText;
+		private string _baseLanguage;
 		
 		public override string NameScreen
 		{ 
@@ -145,122 +109,24 @@ namespace yourvrexperience.template6dof
 
 			eventStartInput.onValueChanged.AddListener(OnStartEventChanged);
 			eventEndInput.onValueChanged.AddListener(OnEndEventChanged);
-
-			englishTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.language.english");
-			spanishTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.language.spanish");
-			catalanTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.language.catalan");
-			frenchTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.language.french");
-
-			englishInput.text = _selectedEntry.GetMessage().GetText(LanguageController.CodeLanguageEnglish);
-			spanishInput.text = _selectedEntry.GetMessage().GetText(LanguageController.CodeLanguageSpanish);
-			catalanInput.text = _selectedEntry.GetMessage().GetText(LanguageController.CodeLanguageCatalan);
-			frenchInput.text = _selectedEntry.GetMessage().GetText(LanguageController.CodeLanguageFrench);
-
-			englishVoiceRecognition.gameObject.SetActive(false);
-			englishAITranslation.gameObject.SetActive(false);
-			spanishVoiceRecognition.gameObject.SetActive(false);
-			spanishAITranslation.gameObject.SetActive(false);
-			catalanVoiceRecognition.gameObject.SetActive(false);
-			catalanAITranslation.gameObject.SetActive(false);
-			frenchVoiceRecognition.gameObject.SetActive(false);
-			frenchAITranslation.gameObject.SetActive(false);
-
-			englishVoiceRecognition.onClick.AddListener(OnVoiceRecognition);
-			englishAITranslation.onClick.AddListener(OnAIEnglishTranslation);
-			englishAISpeech.onClick.AddListener(OnAIEnglishSpeech);
-			englishAIUpload.onClick.AddListener(OnAIEnglishUpload);			
-
-			spanishVoiceRecognition.onClick.AddListener(OnVoiceRecognition);
-			spanishAITranslation.onClick.AddListener(OnAISpanishTranslation);
-			spanishAISpeech.onClick.AddListener(OnAISpanishSpeech);
-			spanishAIUpload.onClick.AddListener(OnAISpanishUpload);
-
-			catalanVoiceRecognition.onClick.AddListener(OnVoiceRecognition);
-			catalanAITranslation.onClick.AddListener(OnAICatalanTranslation);
-			catalanAISpeech.onClick.AddListener(OnAICatalanSpeech);
-			catalanAIUpload.onClick.AddListener(OnAICatalanUpload);
-
-			frenchVoiceRecognition.onClick.AddListener(OnVoiceRecognition);
-			frenchAITranslation.onClick.AddListener(OnAIFrenchTranslation);
-			frenchAISpeech.onClick.AddListener(OnAIFrenchSpeech);
-			frenchAIUpload.onClick.AddListener(OnAIFrenchUpload);
-
-#if UNITY_WEBGL || UNITY_EDITOR
-			englishAIUpload.gameObject.SetActive(true);
-			spanishAIUpload.gameObject.SetActive(true);
-			catalanAIUpload.gameObject.SetActive(true);
-			frenchAIUpload.gameObject.SetActive(true);
-#else
-			englishAIUpload.gameObject.SetActive(false);
-			spanishAIUpload.gameObject.SetActive(false);
-			catalanAIUpload.gameObject.SetActive(false);
-			frenchAIUpload.gameObject.SetActive(false);			
-#endif
-
-			SetUpPlayButton(englishAISpeech, LanguageController.CodeLanguageEnglish);
-			SetUpPlayButton(spanishAISpeech, LanguageController.CodeLanguageSpanish);
-			SetUpPlayButton(catalanAISpeech, LanguageController.CodeLanguageCatalan);
-			SetUpPlayButton(frenchAISpeech, LanguageController.CodeLanguageFrench);
+			
 			StopAllPlayButtons();
-
-			switch (LanguageController.Instance.CodeLanguage)
-			{
-				case LanguageController.CodeLanguageEnglish:
-#if ENABLE_SPEECH				
-					englishVoiceRecognition.gameObject.SetActive(true);
-#endif					
-					spanishAITranslation.gameObject.SetActive(true);
-					catalanAITranslation.gameObject.SetActive(true);
-					frenchAITranslation.gameObject.SetActive(true);
-					break;
-				case LanguageController.CodeLanguageSpanish:
-#if ENABLE_SPEECH								
-					spanishVoiceRecognition.gameObject.SetActive(true);
-#endif					
-					englishAITranslation.gameObject.SetActive(true);
-					catalanAITranslation.gameObject.SetActive(true);
-					frenchAITranslation.gameObject.SetActive(true);
-					break;
-				case LanguageController.CodeLanguageCatalan:
-#if ENABLE_SPEECH								
-					catalanVoiceRecognition.gameObject.SetActive(true);
-#endif					
-					spanishAITranslation.gameObject.SetActive(true);
-					englishAITranslation.gameObject.SetActive(true);
-					frenchAITranslation.gameObject.SetActive(true);
-					break;
-				case LanguageController.CodeLanguageFrench:
-#if ENABLE_SPEECH								
-					frenchVoiceRecognition.gameObject.SetActive(true);
-#endif					
-					spanishAITranslation.gameObject.SetActive(true);
-					englishAITranslation.gameObject.SetActive(true);
-					catalanAITranslation.gameObject.SetActive(true);
-					break;
-			}
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-			englishVoiceRecognition.gameObject.SetActive(false);
-			spanishVoiceRecognition.gameObject.SetActive(false);
-			catalanVoiceRecognition.gameObject.SetActive(false);
-			frenchVoiceRecognition.gameObject.SetActive(false);
-#endif
-
-			englishInput.onValueChanged.AddListener(OnEnglishChanged);
-			spanishInput.onValueChanged.AddListener(OnSpanishChanged);
-			catalanInput.onValueChanged.AddListener(OnCatalanChanged);
-			frenchInput.onValueChanged.AddListener(OnFrenchChanged);
 
 			UIEventController.Instance.Event += OnUIEvent;
 			SystemEventController.Instance.Event += OnSystemEvent;
 
+			SlotManagerSegments.ClearCurrentGameObject(true);
+            List<ItemMultiObjectEntry> itemsLanguageSegments = new List<ItemMultiObjectEntry>();
+			for (int i = 0; i < LanguageController.Instance.SupportedLanguages.Length; i++)
+			{
+				string currLanguageCode = LanguageController.Instance.SupportedLanguages[i];
+				itemsLanguageSegments.Add(new ItemMultiObjectEntry(this, currLanguageCode, _selectedEntry, _narrationPOI, _secretId));
+			}
+            SlotManagerSegments.Initialize(itemsLanguageSegments.Count, itemsLanguageSegments, NarrationSegmentPrefab);						
+
 #if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			eventStartInput.OnFocusEvent += OnFocusEventStartInput;
 			eventEndInput.OnFocusEvent += OnFocusEventEndInput;
-			englishInput.OnFocusDownEvent += OnFocusEnglishInput;
-			spanishInput.OnFocusDownEvent += OnFocusSpanishInput;
-			catalanInput.OnFocusDownEvent += OnFocusCatalanInput;
-			frenchInput.OnFocusDownEvent += OnFocusFrenchInput;
 #endif
 			if (_selectedEntry.IsTitle())
 			{
@@ -282,15 +148,6 @@ namespace yourvrexperience.template6dof
 				toggleDestroyPrevious.gameObject.SetActive(false);
 				togglePauseNarration.gameObject.SetActive(false);
 
-				englishAISpeech.gameObject.SetActive(false);
-				spanishAISpeech.gameObject.SetActive(false);
-				catalanAISpeech.gameObject.SetActive(false);
-				frenchAISpeech.gameObject.SetActive(false);
-
-				englishAIUpload.gameObject.SetActive(false);
-				spanishAIUpload.gameObject.SetActive(false);
-				catalanAIUpload.gameObject.SetActive(false);
-				frenchAIUpload.gameObject.SetActive(false);
 
 				addQRButton.onClick.AddListener(OnAddQR);
 				addQRTitle.text = LanguageController.Instance.GetText("screen.edit.segment.title.add.qr");
@@ -374,18 +231,37 @@ namespace yourvrexperience.template6dof
 				_aiOperationPerformed = false;
 				GameLevelData.Instance.SaveGameProgressLocally();
 			}
+			_narrationPOI = null;
+			_selectedEntry = null;
 
 #if ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || ENABLE_NREAL || ENABLE_NIANTICXR || ENABLE_QR_XR || ENABLE_QR_META
 			UIEventController.Instance.DispatchUIEvent(PanelInputTextAction.EventPanelInputExternalClose);
 			if (eventStartInput != null) eventStartInput.OnFocusEvent -= OnFocusEventStartInput;
 			if (eventEndInput != null) eventEndInput.OnFocusEvent -= OnFocusEventEndInput;
-			if (englishInput != null) englishInput.OnFocusEvent -= OnFocusEnglishInput;
-			if (spanishInput != null) spanishInput.OnFocusEvent -= OnFocusSpanishInput;
-			if (catalanInput != null) catalanInput.OnFocusEvent -= OnFocusCatalanInput;
 #endif
 		}
 
-		private bool CheckAIAdminOperationAllowed()
+		public void SetBaseText(string text)
+		{
+			_baseText = text;
+		}
+		
+		public string GetBaseText()
+		{
+			return _baseText;
+		}
+
+		public void SetBaseLanguage(string language)
+		{
+			_baseLanguage = language;
+		}
+
+		public string GetBaseLanguage()
+		{
+			return _baseLanguage;
+		}
+
+		public bool CheckAIAdminOperationAllowed()
 		{
 #if !ENABLE_AI_OPERATIONS
 			string information = LanguageController.Instance.GetText("text.error");
@@ -415,148 +291,13 @@ namespace yourvrexperience.template6dof
 #endif			
 		}
 
-		private void SetUpPlayButton(Button button, string languageCode)
-		{
-			GameObject iconPlay = button.gameObject.transform.Find("Icon_Play").gameObject;
-			GameObject iconStop = button.gameObject.transform.Find("Icon_Stop").gameObject;
-			
-			_audioPlayers.Add(languageCode, new List<GameObject>() { iconPlay, iconStop });			
-		}
-
-		private bool GetStatePlayButton(string languageCode)
-		{
-			if (_audioPlayers.ContainsKey(languageCode))
-			{
-				return _audioPlayers[languageCode][1].activeSelf;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
 		private void StopAllPlayButtons()
 		{
 			SystemEventController.Instance.ClearSystemEvents(ScreenXMLEditSegmentView.EventScreenXMLEditSegmentViewStopPlaying);
-
-			foreach (var item in _audioPlayers)
-			{
-				item.Value[0].SetActive(true);
-				item.Value[1].SetActive(false);
-			}
-		}
-
-		private void ActivatePlayButton(string languageCode, bool isPlaying)
-		{
-			if (_audioPlayers.ContainsKey(languageCode))
-			{
-				_audioPlayers[languageCode][0].SetActive(!isPlaying);
-				_audioPlayers[languageCode][1].SetActive(isPlaying);
-			}
 		}
 
         private void OnSystemEvent(string nameEvent, object[] parameters)
         {
-#if ENABLE_SPEECH
-			if (_speechProcessingRequested)
-			{
-				if (nameEvent.Equals(SpeechRecognitionController.EventTextToSpeechControllerTimeoutProcessing))
-				{
-					_speechProcessingRequested = false;
-					contentProcessing.gameObject.SetActive(false);
-				}
-				if (nameEvent.Equals(EventScreenXMLEditSegmentViewSpeechRecognized))
-				{
-					_speechProcessingRequested = false;
-					bool isOk = (bool)parameters[0];
-					string resultText = (string)parameters[1];
-					_timeToRecord = -1;
-					_timeToProcess = -1;
-					contentProcessing.gameObject.SetActive(false);
-					if (isOk)
-					{
-						switch (LanguageController.Instance.CodeLanguage)
-						{
-							case LanguageController.CodeLanguageEnglish:
-								englishInput.text = resultText;
-								break;
-							case LanguageController.CodeLanguageSpanish:
-								spanishInput.text = resultText;
-								break;
-							case LanguageController.CodeLanguageCatalan:
-								catalanInput.text = resultText;
-								break;
-							case LanguageController.CodeLanguageFrench:
-								frenchInput.text = resultText;
-								break;
-						}
-					}
-				}
-			}
-#endif      			
-			if (nameEvent.Equals(EventScreenXMLEditSegmentViewTranslationCompleted))
-			{
-				if ((bool)parameters[0])
-				{
-					string translatedText = (string)parameters[1];
-					if (_askedForTranslation)
-					{
-						_askedForTranslation = false;
-						_timeToProcess = -1;
-						contentProcessing.gameObject.SetActive(false);
-						UIEventController.Instance.DispatchUIEvent(ScreenInformationView.EventScreenInformationRequestAllScreensDestroyed);
-						switch (_codeLanguageTranlation)
-						{
-							case LanguageController.CodeLanguageEnglish:
-								englishInput.text = translatedText;
-								break;
-							case LanguageController.CodeLanguageSpanish:
-								spanishInput.text = translatedText;
-								break;
-							case LanguageController.CodeLanguageCatalan:
-								catalanInput.text = translatedText;
-								break;
-							case LanguageController.CodeLanguageFrench:
-								frenchInput.text = translatedText;
-								break;
-						}
-					}
-				}
-			}
-			if (nameEvent.Equals(SpeechDatabaseController.EventSpeechDatabaseControllerAvailableSpeech))
-			{
-				if (_speechIdRequested != -1)
-				{					
-					int speechId = (int)parameters[0];
-					if (_speechIdRequested == speechId)
-					{
-						if ((bool)parameters[1])
-						{
-							_speechIdRequested = -1;
-							_selectedEntry.GetMessage().ResetModified(_languageRequested);
-							UIEventController.Instance.DispatchUIEvent(ScreenInformationView.EventScreenInformationRequestAllScreensDestroyed);
-							AudioClip speechDownloaded = SpeechDatabaseController.Instance.GetSpeechDataByID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, _languageRequested);
-							if (speechDownloaded != null)
-							{								
-								SystemEventController.Instance.DelaySystemEvent(ScreenXMLEditSegmentView.EventScreenXMLEditSegmentViewStopPlaying, speechDownloaded.length);
-								SoundsController.Instance.PlaySoundClipFx(ChannelsAudio.FX1, speechDownloaded, false, 1);
-								_selectedEntry.GetAudio().SetText(_languageRequested, speechDownloaded.length.ToString());
-							}
-							return;
-						}
-					}
-					SpeechDatabaseController.Instance.RegisterNewSpeech(_textRequested, new ItemMultiObjectEntry(_secretId, _textRequested, _voiceRequested, _languageRequested, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id));
-				}
-			}
-			if (nameEvent.Equals(EventScreenXMLEditSegmentViewStopPlaying))
-			{
-				StopAllPlayButtons();
-			}
-			if (nameEvent.Equals(EventScreenXMLEditSegmentViewForcePlaying))
-			{
-				string languageCode = (string)parameters[0];
-				ActivatePlayButton(languageCode, true);
-			}
 #if UNITY_EDITOR || ENABLE_OCULUS || ENABLE_OPENXR || ENABLE_ULTIMATEXR || UNITY_WEBGL || ENABLE_QR_XR || ENABLE_QR_META			
 			if (nameEvent.Equals(VRInputController.EventVRInputControllerMenuTriggered))
 			{
@@ -596,26 +337,6 @@ namespace yourvrexperience.template6dof
 		{
 			ScreenController.Instance.CreateScreen(ScreenVRKeyboardView.ScreenName, false, true,  eventEndInput.gameObject, eventEndInput, TOTAL_CHARACTERS_SECTION);
 		}
-		private void OnFocusEnglishInput()
-		{
-			PanelInputTextAction inputActionText = MainController.Instance.CreateInputActionEditText();
-			if (inputActionText != null) inputActionText.InputDescriptionObject = englishInput;
-		}
-		private void OnFocusSpanishInput()
-		{
-			PanelInputTextAction inputActionText = MainController.Instance.CreateInputActionEditText();
-			if (inputActionText != null) inputActionText.InputDescriptionObject = spanishInput;
-		}
-		private void OnFocusCatalanInput()
-		{
-			PanelInputTextAction inputActionText = MainController.Instance.CreateInputActionEditText();
-			if (inputActionText != null) inputActionText.InputDescriptionObject = catalanInput;
-		}
-		private void OnFocusFrenchInput()
-		{
-			PanelInputTextAction inputActionText = MainController.Instance.CreateInputActionEditText();
-			if (inputActionText != null) inputActionText.InputDescriptionObject = frenchInput;
-		}
 #endif					
 
         private void OnStartEventChanged(string value)
@@ -633,125 +354,6 @@ namespace yourvrexperience.template6dof
 			SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
 			SystemEventController.Instance.DispatchSystemEvent(ScreenXMLNarrationNodesView.EventScreenXMLNarrationNodesViewRefresh);
 			UIEventController.Instance.DispatchUIEvent(ScreenController.EventScreenControllerDestroyScreen, this.gameObject);			
-        }
-
-        private void OnCatalanChanged(string value)
-        {
-        	_selectedEntry.GetMessage().SetText(LanguageController.CodeLanguageCatalan, value);
-        }
-
-        private void OnSpanishChanged(string value)
-        {
-        	_selectedEntry.GetMessage().SetText(LanguageController.CodeLanguageSpanish, value);
-        }
-
-        private void OnEnglishChanged(string value)
-        {
-        	_selectedEntry.GetMessage().SetText(LanguageController.CodeLanguageEnglish, value);	
-        }
-
-        private void OnFrenchChanged(string value)
-        {
-        	_selectedEntry.GetMessage().SetText(LanguageController.CodeLanguageFrench, value);
-        }
-
-		private void OnAILanguageSpeech(string languageCode, string textfield)
-		{
-			AudioClip speech = null;
-			SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
-			if (textfield.Length > 1)
-			{
-				bool isTextDifferentFromSpeech = false;
-				if (!_selectedEntry.GetMessage().GetModified(languageCode))
-				{					
-					speech = SpeechDatabaseController.Instance.GetSpeechDataByID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, languageCode);
-				}
-				else
-				{
-					isTextDifferentFromSpeech = true;
-				}				
-				if (speech == null)
-				{
-					if (CheckAIAdminOperationAllowed())
-					{
-						_speechIdRequested = SpeechDatabaseController.Instance.GetSpeechID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, languageCode);
-						_languageRequested = languageCode;
-						_voiceRequested = LanguageController.Instance.GetNarrationVoice(languageCode);
-						_textRequested = textfield;
-						ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenLoading, null, "", LanguageController.Instance.GetText("message.please.wait"));
-						if (isTextDifferentFromSpeech)
-						{
-							SpeechDatabaseController.Instance.RegisterNewSpeech(_textRequested, new ItemMultiObjectEntry(_secretId, _textRequested, _voiceRequested, _languageRequested, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id));
-						}
-						else
-						{
-							SystemEventController.Instance.DispatchSystemEvent(SpeechDatabaseController.EventSpeechDatabaseControllerDownloadSpeech, _secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, languageCode);
-						}					
-					}
-				}
-				else
-				{
-					SystemEventController.Instance.DelaySystemEvent(ScreenXMLEditSegmentView.EventScreenXMLEditSegmentViewStopPlaying, speech.length);					
-					SoundsController.Instance.PlaySoundClipFx(ChannelsAudio.FX1, speech, false, 1);
-				}
-			}
-		}
-
-        private void OnAIEnglishSpeech()
-        {
-			if (GetStatePlayButton(LanguageController.CodeLanguageEnglish))
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				return;
-			}
-			StopAllPlayButtons();
-			SoundsController.Instance.StopAllSounds();
-			ActivatePlayButton(LanguageController.CodeLanguageEnglish, true);
-			OnAILanguageSpeech(LanguageController.CodeLanguageEnglish, englishInput.text);
-        }
-
-        private void OnAISpanishSpeech()
-        {
-			if (GetStatePlayButton(LanguageController.CodeLanguageSpanish))
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				return;
-			}
-			StopAllPlayButtons();
-			SoundsController.Instance.StopAllSounds();
-			ActivatePlayButton(LanguageController.CodeLanguageSpanish, true);
-			OnAILanguageSpeech(LanguageController.CodeLanguageSpanish, spanishInput.text);
-        }
-
-        private void OnAICatalanSpeech()
-        {
-			if (GetStatePlayButton(LanguageController.CodeLanguageCatalan))
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				return;
-			}
-			StopAllPlayButtons();
-			SoundsController.Instance.StopAllSounds();
-			ActivatePlayButton(LanguageController.CodeLanguageCatalan, true);
-			OnAILanguageSpeech(LanguageController.CodeLanguageCatalan, catalanInput.text);
-        }
-
-
-        private void OnAIFrenchSpeech()
-        {
-			if (GetStatePlayButton(LanguageController.CodeLanguageFrench))
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				return;
-			}
-			StopAllPlayButtons();
-			SoundsController.Instance.StopAllSounds();
-			ActivatePlayButton(LanguageController.CodeLanguageFrench, true);
-			OnAILanguageSpeech(LanguageController.CodeLanguageFrench, frenchInput.text);
         }
 
         private void OnAdd3DModel()
@@ -818,207 +420,46 @@ namespace yourvrexperience.template6dof
 			_selectedEntry.ShouldDestroy = value;
         }
 
-		private string GetSourceLanguage()
+		public void ShowContentProcessing(bool visible)
 		{
-			switch (LanguageController.Instance.CodeLanguage)
-			{
-				case LanguageController.CodeLanguageEnglish:
-					return "English";
-				case LanguageController.CodeLanguageSpanish:
-					return "Spanish";
-				case LanguageController.CodeLanguageCatalan:
-					return "Catalan";
-				case LanguageController.CodeLanguageFrench:
-					return "French";
-			}			
-			return "English";
+			contentProcessing.gameObject.SetActive(visible);
 		}
 
-		private string GetSourceText()
+		public void ShowStopRecording(bool visible)
 		{
-			switch (LanguageController.Instance.CodeLanguage)
-			{
-				case LanguageController.CodeLanguageEnglish:
-					return englishInput.text;
-				case LanguageController.CodeLanguageSpanish:
-					return spanishInput.text;
-				case LanguageController.CodeLanguageCatalan:
-					return catalanInput.text;
-				case LanguageController.CodeLanguageFrench:
-					return frenchInput.text;
-			}			
-			return englishInput.text;
+			stopRecording.gameObject.SetActive(visible);
 		}
 
-        private void OnAIFrenchTranslation()
-        {
-			if (CheckAIAdminOperationAllowed())
-			{
-				string sourceTextToTranslate = GetSourceText();
-				if (sourceTextToTranslate.Length > 10)
-				{
-					string textRequest = "Please, translate the next text from "+GetSourceLanguage()+" to French. Give me only the translated text: \n" + sourceTextToTranslate;
-					_codeLanguageTranlation = LanguageController.CodeLanguageFrench;
-					_askedForTranslation = true;
-					ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenLoading, null, "", LanguageController.Instance.GetText("message.please.wait"));
-					AskForTranslation(textRequest);
-				}
-			}
-        }
-
-        private void OnAIFrenchUpload()
-        {
-			if (frenchInput.text.Length == 0)
-			{
-				ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenInformation, null, LanguageController.Instance.GetText("text.error"), LanguageController.Instance.GetText("screen.edit.segment.provide.text"));				
-			}
-			else
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
-				_speechIdRequested = SpeechDatabaseController.Instance.GetSpeechID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageFrench);
-				_languageRequested = LanguageController.CodeLanguageFrench;
-				_textRequested = frenchInput.text;
-				SpeechDatabaseController.Instance.OnUploadSpeech(frenchInput.text, _secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageFrench);
-			}
-        }
-
-        private void OnAICatalanTranslation()
-        {
-			if (CheckAIAdminOperationAllowed())
-			{
-				string sourceTextToTranslate = GetSourceText();
-				if (sourceTextToTranslate.Length > 10)
-				{
-					string textRequest = "Please, translate the next text from "+GetSourceLanguage()+" to Catalan. Give me only the translated text: \n" + sourceTextToTranslate;
-					_codeLanguageTranlation = LanguageController.CodeLanguageCatalan;
-					_askedForTranslation = true;
-					ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenLoading, null, "", LanguageController.Instance.GetText("message.please.wait"));
-					AskForTranslation(textRequest);
-				}
-			}
-        }
-
-		private void OnAICatalanUpload()
-        {
-			if (catalanInput.text.Length == 0)
-			{
-				ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenInformation, null, LanguageController.Instance.GetText("text.error"), LanguageController.Instance.GetText("screen.edit.segment.provide.text"));				
-			}
-			else
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
-				_speechIdRequested = SpeechDatabaseController.Instance.GetSpeechID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageCatalan);
-				_languageRequested = LanguageController.CodeLanguageCatalan;
-				_textRequested = catalanInput.text;
-				SpeechDatabaseController.Instance.OnUploadSpeech(catalanInput.text, _secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageCatalan);
-			}
-        }
-
-        private void OnAISpanishTranslation()
-        {
-			if (CheckAIAdminOperationAllowed())
-			{
-				string sourceTextToTranslate = GetSourceText();
-				if (sourceTextToTranslate.Length > 10)
-				{
-					string textRequest = "Please, translate the next text from "+GetSourceLanguage()+" to Spanish. Give me only the translated text: \n" + sourceTextToTranslate;
-					_codeLanguageTranlation = LanguageController.CodeLanguageSpanish;
-					_askedForTranslation = true;
-					ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenLoading, null, "", LanguageController.Instance.GetText("message.please.wait"));
-					AskForTranslation(textRequest);
-				}
-			}
-        }
-
-        private void OnAISpanishUpload()
-        {
-			if (spanishInput.text.Length == 0)
-			{
-				ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenInformation, null, LanguageController.Instance.GetText("text.error"), LanguageController.Instance.GetText("screen.edit.segment.provide.text"));
-			}
-			else
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
-				_speechIdRequested = SpeechDatabaseController.Instance.GetSpeechID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageSpanish);
-				_languageRequested = LanguageController.CodeLanguageSpanish;
-				_textRequested = spanishInput.text;
-				SpeechDatabaseController.Instance.OnUploadSpeech(spanishInput.text, _secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageSpanish);
-			}            
-        }
-
-        private void OnAIEnglishTranslation()
-        {
-			if (CheckAIAdminOperationAllowed())
-			{
-				string sourceTextToTranslate = GetSourceText();
-				if (sourceTextToTranslate.Length > 10)
-				{
-					string textRequest = "Please, translate the next text from "+GetSourceLanguage()+" to English. Give me only the translated text: \n" + sourceTextToTranslate;
-					_codeLanguageTranlation = LanguageController.CodeLanguageEnglish;
-					_askedForTranslation = true;
-					ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenLoading, null, "", LanguageController.Instance.GetText("message.please.wait"));
-					AskForTranslation(textRequest);
-				}
-			}
-        }
-        private void OnAIEnglishUpload()
-        {
-			if (englishInput.text.Length == 0)
-			{
-				ScreenInformationView.CreateScreenInformation(ScreenInformationView.ScreenInformation, null, LanguageController.Instance.GetText("text.error"), LanguageController.Instance.GetText("screen.edit.segment.provide.text"));				
-			}
-			else
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
-				SystemEventController.Instance.DispatchSystemEvent(NarrationController.EventNarrationControllerStopNarrations);
-				_speechIdRequested = SpeechDatabaseController.Instance.GetSpeechID(_secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageEnglish);
-				_languageRequested = LanguageController.CodeLanguageEnglish;
-				_textRequested = englishInput.text;
-				SpeechDatabaseController.Instance.OnUploadSpeech(englishInput.text, _secretId, (int)GameLevelData.Instance.Age, MainController.Instance.CurrentGameLevel, _narrationPOI.Id, _selectedEntry.Id, LanguageController.CodeLanguageEnglish);
-			}            
-        }
-
-        private void OnVoiceRecognition()
-        {
-			if (CheckAIAdminOperationAllowed())
-			{
-				StopAllPlayButtons();
-				SoundsController.Instance.StopAllSounds();
+		public void ResetContentProcessing()
+		{
+			_timeToRecord = -1;
+			_timeToProcess = -1;
+			ShowContentProcessing(false);
+		}
+                    
+		public void OnStartRecording()
+		{
 #if ENABLE_SPEECH
-				contentProcessing.gameObject.SetActive(true);
-				stopRecording.gameObject.SetActive(true);
-				_timeToRecord = 30;
-				_timeToProcess = -1;
-				_speechProcessingRequested = true;
-				infoTextProcessing.text = LanguageController.Instance.GetText("vr.keyboard.speak.now") + (int)_timeToRecord + "...";
-				SpeechRecognitionController.Instance.StartRecording();
+			ShowContentProcessing(true);
+			ShowStopRecording(true);
+			_timeToRecord = 30;
+			_timeToProcess = -1;
+			infoTextProcessing.text = LanguageController.Instance.GetText("vr.keyboard.speak.now") + (int)_timeToRecord + "...";
+			SpeechRecognitionController.Instance.StartRecording();
 #endif			
-			}
-        }
+		}
 
-        private void OnStopRecording()
+        public void OnStopRecording()
         {
 #if ENABLE_SPEECH		
-			stopRecording.gameObject.SetActive(false);
-			contentProcessing.gameObject.SetActive(true);
+			ShowStopRecording(false);
+			ShowContentProcessing(true);
 			_timeToRecord = -1;
 			_timeToProcess = 0;
 			infoTextProcessing.text = LanguageController.Instance.GetText("vr.keyboard.now.processing");
 			SpeechRecognitionController.Instance.ProcessSpeech(EventScreenXMLEditSegmentViewSpeechRecognized);
 #endif			
         }
-
-		private void AskForTranslation(string text)
-		{
-			GameAIData.Instance.AskGenericQuestionAI("", text, false, EventScreenXMLEditSegmentViewTranslationCompleted);
-		}
 
         void Update()
         {

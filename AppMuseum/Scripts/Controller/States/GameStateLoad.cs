@@ -69,7 +69,7 @@ namespace yourvrexperience.template6dof
 			string speechVoice = LanguageController.Instance.GetSpeechVoice(LanguageController.Instance.CodeLanguage);
 			if (speechVoice != null)
 			{
-				SpeechRecognitionController.Instance.SetVoiceByLanguage(LanguageController.Instance.CodeLanguage, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice);
+				SpeechRecognitionController.Instance.SetVoiceByLanguage(LanguageController.Instance.CodeLanguage, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice, speechVoice);
 			}
 #endif
 			ScreenController.Instance.DestroyScreens();

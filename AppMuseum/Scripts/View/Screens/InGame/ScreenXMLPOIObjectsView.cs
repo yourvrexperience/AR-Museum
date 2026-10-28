@@ -202,6 +202,8 @@ namespace yourvrexperience.template6dof
 				_itemsPOIsObjectsAssets.Add(new ItemMultiObjectEntry(this.gameObject, i, objectAssets[i], _typePOIObject));
 			}
             SlotManagerAssets.Initialize(_itemsPOIsObjectsAssets.Count, _itemsPOIsObjectsAssets, POIObjectAssetPrefab);
+
+			LanguageController.Instance.SetFontAsset(this.transform);
 		}
 
 		private void FillObjectInstances()
@@ -226,6 +228,8 @@ namespace yourvrexperience.template6dof
 			}
 
             SlotManagerInstances.Initialize(_itemsPOIsObjectsInstances.Count, _itemsPOIsObjectsInstances, POIObjectInstancePrefab);			
+
+			LanguageController.Instance.SetFontAsset(this.transform);
 		}
 
 		private void DestroyExistingWaypoints()

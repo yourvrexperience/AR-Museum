@@ -168,8 +168,12 @@ namespace yourvrexperience.template6dof
 
 			if (ModelAnimator != null)
 			{
-				_animatorSystem = ModelAnimator.gameObject.AddComponent<AnimatorSystem>();
-				ChangeGuideAnimation(AnimationIdle);
+				_animatorSystem = ModelAnimator.gameObject.GetComponent<AnimatorSystem>();
+				if (_animatorSystem == null)
+				{
+					_animatorSystem = ModelAnimator.gameObject.AddComponent<AnimatorSystem>();
+					ChangeGuideAnimation(AnimationIdle);
+				}
 			}
 
 			Activate(false);

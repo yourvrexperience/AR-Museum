@@ -184,11 +184,11 @@ namespace yourvrexperience.Narration
 				Id       = ParseIntAttr(_data, "id", 0);
 				NameClip = GetAttr(_data, "audioclip", "");
 
-				XmlNode nodeLanguages = _data["languages"];   // element indexer, no XPath
+				XmlNode nodeLanguages = _data["languages"];
 				if (nodeLanguages != null && nodeLanguages.ChildNodes.Count > 0)
 					Message = new TextEntry("", nodeLanguages.ChildNodes);
 
-				XmlNode nodeAudios = _data["audios"];          // no XPath
+				XmlNode nodeAudios = _data["audios"];
 				if (nodeAudios != null && nodeAudios.ChildNodes.Count > 0)
 					Audios = new TextEntry("", nodeAudios.ChildNodes);
 
@@ -385,7 +385,7 @@ namespace yourvrexperience.Narration
 					{
 						Time = -1;
 					}
-				}					
+				}
 				if (Time != -1)
 				{
 					if (_narrationController.AINarration)

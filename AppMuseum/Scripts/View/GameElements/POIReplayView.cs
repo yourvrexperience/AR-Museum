@@ -199,8 +199,11 @@ namespace yourvrexperience.template6dof
 					{
 						if (!IconContainer.activeSelf)
 						{
-							bool shouldEnableReplay = yourvrexperience.Utils.Utilities.IsVisibleFrom(MainController.Instance.GuideTourView.transform.position, Camera.main);
-							IconContainer.SetActive(!shouldEnableReplay);
+							if (MainController.Instance.GuideTourView != null)
+							{
+								bool shouldEnableReplay = yourvrexperience.Utils.Utilities.IsVisibleFrom(MainController.Instance.GuideTourView.transform.position, Camera.main);
+								IconContainer.SetActive(!shouldEnableReplay);
+							}
 						}
 						else
 						{

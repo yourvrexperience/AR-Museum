@@ -21,7 +21,15 @@ namespace yourvrexperience.template6dof
             ["en"] = 2,
             ["fr"] = 3,
             ["de"] = 4,
-            ["it"] = 5
+            ["it"] = 5,
+			["ru"] = 6,
+			["zh"] = 7,
+			["pt"] = 8,
+			["ja"] = 9,
+			["ar"] = 10,
+			["el"] = 11,
+			["ur"] = 12,
+			["ko"] = 13
             // ....
         };    
 

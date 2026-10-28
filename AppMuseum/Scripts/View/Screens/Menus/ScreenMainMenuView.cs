@@ -66,6 +66,7 @@ namespace yourvrexperience.template6dof
 
         private void UpdateLocalTexts()
 		{
+			LanguageController.Instance.SetFontAsset(this.transform);
 			titleScreen.text = LanguageController.Instance.GetText("screen.main.menu.title");
 			descriptionScreen.text = LanguageController.Instance.GetText("screen.main.menu.description");
 			toggleMultiplayer.transform.GetComponentInChildren<TextMeshProUGUI>().text = LanguageController.Instance.GetText("screen.main.menu.toggle.multiplayer." + MainController.Instance.IsMultiplayer);

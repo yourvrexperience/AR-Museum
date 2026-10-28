@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e968d162d10e144aa741aece0ef69fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::yourvrexperience.Social.GoogleAuth
-  backendBaseUrl: https://www.yourvrexperience.online
-  AppScheme: com.yourvrexperience.museumtechdemo
+  backendBaseUrl: https://yourbackend.com
+  AppScheme: com.yourdomain.yourapp
 --- !u!4 &104242436
 Transform:
   m_ObjectHideFlags: 0
@@ -396,7 +396,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.033333335
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
@@ -550,12 +550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.ARFoundation::UnityEngine.XR.ARFoundation.ARTrackedImageManager
-  <trackablesChanged>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
-  m_SerializedLibrary: {fileID: 0}
-  m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 0}
 --- !u!114 &667397694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,11 +562,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.XR.CoreUtils::Unity.XR.CoreUtils.XROrigin
-  m_Camera: {fileID: 0}
-  m_OriginBaseGameObject: {fileID: 667397685}
-  m_CameraFloorOffsetObject: {fileID: 0}
-  m_RequestedTrackingOriginMode: 0
-  m_CameraYOffset: 1.1176
 --- !u!114 &674696992 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3208446821634300861, guid: ddd0c0ced6abc4a7c8167a2614cb377a, type: 3}
@@ -935,6 +924,10 @@ PrefabInstance:
     - target: {fileID: 4000011510471448, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013716498916, guid: 73477f779c490234d82ad11f2536dbd9, type: 3}
+      propertyPath: apiKey
+      value: <dsfdgadfgsdfbsdfgsdfgsdfg
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1861,6 +1854,10 @@ PrefabInstance:
     - target: {fileID: 4000011510471448, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114599950165526744, guid: 0fef363bbb9f4a426a5e8c1e5ed946a7, type: 3}
+      propertyPath: apiKey
+      value: asdfasdfadsfadfasdgdfagadsgfdsf
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

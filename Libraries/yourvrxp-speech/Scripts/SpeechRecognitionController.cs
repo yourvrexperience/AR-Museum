@@ -138,14 +138,65 @@ namespace yourvrexperience.speech
                     _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.fr_FR;
                     _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.WAVENET;
                     break;
+                case LanguageController.CodeLanguageGerman:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.de_DE;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;
+                case LanguageController.CodeLanguageChinese:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.yue_HK;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;
+                case LanguageController.CodeLanguageItalian:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.it_IT;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageRussian:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.ru_RU;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguagePortuguese:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.pt_PT;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageJapanese:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.ja_JP;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageArabic:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.ar_XA;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageGreek:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.el_GR;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageUrdu:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.ur_IN;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
+                case LanguageController.CodeLanguageKorean:
+                    _languageCode = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.LanguageCode.ko_KR;
+                    _voiceType = FrostweepGames.Plugins.GoogleCloud.TextToSpeech.Enumerators.VoiceType.STANDARD;
+                    break;                    
             }
 #endif            
         }
 
-        public void SetVoiceByLanguage(string languageCode, string voiceManEnglish = "en-US-Wavenet-I", string voiceWomanEnglish = "en-US-Wavenet-H",
+        public void SetVoiceByLanguage(string languageCode, 
+                                        string voiceManEnglish = "en-US-Wavenet-I", string voiceWomanEnglish = "en-US-Wavenet-H",
                                         string voiceManSpanish = "es-ES-Wavenet-F", string voiceWomanSpanish = "es-ES-Wavenet-H",
                                         string voiceManCatalan = "ca-ES-Standard-B", string voiceWomanCatalan = "ca-ES-Standard-B",
-                                        string voiceManFrench = "fr-FR-Wavenet-G", string voiceWomanFrench = "fr-FR-Wavenet-F")
+                                        string voiceManFrench = "fr-FR-Wavenet-G", string voiceWomanFrench = "fr-FR-Wavenet-F",
+                                        string voiceManGerman = "de-DE-Standard-G", string voiceWomanGerman = "de-DE-Standard-G",
+                                        string voiceManChinese = "yue-HK-Standard-C", string voiceWomanChinese = "yue-HK-Standard-C",
+                                        string voiceManItalian = "it-IT-Standard-E", string voiceWomanItalian = "it-IT-Standard-E",
+                                        string voiceManRussian = "ru-RU-Standard-E", string voiceWomanRussian = "ru-RU-Standard-E",
+                                        string voiceManPortuguese = "pt-PT-Standard-E", string voiceWomanPortuguese = "pt-PT-Standard-E",
+                                        string voiceManJapanese = "ja-JP-Standard-B", string voiceWomanJapanese = "ja-JP-Standard-B",
+                                        string voiceManArabic = "ar-XA-Standard-A", string voiceWomanArabic = "ar-XA-Standard-A",
+                                        string voiceManGreek = "el-GR-Standard-B", string voiceWomanGreek = "el-GR-Standard-B",
+                                        string voiceManUrdu = "ur-IN-Standard-A", string voiceWomanUrdu = "ur-IN-Standard-A",
+                                        string voiceManKorean = "ko-KR-Standard-A", string voiceWomanKorean = "ko-KR-Standard-A")
         {
 #if ENABLE_GOOGLE_SPEECH                     
             if (_voices != null)
@@ -168,6 +219,46 @@ namespace yourvrexperience.speech
                         _currentVoiceMan = GetVoiceByName(voiceManFrench);
                         _currentVoiceWoman = GetVoiceByName(voiceWomanFrench);
                         break;
+                    case LanguageController.CodeLanguageGerman:
+                        _currentVoiceMan = GetVoiceByName(voiceManGerman);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanGerman);
+                        break;
+                    case LanguageController.CodeLanguageChinese:
+                        _currentVoiceMan = GetVoiceByName(voiceManChinese);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanChinese);
+                        break;
+                    case LanguageController.CodeLanguageItalian:
+                        _currentVoiceMan = GetVoiceByName(voiceManItalian);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanItalian);
+                        break;
+                    case LanguageController.CodeLanguageRussian:
+                        _currentVoiceMan = GetVoiceByName(voiceManRussian);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanRussian);
+                        break;
+                    case LanguageController.CodeLanguagePortuguese:
+                        _currentVoiceMan = GetVoiceByName(voiceManPortuguese);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanPortuguese);
+                        break;
+                    case LanguageController.CodeLanguageJapanese:
+                        _currentVoiceMan = GetVoiceByName(voiceManJapanese);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanJapanese);
+                        break;
+                    case LanguageController.CodeLanguageArabic:
+                        _currentVoiceMan = GetVoiceByName(voiceManArabic);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanArabic);
+                        break;
+                    case LanguageController.CodeLanguageGreek:
+                        _currentVoiceMan = GetVoiceByName(voiceManGreek);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanGreek);
+                        break;
+                    case LanguageController.CodeLanguageUrdu:
+                        _currentVoiceMan = GetVoiceByName(voiceManUrdu);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanUrdu);
+                        break;
+                    case LanguageController.CodeLanguageKorean:
+                        _currentVoiceMan = GetVoiceByName(voiceManKorean);
+                        _currentVoiceWoman = GetVoiceByName(voiceWomanKorean);
+                        break;                                                
                 }
             }
 #endif
@@ -350,6 +441,37 @@ namespace yourvrexperience.speech
                 case LanguageController.CodeLanguageFrench:
                     config.languageCode = "fr-FR";
                     break;
+                case LanguageController.CodeLanguageGerman:
+                    config.languageCode = "de-DE";
+                    break;
+                case LanguageController.CodeLanguageChinese:
+                    config.languageCode = "yue-HK";
+                    break;
+                case LanguageController.CodeLanguageJapanese:
+                    config.languageCode = "ja-JA";
+                    break;
+                case LanguageController.CodeLanguageItalian:
+                    config.languageCode = "it-IT";
+                    break;
+                case LanguageController.CodeLanguageRussian:
+                    config.languageCode = "ru-RU";
+                    break;
+                case LanguageController.CodeLanguagePortuguese:
+                    config.languageCode = "pt-PT";
+                    break;
+                case LanguageController.CodeLanguageArabic:
+                    config.languageCode = "ar-XA";
+                    break;
+                case LanguageController.CodeLanguageGreek:
+                    config.languageCode = "el-GR";
+                    break;
+                case LanguageController.CodeLanguageUrdu:
+                    config.languageCode = "ur-IN";
+                    break;
+                case LanguageController.CodeLanguageKorean:
+                    config.languageCode = "ko_KR";
+                    break;
+
             }
 			config.audioChannelCount = clip.channels;
 

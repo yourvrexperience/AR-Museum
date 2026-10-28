@@ -1376,28 +1376,28 @@
 		<fr>Événement de fin</fr>
 	</text>
 
-	<text id="screen.edit.segment.title.language.english">
+	<text id="screen.edit.segment.title.language.en">
 		<en>English</en>
 		<es>Inglés</es>
 		<ca>Anglés</ca>
 		<fr>Anglais</fr>
 	</text>
 
-	<text id="screen.edit.segment.title.language.spanish">
+	<text id="screen.edit.segment.title.language.es">
 		<en>Spanish</en>
 		<es>Español</es>
 		<ca>Espanyol</ca>
 		<fr>Espagnol</fr>
 	</text>
 
-	<text id="screen.edit.segment.title.language.catalan">
+	<text id="screen.edit.segment.title.language.ca">
 		<en>Catalan</en>
 		<es>Catalán</es>
 		<ca>Català</ca>
 		<fr>Catalan</fr>
 	</text>
 
-	<text id="screen.edit.segment.title.language.french">
+	<text id="screen.edit.segment.title.language.fr">
 		<en>French</en>
 		<es>Francés</es>
 		<ca>Francès</ca>

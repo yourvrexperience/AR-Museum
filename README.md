@@ -11,6 +11,9 @@ This README is the setup guide: it takes you from an empty Unity project to a ru
 ## Table of contents
 
 - [Who this is for](#who-this-is-for)
+- [Multilingual narration (14 languages)](#multilingual-narration-14-languages)
+  - [Editing a POI in 14 languages](#editing-a-poi-in-14-languages)
+  - [The tour in every language](#the-tour-in-every-language)
 - [Requirements](#requirements)
 - [What's in this repository](#whats-in-this-repository)
 - [Setup](#setup)
@@ -39,6 +42,30 @@ This README is the setup guide: it takes you from an empty Unity project to a ru
 This project is aimed at professionals. You need to be proficient in general programming and, above all, in Unity. The other languages involved (PHP, Python) are far less critical — with a solid programming background you should pick them up easily. Use an AI assistant to clear up questions, especially around the backend endpoints, where configuration and testing can be hard to debug.
 
 Once you're fully familiar with the project, you should be able to deliver a solution to a museum in about four weeks — less, if the museum doesn't require an application redesign.
+
+## Multilingual narration (14 languages)
+
+Every Point of Interest (POI) can be narrated in up to **14 languages**. Museum staff write or edit the text in one language, translate it into the others and generate the audio track for each one directly from the app's tour edition mode — no developer, no recording studio, no rebuild required.
+
+### Editing a POI in 14 languages
+
+This video shows a single POI being edited in real time: the narration is changed, translated into all 14 languages and the audio is regenerated for each of them.
+
+[![Editing a POI in 14 languages](https://img.youtube.com/vi/2UtSajSPuXU/hqdefault.jpg)](https://youtu.be/2UtSajSPuXU)
+
+- 🎬 [Watch: Real-time POI edition in 14 languages](https://youtu.be/2UtSajSPuXU)
+
+### The tour in every language
+
+The same tour, played in each of the supported languages:
+
+| | | |
+| :---: | :---: | :---: |
+| [![English Tour](https://img.youtube.com/vi/GkDr_u3SBgU/mqdefault.jpg)](https://youtu.be/GkDr_u3SBgU)<br>🇬🇧 **English** | [![Spanish Tour](https://img.youtube.com/vi/mC-cfMZlCLM/mqdefault.jpg)](https://youtu.be/mC-cfMZlCLM)<br>🇪🇸 **Spanish** · Español | [![German Tour](https://img.youtube.com/vi/jtZ-Ov1reLw/mqdefault.jpg)](https://youtu.be/jtZ-Ov1reLw)<br>🇩🇪 **German** · Deutsch |
+| [![French Tour](https://img.youtube.com/vi/XMBbvwIb1Ko/mqdefault.jpg)](https://youtu.be/XMBbvwIb1Ko)<br>🇫🇷 **French** · Français | [![Italian Tour](https://img.youtube.com/vi/DN913a6CUV4/mqdefault.jpg)](https://youtu.be/DN913a6CUV4)<br>🇮🇹 **Italian** · Italiano | [![Korean Tour](https://img.youtube.com/vi/xbeuoCiQGtI/mqdefault.jpg)](https://youtu.be/xbeuoCiQGtI)<br>🇰🇷 **Korean** · 한국어 |
+| [![Russian Tour](https://img.youtube.com/vi/CZn4HpN9Hi0/mqdefault.jpg)](https://youtu.be/CZn4HpN9Hi0)<br>🇷🇺 **Russian** · Русский | [![Japanese Tour](https://img.youtube.com/vi/xLTlt3sGgSM/mqdefault.jpg)](https://youtu.be/xLTlt3sGgSM)<br>🇯🇵 **Japanese** · 日本語 | [![Chinese Tour](https://img.youtube.com/vi/4TfGl4hjuqk/mqdefault.jpg)](https://youtu.be/4TfGl4hjuqk)<br>🇨🇳 **Chinese** · 中文 |
+| [![Portuguese Tour](https://img.youtube.com/vi/UV4tuavDdPs/mqdefault.jpg)](https://youtu.be/UV4tuavDdPs)<br>🇵🇹 **Portuguese** · Português | [![Arabic Tour](https://img.youtube.com/vi/xmbBKNlXkms/mqdefault.jpg)](https://youtu.be/xmbBKNlXkms)<br>🇸🇦 **Arabic** · العربية | [![Urdu Tour](https://img.youtube.com/vi/iaBpccSegQc/mqdefault.jpg)](https://youtu.be/iaBpccSegQc)<br>🇵🇰 **Urdu** · اردو |
+| [![Greek Tour](https://img.youtube.com/vi/35oMfhI5Mgs/mqdefault.jpg)](https://youtu.be/35oMfhI5Mgs)<br>🇬🇷 **Greek** · Ελληνικά | [![Catalan Tour](https://img.youtube.com/vi/MbPv4wF5TyA/mqdefault.jpg)](https://youtu.be/MbPv4wF5TyA)<br>**Catalan** · Català | |
 
 ## Requirements
 
